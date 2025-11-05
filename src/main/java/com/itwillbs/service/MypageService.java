@@ -4,11 +4,10 @@ import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 
-import com.itwillbs.mapper.CustomerMapper;
+import com.itwillbs.mapper.MypageMapper;
 
 @Service
-public class CustomerService {
+public class MypageService {
 	@Inject
-	private CustomerMapper custoemrMapper;
-
+	private MypageMapper mypageMapper; 
 }
