@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MypageController {
 
 	// 마이페이지 -> 관심 영화 목록
-	@GetMapping("/")
+	@GetMapping("/mypage/favorites")
 	public String favorites() {
 		return "/mypage/favorites";
 	}
