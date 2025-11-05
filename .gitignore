@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/eclipse,java,maven
 # Edit at https://www.toptal.com/developers/gitignore?templates=eclipse,java,maven
 
+# 무시 규칙(properties 끝나는 제외)
+*.properties
+
 ### Eclipse ###
 .metadata
 bin/
