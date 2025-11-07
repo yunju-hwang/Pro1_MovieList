@@ -71,5 +71,29 @@ public class MovieController {
 		return "/movies/search";
 	}
 	
+	// 영화 예약하기
+	@GetMapping("/reservation/info")
+	public String resInfo() {
+		return "/reservation/info";
+	}
+	
+	// 영화 예약하기 (좌석 선택)
+	@GetMapping("/reservation/seat")
+	public String resSeat() {
+		return "/reservation/seat";
+	}
+	
+	// 영화 예약하기 (결제)
+	@GetMapping("/reservation/payment")
+	public String resPayment() {
+		return "/reservation/payment";
+	}
+	
+	// 영화 예약 완료창
+	@GetMapping("/reservation/complete")
+	public String resComplete() {
+		return "/reservation/complete";
+	}
+	
 
 }
