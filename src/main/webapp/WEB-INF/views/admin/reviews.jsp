@@ -29,7 +29,7 @@
                 <td><span class="sentiment-badge positive">긍정</span></td>
                 <td>2025.11.03</td>
                 <td>
-                    <button class="delete-btn">
+                    <button class="action-icon-btn">
                         <img src="<c:url value='/resources/img/trash_red.png'/>" alt="삭제 아이콘">
                     </button>
                 </td>
@@ -45,7 +45,7 @@
                 <td><span class="sentiment-badge positive">긍정</span></td>
                 <td>2025.11.03</td>
                 <td>
-                    <button class="delete-btn">
+                    <button class="action-icon-btn">
                         <img src="<c:url value='/resources/img/trash_red.png'/>" alt="삭제 아이콘">
                     </button>
                 </td>
@@ -61,7 +61,7 @@
                 <td><span class="sentiment-badge negative">부정</span></td>
                 <td>2025.11.03</td>
                 <td>
-                    <button class="delete-btn">
+                    <button class="action-icon-btn">
                         <img src="<c:url value='/resources/img/trash_red.png'/>" alt="삭제 아이콘">
                     </button>
                 </td>

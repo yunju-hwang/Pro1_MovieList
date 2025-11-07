@@ -4,7 +4,7 @@
  * 3. TABS & BUTTON STYLES (Menu, Action Buttons, Reply Buttons)
  * ========================================================= */
 
-/* -------------------- 1. 메뉴 탭 스타일 (복구됨) -------------------- */
+/* -------------------- 1. 메뉴 탭 스타일 -------------------- */
 .menu-tabs {
     display: flex;
     justify-content: center;
@@ -32,22 +32,26 @@
 /* -------------------- 2. 일반 액션 버튼 (공통 기준 스타일) -------------------- */
 .action-btn {
     padding: 5px 10px;
-    border: 1px solid #dc3545; 
-    background-color: #fff; 
-    color: #dc3545; 
+    border: 1px solid #dc3545;  
+    background-color: #fff;  
+    color: #dc3545;  
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    transition: background-color 0.2s, color 0.2s;
-    width: 80px; 
+    
+    /* 호버 애니메이션을 위한 공통 설정 */
+    transition: background-color 0.2s, color 0.2s, transform 0.2s, border-color 0.2s; 
+    
+    /* width: 80px; 👈 수평 정렬 문제의 원인이므로 삭제 (네 코드에서는 주석 처리됨) */ 
     text-align: center;
-    display: inline-block;
+    display: inline-block; /* 관리 버튼에 오버라이드 됨 */
     vertical-align: middle;
 }
 .action-btn:hover {
-    background-color: #dc3545; 
-    color: #fff; 
+    background-color: #dc3545;  
+    color: #fff;
+    transform: scale(1.05); /* 👈 모든 .action-btn에 기본 5% 확대 효과 적용 */
 }
 
 
@@ -58,22 +62,22 @@
     padding: 6px 12px;
     font-size: 13px;
     font-weight: 500;
-    width: 60px;
+    min-width: 65px; /* 너비 통일 및 텍스트 자연스러움 유지 */
     color: #212529; /* 글자색 검은색 */
-    background-color: #ffc107; /* 배경색을 노란색으로 다시 설정 */
+    background-color: #ffffff; 
     border: 1px solid #ffaa00; /* 노란색보다 진한 오렌지 테두리 */
     border-radius: 4px;
     margin-right: 8px;
-    transition: all 0.2s;
-    white-space: nowrap; 
-    display: inline-flex; /* 👈 이 부분! 수평 정렬을 강제합니다. */
-    align-items: center; /* 텍스트를 세로 중앙에 배치 */
+    white-space: nowrap;  
+    display: inline-flex; /* 수평 정렬 강제 */
+    align-items: center; 
     justify-content: center;
 }
 .action-btn.edit-btn:hover {
-	color: #333; /* 호버 시 글자색은 유지 */
-    background-color: #e0a800; 
+    color: #ffffff; 
+    background-color: #e0a800;  
     border-color: #d39e00;
+    transform: scale(1.1); /* 👈 확대 효과 적용 */
 }
 
 /* B. 삭제 버튼 (빨간색 테두리, 흰색 배경 - '답변하기' 스타일) */
@@ -81,49 +85,58 @@
     padding: 6px 12px;
     font-size: 13px;
     font-weight: 500;
-    min-width: 60px;
-    color: #dc3545; 
-    background-color: #fff; 
-    border: 1px solid #dc3545; 
+    min-width: 65px; /* 너비 통일 */
+    
+    color: #dc3545;  
+    background-color: #fff;  
+    border: 1px solid #dc3545;  
     border-radius: 4px;
     margin-right: 0; 
-    transition: all 0.2s;
-    white-space: nowrap; 
-    display: inline-flex; /* 👈 이 부분! 수평 정렬을 강제합니다. */
-    align-items: center; /* 텍스트를 세로 중앙에 배치 */
+    
+    white-space: nowrap;  
+    display: inline-flex; /* 수평 정렬 강제 */
+    align-items: center; 
     justify-content: center;
 }
 .action-btn.delete-btn:hover {
-    color: #fff; 
-    background-color: #dc3545; 
+    color: #fff;  
+    background-color: #dc3545;  
     border-color: #dc3545;
-}
-/* -------------------- 4. 이미지 아이콘 버튼 복구 (.delete-btn 등) -------------------- */
-/* 이미지 삭제 버튼 (다른 페이지에서 사용될 수 있으므로 유지) */
-.delete-btn { /* 이 클래스가 글자 버튼과 충돌할 수 있으니, 이미지 버튼에는 .action-icon-btn을 주로 사용 권장 */
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    display: flex;  
-    align-items: center;  
-    justify-content: center;
-    margin: 0 auto;
-    width: 24px; 
-    height: 24px; 
-    transition: transform 0.1s;
-}
-.delete-btn img {
-    width: 100%;  
-    height: 100%;
-    object-fit: contain; 
-    display: block;
-}
-.delete-btn:hover {
-    transform: scale(1.1);
+    transform: scale(1.1); /* 👈 확대 효과 적용 */
 }
 
-/* .action-icon-btn 스타일 (아이콘 형태가 필요한 경우) */
+/* C. 답변하기 버튼 (문의 관리 페이지) */
+.action-btn.answer-btn {
+    /* delete-btn과 동일한 아웃라인 스타일을 가지거나, 필요에 따라 색상 정의 */
+    color: #007bff; /* 파란색 계열 추천 */
+    border: 1px solid #007bff;
+    background-color: #fff;
+}
+.action-btn.answer-btn:hover {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    transform: scale(1.1); /* 👈 확대 효과 적용 */
+}
+
+/* D. 탈퇴 버튼 (회원 관리 페이지) */
+.action-btn.delete-user-btn {
+    /* 삭제 버튼과 동일하게 빨간색 아웃라인으로 설정 */
+    color: #dc3545;  
+    background-color: #fff;  
+    border: 1px solid #dc3545;  
+}
+.action-btn.delete-user-btn:hover {
+    color: #fff;  
+    background-color: #dc3545;  
+    border-color: #dc3545;
+    transform: scale(1.1); /* 👈 확대 효과 적용 */
+}
+
+
+/* -------------------- 4. 이미지 아이콘 버튼 (.action-icon-btn) 스타일 (충돌 요소 제거됨) -------------------- */
+
+/* .action-icon-btn 스타일 (리뷰 삭제 등 아이콘 형태가 필요한 경우) */
 .action-icon-btn {
     background: none;
     border: none;
@@ -135,7 +148,7 @@
     justify-content: center;
     width: 24px;
     height: 24px;
-    transition: transform 0.1s;
+    transition: transform 0.1s; /* 아이콘은 전환 속도를 빠르게 */
 }
 .action-icon-btn img {
     width: 100%;  
@@ -146,6 +159,7 @@
 .action-icon-btn:hover {
     transform: scale(1.1);
 }
+
 
 /* -------------------- 5. 기타 버튼 스타일 (답변, 환불, 등록) -------------------- */
 /* 답변 폼 버튼 - 답변 등록 버튼 (빨간색) */
@@ -158,10 +172,11 @@
     cursor: pointer;
     font-weight: 500;
     margin-left: 10px;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.2s; /* transform 추가 */
 }
 .reply-submit-btn:hover {
     background-color: #a80000;
+    transform: scale(1.05); /* 👈 확대 효과 적용 */
 }
 
 /* 답변 폼 버튼 - 취소 버튼 (회색) */
@@ -173,10 +188,11 @@
     border-radius: 4px;
     cursor: pointer;
     font-weight: 500;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.2s; /* transform 추가 */
 }
 .reply-cancel-btn:hover {
     background-color: #e2e6ea;
+    transform: scale(1.05); /* 👈 확대 효과 적용 */
 }
 
 /* 환불 버튼 스타일 */
@@ -188,7 +204,7 @@
     border-radius: 6px;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.2s; /* transform 추가 */
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -197,6 +213,7 @@
 }
 .refund-btn:hover {
     background-color: #c82333;
+    transform: scale(1.1); /* 👈 확대 효과 적용 */
 }
 .refund-btn img {
     width: 16px;
@@ -218,8 +235,9 @@
     border-radius: 4px;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.2s; /* transform 추가 */
 }
 .table-header .register-btn:hover {
     background-color: #0056b3;
+    transform: scale(1.05); /* 👈 확대 효과 적용 */
 }

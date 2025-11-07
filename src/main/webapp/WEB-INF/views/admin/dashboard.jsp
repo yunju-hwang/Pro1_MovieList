@@ -11,8 +11,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h1>관리자페이지/dashboard</h1>
-
 
 <head>
     <meta charset="UTF-8">
@@ -124,14 +122,14 @@
                         <th>1,234</th>
                         <th>56</th>
                         <th>2023.11.22</th>
-                        <td><button class="delete-btn">
+                        <td><button class="action-icon-btn">
  <img src="${pageContext.request.contextPath}/resources/img/trash_red.png"
                 alt="삭제 아이콘">
 </button></td>
                     </tr>
                     <tr>
                         <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-                        <td><button class="delete-btn">
+                        <td><button class="action-icon-btn">
  <img src="${pageContext.request.contextPath}/resources/img/trash_red.png"
                 alt="삭제 아이콘">
 </button></td>
