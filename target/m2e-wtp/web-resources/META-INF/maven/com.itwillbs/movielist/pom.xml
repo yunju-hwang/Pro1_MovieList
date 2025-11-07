@@ -147,8 +147,19 @@
     		<artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
     		<version>1.16</version>
 		</dependency>
+		<!-- Jackson core + databind (JSON <-> Java 매핑) -->
+		<dependency>
+  			<groupId>com.fasterxml.jackson.core</groupId>
+  			<artifactId>jackson-databind</artifactId>
+  			<version>2.15.2</version> 
+		</dependency>
 		
-		
+		<!-- JavaTimeModule -->
+		<dependency>
+ 			 <groupId>com.fasterxml.jackson.datatype</groupId>
+  			<artifactId>jackson-datatype-jsr310</artifactId>
+  			<version>2.15.2</version> <!-- 프로젝트의 jackson-databind 버전에 맞게 조정 -->
+		</dependency>
 		
 		<!-- Servlet -->
 		<dependency>
