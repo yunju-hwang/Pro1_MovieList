@@ -1,0 +1,52 @@
+@charset "UTF-8";
+
+.mnavbar {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* 버튼 가운데 정렬 */
+    padding: 20px 0; 
+    background-color: transparent; /* 배경 제거 */
+}
+
+.mnavbar a {
+    display: inline-block;
+    background-color: #cd0000; /* 빨간색 버튼 */
+    color: #ffffff;            /* 글씨 흰색 */
+    text-decoration: none;
+    padding: 10px 20px;        /* 버튼 크기 */
+    margin: 0 10px;            /* 버튼 간 간격 */
+    border-radius: 12px;       /* 둥근 모서리 */
+    font-weight: bold;
+    transition: background 0.3s, transform 0.2s;
+}
+
+/* hover 효과 */
+.mnavbar a:hover {
+    background-color: #a80000; /* hover 시 진한 빨강 */
+    transform: translateY(-2px); /* 살짝 떠 있는 느낌 */
+}
+
+.movie-card-buttons {
+    display: flex;
+    gap: 10px; /* 버튼 간격 */
+    margin-top: 10px;
+}
+
+.movie-card-buttons a {
+    flex: 1;                     /* 버튼 동일 너비 */
+    text-align: center;
+    background-color: #cd0000;
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 0;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 14px;
+    transition: background 0.3s, transform 0.2s;
+}
+
+/* hover 효과 */
+.movie-card-buttons a:hover {
+    background-color: #a80000;   /* hover 시 진한 빨강 */
+    transform: translateY(-2px); /* 살짝 뜨는 느낌 */
+}
