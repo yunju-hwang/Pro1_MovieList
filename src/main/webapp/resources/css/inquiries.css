@@ -1,0 +1,47 @@
+@charset "UTF-8";
+
+body{
+	background-color: #f7f7f7;
+}
+
+.inquery{
+	text-align: center;
+	margin-top: 70px;
+	font-size: 2.5em;
+	}
+.many{
+	text-align: center;
+	margin:auto;
+	color: gray;
+}
+
+.container{
+	margin:30px auto;
+	width:80%;
+	height:500px;
+	border-radius: 30px;
+	background-color: white;
+	border: 1px solid black;
+	display: flex;
+}
+
+.inquirey{
+	width: 80%;
+	height:50px;
+	border-radius: 30px;
+	background-color: #cd0000;
+	color:white;
+	font-size: 1.5em;
+}
+
+.btn_con{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.ma{
+	margin:auto;
+	font-size: 1.2em;
+	
+}
