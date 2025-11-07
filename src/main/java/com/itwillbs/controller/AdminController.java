@@ -46,7 +46,7 @@ public class AdminController {
 	}
 	
 	// 관리자 대시보드
-	@GetMapping("/movie_request")
+	@GetMapping("/movie_requests")
 	public String movieRequests() {
 		return "/admin/movie_requests";
 	}
