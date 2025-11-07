@@ -34,12 +34,11 @@ public class MovieController {
 	}
 	
 	// db에 저장된 movie 데이터 출력 (목록 페이지)
+	// json으로 제공 (javaScript 파일)
     @GetMapping("/movies/list")
-    public String movieList(Model model) {
-    	List<MovieVO> movies = movieService.getMovieList();
-    	model.addAttribute("movies", movies);
-    	
-        return "/movies/list"; // views/movies/list.jsp
+    @ResponseBody
+    public List<MovieVO> movieList() {
+    	return movieService.getMovieList();
     }
 
 	// 영화 상세 페이지
