@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+body{
+	background-color: #FFF0F0;
+	height: 1300px;
+}
+.title{
+	text-align: center;
+}
+.show{
+	text-align: center;
+	color: gray;
+}
+.notice {
+	display: inline-block;
+	margin: 50px auto;
+	width: 70%;
+	height: 150px;
+	border-radius: 30px;
+	background-color: white;
+	padding: 20px;
+}
+
+.not {
+  width: 60px;
+  height: 30px;
+  background: #B158FF;
+  color: white;
+  border-radius: 10px;
+  text-align: center;
+  line-height: 30px;
+  margin-right: 15px;
+  margin-bottom: 30px;
+}
+.notice-link {
+  color: inherit;
+  text-decoration: none;
+  height:150px;
+}
+
