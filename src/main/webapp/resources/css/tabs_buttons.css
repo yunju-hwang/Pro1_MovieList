@@ -1,0 +1,225 @@
+@charset "UTF-8";
+
+/* =========================================================
+ * 3. TABS & BUTTON STYLES (Menu, Action Buttons, Reply Buttons)
+ * ========================================================= */
+
+/* -------------------- 1. 메뉴 탭 스타일 (복구됨) -------------------- */
+.menu-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 30px;
+}
+.tab {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 8px 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    border-radius: 5px;
+    white-space: nowrap;
+    border-bottom: none;
+}
+.tab.active {
+    background-color: #dc3545; /* 활성화된 탭은 빨간색 배경 */
+    color: #fff;
+    border-color: #dc3545;
+}
+
+
+/* -------------------- 2. 일반 액션 버튼 (공통 기준 스타일) -------------------- */
+.action-btn {
+    padding: 5px 10px;
+    border: 1px solid #dc3545; 
+    background-color: #fff; 
+    color: #dc3545; 
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s;
+    width: 80px; 
+    text-align: center;
+    display: inline-block;
+    vertical-align: middle;
+}
+.action-btn:hover {
+    background-color: #dc3545; 
+    color: #fff; 
+}
+
+
+/* -------------------- 3. 테이블 관리 컬럼 버튼 (수정/삭제 최종 통일 스타일) -------------------- */
+
+/* A. 수정 버튼 (노란색 배경 - '답변대기' 스타일) */
+.action-btn.edit-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    width: 60px;
+    color: #212529; /* 글자색 검은색 */
+    background-color: #ffc107; /* 배경색을 노란색으로 다시 설정 */
+    border: 1px solid #ffaa00; /* 노란색보다 진한 오렌지 테두리 */
+    border-radius: 4px;
+    margin-right: 8px;
+    transition: all 0.2s;
+    white-space: nowrap; 
+    display: inline-flex; /* 👈 이 부분! 수평 정렬을 강제합니다. */
+    align-items: center; /* 텍스트를 세로 중앙에 배치 */
+    justify-content: center;
+}
+.action-btn.edit-btn:hover {
+	color: #333; /* 호버 시 글자색은 유지 */
+    background-color: #e0a800; 
+    border-color: #d39e00;
+}
+
+/* B. 삭제 버튼 (빨간색 테두리, 흰색 배경 - '답변하기' 스타일) */
+.action-btn.delete-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    min-width: 60px;
+    color: #dc3545; 
+    background-color: #fff; 
+    border: 1px solid #dc3545; 
+    border-radius: 4px;
+    margin-right: 0; 
+    transition: all 0.2s;
+    white-space: nowrap; 
+    display: inline-flex; /* 👈 이 부분! 수평 정렬을 강제합니다. */
+    align-items: center; /* 텍스트를 세로 중앙에 배치 */
+    justify-content: center;
+}
+.action-btn.delete-btn:hover {
+    color: #fff; 
+    background-color: #dc3545; 
+    border-color: #dc3545;
+}
+/* -------------------- 4. 이미지 아이콘 버튼 복구 (.delete-btn 등) -------------------- */
+/* 이미지 삭제 버튼 (다른 페이지에서 사용될 수 있으므로 유지) */
+.delete-btn { /* 이 클래스가 글자 버튼과 충돌할 수 있으니, 이미지 버튼에는 .action-icon-btn을 주로 사용 권장 */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;  
+    align-items: center;  
+    justify-content: center;
+    margin: 0 auto;
+    width: 24px; 
+    height: 24px; 
+    transition: transform 0.1s;
+}
+.delete-btn img {
+    width: 100%;  
+    height: 100%;
+    object-fit: contain; 
+    display: block;
+}
+.delete-btn:hover {
+    transform: scale(1.1);
+}
+
+/* .action-icon-btn 스타일 (아이콘 형태가 필요한 경우) */
+.action-icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0 2px;
+    display: inline-flex;  
+    align-items: center;  
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    transition: transform 0.1s;
+}
+.action-icon-btn img {
+    width: 100%;  
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+.action-icon-btn:hover {
+    transform: scale(1.1);
+}
+
+/* -------------------- 5. 기타 버튼 스타일 (답변, 환불, 등록) -------------------- */
+/* 답변 폼 버튼 - 답변 등록 버튼 (빨간색) */
+.reply-submit-btn {
+    padding: 8px 15px;
+    border: none;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-left: 10px;
+    transition: background-color 0.2s;
+}
+.reply-submit-btn:hover {
+    background-color: #a80000;
+}
+
+/* 답변 폼 버튼 - 취소 버튼 (회색) */
+.reply-cancel-btn {
+    padding: 8px 15px;
+    border: 1px solid #6c757d;
+    background-color: #fff;
+    color: #6c757d;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+.reply-cancel-btn:hover {
+    background-color: #e2e6ea;
+}
+
+/* 환불 버튼 스타일 */
+.refund-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    line-height: 1;
+}
+.refund-btn:hover {
+    background-color: #c82333;
+}
+.refund-btn img {
+    width: 16px;
+    height: 16px;
+    filter: invert(100%);
+}
+
+/* 테이블 상단 등록 버튼 영역 및 버튼 스타일 */
+.table-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 0 15px 0;
+}
+.table-header .register-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.table-header .register-btn:hover {
+    background-color: #0056b3;
+}

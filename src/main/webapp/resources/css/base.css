@@ -1,0 +1,32 @@
+@charset "UTF-8";
+
+/* =========================================================
+ * 1. BASE LAYOUT & COMMON STYLES
+ * - 모든 페이지/탭에 적용되는 기본 설정
+ * ========================================================= */
+
+/* 기본 설정 */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    margin: 20px;
+    padding: 0;
+}
+
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* 탭 콘텐츠 숨김/표시 */
+.tab-content {
+    display: none; /* 모든 탭 내용은 기본적으로 숨김 */
+    padding-top: 20px; /* 탭 버튼과 콘텐츠 사이에 약간의 여백 */
+}
+.tab-content.active {
+    display: block; /* 'active' 클래스가 붙은 탭 내용만 보이게 함 */
+}

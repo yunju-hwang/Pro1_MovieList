@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
     <%@ include file="/WEB-INF/views/admin/admin_navbar.jsp" %>
     
 <!DOCTYPE html>
@@ -8,8 +9,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>영화 관리 대시보드</title>
-    <link rel="stylesheet" href="<c:url value='/resources/css/dashboard.css' />"></head>
-    
+       <link rel="stylesheet" href="<c:url value='/resources/css/base.css' />">
+    <link rel="stylesheet" href="<c:url value='/resources/css/stats_card.css' />">
+    <link rel="stylesheet" href="<c:url value='/resources/css/tabs_buttons.css' />">
+    <link rel="stylesheet" href="<c:url value='/resources/css/tables.css' />">
+    </head>
 <body>
 
     <div class="dashboard-container">
@@ -90,7 +94,7 @@
             <table class="movie-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>번호</th>
                         <th>제목</th>
                         <th>장르</th>
                         <th>평점</th>
@@ -103,14 +107,14 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>1</td>
-                        <td>2</td>
-                        <td>3</td>
-                        <td>4</td>
-                        <td>5</td>
-                        <td>6</td>
-                        <td>7</td>
-                        <td>8</td>
+               			<th>1</th>
+                        <th>서울의 봄</th>
+                        <th>드라마, 액션</th>
+                        <th>9.1</th>
+                        <th>141분</th>
+                        <th>1,234</th>
+                        <th>56</th>
+                        <th>2023.11.22</th>
                         <td><button class="delete-btn">
  <img src="${pageContext.request.contextPath}/resources/img/trash_red.png"
                 alt="삭제 아이콘">
