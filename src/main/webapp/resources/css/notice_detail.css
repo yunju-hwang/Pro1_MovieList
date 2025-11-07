@@ -1,0 +1,43 @@
+@charset "UTF-8";
+
+body{
+	background-color: #FFF0F0;
+	height: 1300px;
+}
+
+.notice_detail{
+	background-color: white;
+	width:50%;
+	height:900PX;
+	margin: 100px auto;
+	border-radius: 30px;
+	padding-top:20px;
+	padding-left: 30px;
+}
+
+.name{
+	text-align: center;
+}
+
+.not {
+  width: 60px;
+  height: 30px;
+  background: #B158FF;
+  color: white;
+  border-radius: 10px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.main{
+	font-size: 1.5em;
+	color:gray;
+	margin-top: 70px;
+	margin-left: 30px;
+}
+.ma{
+	margin:0px; padding: 0px;
+}
+.na{
+	margin-bottom: 0px;
+}
