@@ -1,13 +1,49 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
- <%@ include file="/WEB-INF/views/common/navbar.jsp" %>
+<%@ include file="/WEB-INF/views/common/navbar.jsp" %>
+ 
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>MovieList 로그인</title>
+    <style>
+        /* CSS 스타일 작성 */
+    </style>
 </head>
 <body>
-	<h1>로그인페이지</h1>
+    <div class="container">
+        <h1>MovieList</h1>
+        <p>영화 리뷰와 예매 서비스</p>
+        
+        <form action="login_process.jsp" method="post">
+            <div class="form-group">
+                <label for="userId">아이디:</label>
+                <input type="text" id="userId" name="userId" placeholder="아이디를 입력하세요" required>
+            </div>
+            <div class="form-group">
+                <label for="userPw">비밀번호:</label>
+                <input type="password" id="userPw" name="userPw" placeholder="비밀번호를 입력하세요" required>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="rememberUserId" name="rememberUserId">
+                <label for="rememberUserId">아이디 기억하기</label>
+            </div>
+            <div class="form-group">
+                <a href="find_id.jsp">아이디 찾기</a> | <a href="find_pw.jsp">비밀번호 찾기</a>
+            </div>
+            <button type="submit" class="btn btn-primary">로그인</button>
+            <button type="button" class="btn btn-secondary" onclick="location.href='signup.jsp'">회원가입</button> <!-- 회원가입 버튼 추가 -->
+        </form>
+        
+        <div class="or-divider">
+            <span>또는</span>
+        </div>
+        
+        <div class="social-login">
+            <a href="naver_login.jsp" class="btn btn-success">N 네이버로 로그인</a>
+            <a href="kakao_login.jsp" class="btn btn-warning">카카오로 로그인</a>
+        </div>
+    </div> 
 </body>
 </html>
