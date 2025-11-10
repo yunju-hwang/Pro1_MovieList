@@ -5,6 +5,15 @@
   
 <mapper namespace="com.itwillbs.mapper.AdminMapper">
 
+<select id="loginAdmin" resultType="com.itwillbs.domain.MemberVO">
+select *
+from users
+where user_id = #{user_id}
+and password = #{password}
+and role = 'admin'
+
+</select>
+
 
   
 </mapper>

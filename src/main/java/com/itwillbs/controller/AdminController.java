@@ -1,8 +1,16 @@
 package com.itwillbs.controller;
 
+import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.itwillbs.domain.MemberVO;
+import com.itwillbs.mapper.AdminMapper;
+import com.itwillbs.service.AdminService;
 
 @Controller
 @RequestMapping("/admin")
@@ -62,6 +70,9 @@ public class AdminController {
 	public String faqs() {
 		return "/admin/faqs";
 	}
-	
+	// ----------------------------------
 
+	
+	
+	
 }
