@@ -4,7 +4,80 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.itwillbs.mapper.MovieMapper">
-
-
+	<!-- api로 받아온 movie 정보 담기 -->
+	<insert id = "insertMovie">
+		INSERT IGNORE INTO movies(
+			tmdb_id,
+			title,
+			poster_path,
+			release_date,
+			overview,
+			runtime
+		) VALUES(
+			#{tmdbId},
+			#{title},
+			#{posterPath},
+			#{releaseDate},
+			#{overview},
+			#{runtime}
+		)
+	</insert>
+	
+	
+	<resultMap id="movieWithGenresMap" type="com.itwillbs.domain.MovieVO">
+		<id property="tmdbId" column="tmdb_id"/>
+		
+		<result property="title" column = "title"/>
+		<result property="posterPath" column="poster_path"/>
+		<result property="releaseDate" column="release_date" />
+    	<result property="overview" column="overview" />
+   		<result property="runtime" column="runtime" />
+   		
+   		<!-- 장르 리스트 매핑 -->
+   		<collection property="genres" ofType="string">
+   			<result column="genre_name"/>
+   		</collection>
+   		
+	</resultMap>
+	
+	<select id="getMoviesWithGenres" resultMap="movieWithGenresMap">
+    	SELECT 
+        	m.tmdb_id,
+        	m.title,
+        	m.poster_path,
+        	m.release_date,
+        	m.overview,
+        	m.runtime,
+        	g.genre_name AS genre_name
+    	FROM movies m
+    		LEFT JOIN movie_genres mg ON m.tmdb_id = mg.tmdb_id
+    		LEFT JOIN genres g ON mg.genre_id = g.genre_id
+    	ORDER BY m.release_date DESC, m.tmdb_id
+	</select>
+	
+	<!-- DB에 저장된 MOVIE값 가져오기 -->
+	<select id="getAllMovies" resultType = "com.itwillbs.domain.MovieVO">
+		SELECT 
+			tmdb_id AS tmdbId,
+			title,
+			poster_path AS posterPath,
+			release_date AS releaseDate,
+			overview,
+			runtime
+		FROM movies
+		ORDER BY release_date DESC
+	</select>
+	
+	<!-- movie_genres 연결 저장하기 -->
+	<insert id="insertMovieGenre">
+		INSERT INTO movie_genres(tmdb_id, genre_id)
+		VALUES(#{tmdbId}, #{genreId})
+	</insert>
+	
+	<!-- genre 저장하기 -->
+	<insert id = "insertGenre">
+		INSERT IGNORE INTO genres (genre_id, genre_name)
+		VALUES (#{genreId}, #{genreName})
+	</insert>
   
 </mapper>
