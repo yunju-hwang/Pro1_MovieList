@@ -1,7 +1,7 @@
 package com.itwillbs.domain;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +16,11 @@ public class MovieVO {
 	 private String posterPath;
 	 private LocalDate releaseDate;
 	 private String overview;
-	 private Integer runtime;  
-	 private LocalDateTime createdAt;
+	 private Integer runtime; 
+	 private Double popularity;
+	 
+	 // 영화가 가진 장르명 리스트
+	 private List<String> genres;
+
 	
 }

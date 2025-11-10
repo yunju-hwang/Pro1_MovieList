@@ -1,0 +1,253 @@
+@charset "UTF-8";
+
+/* =========================================================
+ * 4. TABLES & FORM SECTIONS STYLES
+ * - 모든 테이블 (영화, 사용자, 문의, 요청, 리뷰, 예매, 공지, FAQ) 스타일
+ * ========================================================= */
+
+/* 3번 영역: 테이블 섹션 공통 스타일 */
+.table-section {
+    border: 1px solid #dc3545; /* 테이블 주변에 빨간 테두리 */
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 1px;
+}
+
+/* FAQ 관리 테이블 스타일 (FAQ 등록 버튼과 관리 버튼 정렬) */
+.faq-table td:last-child { 
+    /* 관리, 액션 버튼이 들어가는 마지막 셀 */
+    white-space: nowrap; /* 버튼들이 줄바꿈되지 않도록 강제 */
+    text-align: center; /* 셀 내용을 중앙 정렬 */
+    vertical-align: middle; /* 세로 중앙 정렬 */
+    width: 150px; /* 관리 컬럼 너비를 충분히 확보 (버튼 두 개+여백) */
+}
+/* -------------------- 공통 테이블 설정 -------------------- */
+/* 모든 테이블 클래스를 명시적으로 포함! */
+.movie-table, .user-table, .inquiry-table, .request-table,
+.review-table, .booking-table, .notice-table, .faq-table
+{
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+/* 💡 모든 테이블의 셀(th, td) 공통 스타일 - 누락된 클래스 추가 및 수정 */
+.movie-table th, .movie-table td,
+.user-table th, .user-table td,
+.inquiry-table th, .inquiry-table td,
+.request-table th, .request-table td,
+.review-table th, .review-table td,
+.booking-table th, .booking-table td,
+.notice-table th, .notice-table td,
+.faq-table th, .faq-table td
+{
+    padding: 12px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: center;
+    display: table-cell; 
+    vertical-align: middle; 
+}
+
+/* 💡 모든 테이블의 헤더(thead th) 공통 스타일 - 셀렉터 오류 수정 */
+.movie-table thead th, 
+.user-table thead th, 
+.inquiry-table thead th,
+.request-table thead th,
+.review-table thead th,
+.booking-table thead th,
+.notice-table thead th, 
+.faq-table thead th
+{
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #333;
+}
+.movie-table tbody td {
+    height: 50px; /* 행 높이 고정 */
+}
+
+/* -------------------- 영화 관리 테이블 (11개 항목) -------------------- */
+.movie-table th:nth-child(1), .movie-table td:nth-child(1) { width: 10%; }    /* 1. 번호 */
+.movie-table th:nth-child(2), .movie-table td:nth-child(2) { width: 15%; }    /* 2. 영화 제목 */
+.movie-table th:nth-child(3), .movie-table td:nth-child(3) { width: 15%; }    /* 3. 장르 */
+.movie-table th:nth-child(4), .movie-table td:nth-child(4) { width: 10%; }    /* 4. 평점 */
+.movie-table th:nth-child(5), .movie-table td:nth-child(5) { width: 10%; }    /* 5. 상영시간 */
+.movie-table th:nth-child(6), .movie-table td:nth-child(6) { width: 10%; }    /* 6. 긍정리뷰 */
+.movie-table th:nth-child(7), .movie-table td:nth-child(7) { width: 10%; }    /* 7. 부정리뷰 */
+.movie-table th:nth-child(8), .movie-table td:nth-child(8) { width: 10%; }    /* 8. 개봉일 */
+.movie-table th:nth-child(9), .movie-table td:nth-child(9) { width: 10%; }    /* 9. 관리 */
+
+
+/* -------------------- 사용자 관리 테이블 (9개 항목) -------------------- */
+.user-table th:nth-child(1), .user-table td:nth-child(1) { width: 8%; }  /* 1. 등급 */
+.user-table th:nth-child(2), .user-table td:nth-child(2) { width: 12%; } /* 2. 사용자 ID */
+.user-table th:nth-child(3), .user-table td:nth-child(3) { width: 12%; } /* 3. 가입일 */
+.user-table th:nth-child(4), .user-table td:nth-child(4) { width: 12%; } /* 4. 최근 접속일 */
+.user-table th:nth-child(5), .user-table td:nth-child(5) { width: 9%; }  /* 5. 리뷰 건수 */
+.user-table th:nth-child(6), .user-table td:nth-child(6) { width: 9%; }  /* 6. 예매 건수 */
+.user-table th:nth-child(7), .user-table td:nth-child(7) { width: 9%; }  /* 7. 문의 건수 */
+.user-table th:nth-child(8), .user-table td:nth-child(8) { width: 11%; }  /* 8. 영화 요청 건수 */
+.user-table th:nth-child(9), .user-table td:nth-child(9) { width: 10%; } /* 9. 관리 (탈퇴) */
+
+/* -------------------- 1:1 문의 테이블 (8개 항목) -------------------- */
+.inquiry-table th:nth-child(1), .inquiry-table td:nth-child(1) { width: 10%; } /* 1. 번호 */
+.inquiry-table th:nth-child(2), .inquiry-table td:nth-child(2) { width: 10%; } /* 2. 카테고리 */
+.inquiry-table th:nth-child(3), .inquiry-table td:nth-child(3) { width: 25%; } /* 3. 제목 (가장 넓게) */
+.inquiry-table th:nth-child(4), .inquiry-table td:nth-child(4) { width: 10%; } /* 4. 작성자 */
+.inquiry-table th:nth-child(5), .inquiry-table td:nth-child(5) { width: 15%; } /* 5. 이메일 */
+.inquiry-table th:nth-child(6), .inquiry-table td:nth-child(6) { width: 10%; } /* 6. 날짜 */
+.inquiry-table th:nth-child(7), .inquiry-table td:nth-child(7) { width: 10%; } /* 7. 상태 */
+.inquiry-table th:nth-child(8), .inquiry-table td:nth-child(8) { width: 10%; } /* 8. 관리 */
+
+
+/* -------------------- 영화 요청 테이블 (8개 항목) - 시안에 맞춰 수정 -------------------- */
+.request-table th:nth-child(1), .request-table td:nth-child(1) { width: 10%; } /* 1. 번호 (긴 ID) */
+.request-table th:nth-child(2), .request-table td:nth-child(2) { width: 15%; } /* 2. 영화 제목 */
+.request-table th:nth-child(3), .request-table td:nth-child(3) { width: 10%; } /* 3. 장르 */
+.request-table th:nth-child(4), .request-table td:nth-child(4) { width: 10%; } /* 4. 개봉년도 */
+.request-table th:nth-child(5), .request-table td:nth-child(5) { width: 15%; } /* 5. 요청자 */
+.request-table th:nth-child(6), .request-table td:nth-child(6) { width: 15%; } /* 6. 요청일 */
+.request-table th:nth-child(7), .request-table td:nth-child(7) { width: 10%; } /* 7. 상태 */
+.request-table th:nth-child(8), .request-table td:nth-child(8) { width: 15%; } /* 8. 관리 (아이콘 2개) */
+
+/* -------------------- 리뷰 테이블 항목 너비 지정 (8개 항목) - 시안에 맞춰 수정 -------------------- */
+.review-table th:nth-child(1), .review-table td:nth-child(1) { width: 9%; }  /* 1. 번호 */
+.review-table th:nth-child(2), .review-table td:nth-child(2) { width: 12%; } /* 2. 영화 제목 */  
+.review-table th:nth-child(3), .review-table td:nth-child(3) { width: 12%; } /* 3. 작성자 */
+.review-table th:nth-child(4), .review-table td:nth-child(4) { width: 30%; text-align: left; /* 4. 리뷰 내용 (가장 넓게) */}
+.review-table th:nth-child(5), .review-table td:nth-child(5) { width: 10%; } /* 5. 평점 */
+.review-table th:nth-child(6), .review-table td:nth-child(6) { width: 8%; } /* 6. 감정 */
+.review-table th:nth-child(7), .review-table td:nth-child(7) { width: 9%; } /* 7. 날짜 */
+.review-table th:nth-child(8), .review-table td:nth-child(8) { width: 11%; } /* 8. 관리 */  
+
+/* -------------------- 예매 관리 테이블 (9개 항목) -------------------- */
+.booking-table th:nth-child(1), .booking-table td:nth-child(1) { width: 10%; } /* 1. 예매 번호 */  
+.booking-table th:nth-child(2), .booking-table td:nth-child(2) { width: 15%; } /* 2. 영화 제목 */  
+.booking-table th:nth-child(3), .booking-table td:nth-child(3) { width: 15%; } /* 3. 예매자 */
+.booking-table th:nth-child(4), .booking-table td:nth-child(4) { width: 10%; } /* 4. 상영관 */
+.booking-table th:nth-child(5), .booking-table td:nth-child(5) { width: 10%; } /* 5. 날짜 */
+.booking-table th:nth-child(6), .booking-table td:nth-child(6) { width: 10%; } /* 6. 시간 */
+.booking-table th:nth-child(7), .booking-table td:nth-child(7) { width: 10%; } /* 7. 좌석 */
+.booking-table th:nth-child(8), .booking-table td:nth-child(8) { width: 10%; } /* 8. 금액 */
+.booking-table th:nth-child(9), .booking-table td:nth-child(9) { width: 10%; } /* 9. 환불 */
+
+
+/* -------------------- 공지사항 테이블 (5개 항목) -------------------- */
+.notice-table th:nth-child(1), .notice-table td:nth-child(1) { width: 5%; }    /* 1. 번호 */
+.notice-table th:nth-child(2), .notice-table td:nth-child(2) { width: 50%; text-align: left;} /* 2. 제목 (왼쪽 정렬) */
+.notice-table th:nth-child(3), .notice-table td:nth-child(3) { width: 10%; } /* 3. 작성일 */
+.notice-table th:nth-child(4), .notice-table td:nth-child(4) { width: 10%; } /* 4. 조회수 */
+.notice-table th:nth-child(5), .notice-table td:nth-child(5) { width: 25%; } /* 5. 관리 */
+
+/* -------------------- FAQ 테이블 (4개 항목) -------------------- */
+.faq-table th:nth-child(1), .faq-table td:nth-child(1) { width: 5%; }    /* 1. 번호 */
+.faq-table th:nth-child(2), .faq-table td:nth-child(2) { width: 10%; }   /* 2. 카테고리 */
+.faq-table th:nth-child(3), .faq-table td:nth-child(3) { width: 60%; text-align: left; } /* 3. 질문 (가장 넓게, 왼쪽 정렬) */
+.faq-table th:nth-child(4), .faq-table td:nth-child(4) { width: 25%; }   /* 4. 관리 */
+
+/* -------------------- 상태 뱃지 스타일 (공통) -------------------- */
+.status-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+.status-badge.pending { /* 답변 대기 (노란색 계열) */
+    background-color: #ffc107;
+    color: #333;
+}
+.status-badge.completed { /* 답변 완료 (초록색 계열) */
+    background-color: #28a745;
+    color: white;
+}
+
+.status-badge.checking {
+    background-color: #ff8c00; /* 다크 오렌지 */
+    color: white;
+}
+
+/* -------------------- 답변 작성 폼 스타일 -------------------- */
+.reply-section {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-top: 30px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+.reply-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 18px;
+}
+.reply-section textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical; /* 수직으로만 크기 조절 가능 */
+    box-sizing: border-box;
+}
+.reply-actions {
+    text-align: right; /* 버튼을 오른쪽으로 */
+    margin-top: 10px;
+}
+/* -------------------- 리뷰 내용 셀에 대한 추가 스타일 -------------------- */
+.review-content-cell {
+    white-space: nowrap; /* 줄바꿈 방지 */
+    overflow: hidden; /* 영역을 벗어나는 내용 숨기기 */
+    text-overflow: ellipsis; /* 숨긴 내용을 ...으로 표시 */
+}
+
+/* ⭐️⭐️⭐️ 리뷰 관련 뱃지/평점 스타일 ⭐️⭐️⭐️ */
+.star-rating {
+    font-size: 18px; /* 별 아이콘을 조금 더 크게 */
+    color: #ffc107; /* 노란색 별 색상 */
+    white-space: nowrap;  
+}
+
+.sentiment-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    width: 55px; /* 너비를 고정해서 감정이 바뀌어도 칸이 안 움직이게 */
+    text-align: center;
+}
+
+.sentiment-badge.positive { /* 긍정 (초록색 계열) */
+    background-color: #28a745;
+    color: white;
+}
+
+.sentiment-badge.negative { /* 부정 (빨간색 계열) */
+    background-color: #dc3545; 
+    color: white;
+}
+
+.sentiment-badge.neutral { /* 중립(Neutral) 추가 (회색 계열) */
+    background-color: #6c757d;
+    color: white;
+}
+
+/* 💡 테이블 상단 등록 버튼 영역 및 버튼 스타일 */
+.table-header {
+    display: flex;
+    justify-content: flex-end;  
+    padding: 0 0 15px 0;
+}
+.table-header .register-btn {
+    background-color: #007bff; /* 파란색으로 등록 버튼 색상 설정 */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.table-header .register-btn:hover {
+    background-color: #0056b3;
+}
