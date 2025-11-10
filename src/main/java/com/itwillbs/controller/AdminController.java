@@ -21,7 +21,7 @@ public class AdminController {
 	@Inject
 	private	AdminMapper adminService;
 	
-	/*
+	/* 
 	// 관리자 대시보드
 	@GetMapping("/dashboard")
 	public String dashboard(HttpSession session) {
