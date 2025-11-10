@@ -79,5 +79,31 @@
 		INSERT IGNORE INTO genres (genre_id, genre_name)
 		VALUES (#{genreId}, #{genreName})
 	</insert>
+	
+	
+	<!-- 영화 상세 페이지 -->
+	<select id="getMovieById" resultMap="movieWithGenresMap">
+		SELECT
+			m.tmdb_id,
+			m.title,
+			m.poster_path,
+			m.release_date,
+			m.overview,
+			m.runtime,
+			g.genre_name AS genre_name
+		FROM movies m
+		LEFT JOIN movie_genres mg ON m.tmdb_id = mg.tmdb_id
+		LEFT JOIN genres g ON mg.genre_id = g.genre_id
+		WHERE m.tmdb_id = #{tmdbId}
+	
+	</select>
+	
+	<!-- 영화 상세 페이지 업데이트 (runtime, popularity) -->
+	<update id="updateMovieDetail" parameterType="com.itwillbs.domain.MovieVO">
+	    UPDATE movies
+	    SET popularity = #{popularity},
+	        runtime = #{runtime}
+	    WHERE tmdb_id = #{tmdbId}
+	</update>
   
 </mapper>

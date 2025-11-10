@@ -14,6 +14,11 @@
         <input type="text" id="searchInput" placeholder="영화 제목을 입력하세요" />
          <img src="${pageContext.request.contextPath}/resources/img/search.png" 
          id="searchBtn" alt="검색" />
+         <select id="sort-section">
+        	<option value="인기순">인기순</option>
+        	<option value="최신순">최신순</option>
+        	<option value="추천순">추천순</option>
+    	</select>
     </form>
 </div>
 
@@ -53,6 +58,28 @@
 .movie-search img:hover {
     transform: scale(1.1); /* hover 시 살짝 커짐 */
 }
+
+.movie-search select {
+    padding: 10px 15px;           /* 내부 여백 */
+    border-radius: 12px;           /* 둥근 모서리 */
+    border: 1px solid #ccc;        /* 테두리 */
+    background-color: #fff;        /* 배경 흰색 */
+    font-size: 16px;               /* 글자 크기 */
+    cursor: pointer;               /* 마우스 포인터 변경 */
+    appearance: none;              /* 기본 화살표 제거 */
+    -webkit-appearance: none;      /* 사파리/크롬 */
+    -moz-appearance: none;         /* 파이어폭스 */
+    background-image: url('${pageContext.request.contextPath}/resources/img/dropdown-arrow.png'); /* 화살표 이미지 */
+    background-repeat: no-repeat;
+    background-position: right 10px center; /* 오른쪽 끝 중앙 배치 */
+    background-size: 16px;          /* 화살표 크기 */
+    margin-left: 10px;
+}
+
+.movie-search select:focus {
+    outline: none;
+}
+
 </style>
 </body>
 </html>

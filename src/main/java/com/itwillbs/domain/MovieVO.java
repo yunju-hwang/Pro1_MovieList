@@ -16,7 +16,8 @@ public class MovieVO {
 	 private String posterPath;
 	 private LocalDate releaseDate;
 	 private String overview;
-	 private Integer runtime;  
+	 private Integer runtime; 
+	 private Double popularity;
 	 
 	 // 영화가 가진 장르명 리스트
 	 private List<String> genres;
