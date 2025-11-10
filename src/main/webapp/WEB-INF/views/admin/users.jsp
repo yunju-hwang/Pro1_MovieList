@@ -1,6 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="dashboard.jsp" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>admin_users</title>
+</head>
+<body>
 <div class="table-section">
     <table class="user-table"> 
         <thead>
@@ -48,4 +54,5 @@
     </table>
 </div>
                 
-<%@ include file="end.jsp" %> 
+</body>
+</html>
