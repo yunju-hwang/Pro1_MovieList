@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+	<%@ include file="dashboard.jsp" %> 
 	
 <div class="table-section">
     <table class="inquiry-table">
@@ -29,7 +30,7 @@
                     <button class="action-btn answer-btn" data-inquiry-id="111">답변하기</button>
                 </td>
             </tr>
-            <%-- 다른 행 반복 --%>
+       
         </tbody>
     </table>
 </div>
@@ -42,3 +43,5 @@
         <button class="reply-cancel-btn">취소</button>
     </div>
 </div>
+
+<%@ include file="end.jsp" %> 

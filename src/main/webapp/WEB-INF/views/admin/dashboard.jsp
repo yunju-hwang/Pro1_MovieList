@@ -1,18 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+   	<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
     <%@ include file="/WEB-INF/views/admin/admin_navbar.jsp" %>
     
 <!DOCTYPE html>
 
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
 
-<head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>영화 관리 대시보드</title>
@@ -20,6 +17,29 @@
     <link rel="stylesheet" href="<c:url value='/resources/css/stats_card.css' />">
     <link rel="stylesheet" href="<c:url value='/resources/css/tabs_buttons.css' />">
     <link rel="stylesheet" href="<c:url value='/resources/css/tables.css' />">
+    <style>
+        /* 1. 하이퍼링크 기본 스타일 무효화 */
+        .menu-tabs a.tab {
+            text-decoration: none; /* 밑줄 제거 */
+            color: #333;          /* 글씨 색상 지정 (파란색 방지) */
+            cursor: pointer;      /* 마우스 오버 시 커서 모양 유지 */
+            
+            /* (선택 사항) 너비/높이가 틀어지는 것을 방지 */
+            display: inline-block; 
+        }
+
+        /* 2. 네가 원했던 호버(Hover) 효과 복구 */
+        /* 네 기존 CSS에 hover 스타일이 없었더라도, 버튼 느낌을 주려면 이걸 추가하는 게 좋아! */
+        .menu-tabs a.tab:hover {
+            background-color: #dc3545; 
+            color: #fff;
+            border-color: #dc3545;
+        }
+		.menu-tabs a.tab.active {
+        color: #fff !important;            
+    }
+
+    </style>
     </head>
 <body>
 
@@ -29,7 +49,7 @@
             <div class="stat-card blue">
                 <div class="stat-content">
                     <span class="label">전체 사용자</span>
-                    <span class="value">*db 값 받아올곳*</span>
+                    <span class="value">${userCount} 명</span>
                 </div>
                 <div class="stat-icon-area">
 <img src="${pageContext.request.contextPath}/resources/img/peoples_red.png"
@@ -40,7 +60,7 @@
             <div class="stat-card red">
                  <div class="stat-content">
                     <span class="label">전체 리뷰</span>
-                    <span class="value">*db 값 받아올곳*</span>
+                    <span class="value">${reviewsCount }</span>
                 </div>
                 <div class="stat-icon-area">
 <img src="${pageContext.request.contextPath}/resources/img/message.png"
@@ -51,7 +71,7 @@
             <div class="stat-card green">
                  <div class="stat-content">
                     <span class="label">전체 예매</span>
-                    <span class="value">*db 값 받아올곳*</span>
+                    <span class="value">${reservations }</span>
                 </div>
                 <div class="stat-icon-area">
                 <img src="${pageContext.request.contextPath}/resources/img/rise.png"
@@ -62,7 +82,7 @@
             <div class="stat-card orange">
                  <div class="stat-content">
                     <span class="label">답변 문의</span>
-                    <span class="value">*db 값 받아올곳*</span>
+                    <span class="value">${inquieresCount }</span>
                 </div>
                 <div class="stat-icon-area" >
                 <img src="${pageContext.request.contextPath}/resources/img/question.png"
@@ -73,7 +93,7 @@
             <div class="stat-card gray">
                  <div class="stat-content">
                     <span class="label">대기 요청</span>
-                    <span class="value">*db 값 받아올곳*</span>
+                    <span class="value">${movie_RequestsCount }</span>
                 </div>
                 <div class="stat-icon-area">
                     <img src="${pageContext.request.contextPath}/resources/img/film_red.png"
@@ -82,111 +102,24 @@
                 
             </div>
         </div>
-        
-       <div class="menu-tabs">
-    <button class="tab active" data-tab="movie">영화관리</button>
-    <button class="tab" data-tab="user">사용자 관리</button>
-    <button class="tab" data-tab="qna">1:1문의</button>
-    <button class="tab" data-tab="request">영화 요청</button>
-    <button class="tab" data-tab="review">리뷰 관리</button>
-    <button class="tab" data-tab="reservation">예매 관리</button>
-</div>
+      <c:set var="currentPath" value="${pageContext.request.requestURI}"/>
+<div class="menu-tabs">
+    
+  <a class="tab <c:if test="${fn:contains(currentPath, '/admin/movie') and not fn:contains(currentPath, '/admin/movie_requests')}">active</c:if>" 
+       href="<c:url value='/admin/movie' />">영화 관리</a>
 
+    <a class="tab <c:if test="${fn:contains(currentPath, '/admin/users')}">active</c:if>" 
+       href="<c:url value='/admin/users' />">사용자 관리</a>
+
+    <a class="tab <c:if test="${fn:contains(currentPath, '/admin/inquiries')}">active</c:if>" 
+       href="<c:url value='/admin/inquiries' />">1:1문의</a>
        
-<div class="table-content-container">
-
-    <div id="tab-movie" class="tab-content active">
-        <%-- 기존 dashboard.jsp의 영화관리 테이블 내용이 여기에 들어갑니다 --%>
-         <div class="table-section">
-            <table class="movie-table">
-                <thead>
-                    <tr>
-                        <th>번호</th>
-                        <th>제목</th>
-                        <th>장르</th>
-                        <th>평점</th>
-                        <th>상영시간</th>
-                        <th>긍정리뷰</th>
-                        <th>부정리뷰</th>
-                        <th>개봉일</th>
-                        <th>관리</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-               			<th>1</th>
-                        <th>서울의 봄</th>
-                        <th>드라마, 액션</th>
-                        <th>9.1</th>
-                        <th>141분</th>
-                        <th>1,234</th>
-                        <th>56</th>
-                        <th>2023.11.22</th>
-                        <td><button class="action-icon-btn">
- <img src="${pageContext.request.contextPath}/resources/img/trash_red.png"
-                alt="삭제 아이콘">
-</button></td>
-                    </tr>
-                    <tr>
-                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-                        <td><button class="action-icon-btn">
- <img src="${pageContext.request.contextPath}/resources/img/trash_red.png"
-                alt="삭제 아이콘">
-</button></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-    </div>
-    </div>
-
-    <div id="tab-user" class="tab-content">
-        <%-- **경로 확인:** 현재 dashboard.jsp와 users.jsp는 같은 폴더(/WEB-INF/views/admin/)에 있으니 파일 이름만 적으면 돼! --%>
-        <%@ include file="users.jsp" %>
-    </div>
-
-    <div id="tab-qna" class="tab-content">
-        <%@ include file="inquiries.jsp" %>
-    </div>
-    
-    <div id="tab-request" class="tab-content">
-        <%@ include file="movie_requests.jsp" %>
-    </div>
-
-    <div id="tab-review" class="tab-content">
-        <%@ include file="reviews.jsp" %>
-    </div>
-    
-    <div id="tab-reservation" class="tab-content">
-        <%@ include file="reservations.jsp" %>
-    </div>
-    <script>
-        const tabs = document.querySelectorAll('.tab');
-        const contents = document.querySelectorAll('.tab-content');
-
-        tabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                // 1. 활성 탭 스타일 초기화 및 클릭한 탭 활성화
-                tabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                
-                // 2. 보여줘야 할 콘텐츠의 ID를 data-tab 속성에서 가져옴
-                const targetTabName = this.dataset.tab; 
-                const targetContentId = 'tab-' + targetTabName;
-
-                // 3. 모든 콘텐츠 숨김 처리
-                contents.forEach(content => content.classList.remove('active'));
-                
-                // 4. 타겟 콘텐츠만 보여주기
-                const targetContent = document.getElementById(targetContentId);
-                if (targetContent) {
-                    targetContent.classList.add('active');
-                }
-            });
-        });
-    </script>
+   <a class="tab <c:if test="${fn:contains(currentPath, '/admin/movie_requests')}">active</c:if>" 
+       href="<c:url value='/admin/movie_requests' />">영화 요청</a>
+       
+    <a class="tab <c:if test="${fn:contains(currentPath, '/admin/reviews')}">active</c:if>" 
+       href="<c:url value='/admin/reviews' />">리뷰 관리</a>
+       
+    <a class="tab <c:if test="${fn:contains(currentPath, '/admin/reservations')}">active</c:if>" 
+       href="<c:url value='/admin/reservations' />">예매 관리</a>
 </div>
-
-</body>
-</html>
