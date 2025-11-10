@@ -6,5 +6,43 @@
 <mapper namespace="com.itwillbs.mapper.AdminMapper">
 
 
+<!-- 로그인시 admin확인 -->
+<select id="loginAdmin" resultType="com.itwillbs.domain.MemberVO">
+select *
+from users
+where user_id = #{user_id}
+and password = #{password}
+and role = 'admin'
+</select>
+
+<!-- 대쉬보드 전체 사용자  -->
+<select id="getUserCount" resultType="int">
+select count(*)
+from users
+</select>
+  
+<!--   대쉬보드 전체 리뷰 -->
+  <select id="getReviewCount" resultType="int">
+  select count(*)
+  from reviews
+  </select>
+  
+  <!--   대쉬보드 전체 예매 -->
+<select id="getReservationCount" resultType="int">
+  select count(*)
+  from reservations
+</select>
+  
+<!--   대쉬보드 답변 문의 -->
+<select id="getInquiriesCount" resultType="int">
+  select count(*)
+  from inquiries
+</select>
+
+<!--   대쉬보드 대기 요청 -->
+<select id="getMovie_requestsCount" resultType="int">
+  select count(*)
+  from movie_requests
+</select>
   
 </mapper>
