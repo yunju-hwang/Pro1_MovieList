@@ -9,9 +9,13 @@ import javax.inject.Inject;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itwillbs.domain.GenresVO;
 import com.itwillbs.domain.MovieVO;
@@ -25,8 +29,9 @@ public class MovieService {
 	// api key 삽입
 	@Value("${tmdb.api.key}")
 	private String tmdbApiKey;
+	private final String TMDB_BASE_URL = "https://api.themoviedb.org/3/movie";
 	
-	
+
 	// -----------장르 저장용 -----------
 	public void loadGenres() throws Exception{
 		String url = "https://api.themoviedb.org/3/genre/movie/list?api_key="
@@ -98,16 +103,57 @@ public class MovieService {
 				 }
 			 }
 			 
-			 
-			 
 		 }	
 	}
 	
 	
 	
-	
+	// -------- db로부터 movie값 받아오기 ------------
 	public List<MovieVO> getMovieList(){
 		return movieMapper.getMoviesWithGenres();
+	}
+	
+	
+	
+	// ----------- db update용 (매일 새벽 2시에 db update ------
+	@Transactional
+	public void updateMovieList() throws Exception {
+		movieMapper.deleteAllMovies();
+		// 2. TMDB API에서 인기 영화 받아와서 DB 저장
+	    getPopularMovies();
+	}
+	
+	// movie 상세 페이지 가져오기 (tmdb api 이용)
+	public MovieVO getMovieById(int tmdbId) {
+	
+		RestTemplate rest = new RestTemplate();
+		
+		String url = "https://api.themoviedb.org/3/movie/"+tmdbId+"?api_key="+tmdbApiKey+
+				"&language=ko-KR";
+		
+		// tmdb api에서 JSON 받아오기
+		Map<String, Object> result = rest.getForObject(url, Map.class);
+		
+		
+		// db에서 기존 정보 가져오기
+		MovieVO movie = movieMapper.getMovieById(tmdbId); 
+		
+		if(result != null) {
+			// popularity
+			Double popularity = result.get("popularity") != null ? ((Number) result.get("popularity")).doubleValue() : null;
+			movie.setPopularity(popularity);
+			
+			// runtime
+			Integer runtime = result.get("runtime") != null ? ((Number) result.get("runtime")).intValue() : null;
+			movie.setRuntime(runtime);
+			
+			// db 업데이트
+			movieMapper.updateMovieDetail(movie);
+		}
+		
+		return movie;
+		
+		
 	}
 	
 }

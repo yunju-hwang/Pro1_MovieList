@@ -4,9 +4,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itwillbs.domain.MovieVO;
@@ -17,6 +19,7 @@ public class MovieController {
 
 	@Inject
 	private MovieService movieService;
+
 	
 	// 장르 저장하기 (처음 1번만 실행하는 용도)
 	@GetMapping("/movies/loadGenres")
@@ -40,11 +43,27 @@ public class MovieController {
     public List<MovieVO> movieList() {
     	return movieService.getMovieList();
     }
+    
+    // 영화 찜하기
+    @GetMapping("/movies/favorite/{movieId}")
+    public void movieFavorite(@PathVariable("movieId") Long movieId) {
+    	
+    	return;
+    }
+    // 영화 상세 페이지 이동 (jsp)
+    @GetMapping("/movies/detailPage")
+    public String movieDetailPage() {
+    	System.out.println("message");
+        return "movies/detail";  // detail.jsp
+    }
 
-	// 영화 상세 페이지
+	// 영화 상세 페이지 값 반환 (json)
 	@GetMapping("/movies/detail")
-	public String movieDetail() {
-		return "/movies/detail";
+	@ResponseBody
+	public ResponseEntity<MovieVO> getmovieDetail(@RequestParam("tmdbId") int tmdbId) {
+		System.out.println("message");
+		MovieVO movieVO = movieService.getMovieById(tmdbId);
+		return ResponseEntity.ok(movieVO);
 	}
 	
 	// AI 리뷰 페이지
