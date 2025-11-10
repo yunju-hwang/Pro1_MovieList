@@ -10,4 +10,21 @@ public interface AdminMapper {
 
 	MemberVO loginAdmin(MemberVO loginVO);
 
+public	int getUserCount();
+
+
+public int getReviewsCount();
+
+
+public int getReservationsCount();
+
+public int getInquieresCount();
+
+public int getMovie_RequestsCount();
+
+
+
+
+
+
 }

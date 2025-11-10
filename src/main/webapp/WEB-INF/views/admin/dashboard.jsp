@@ -49,7 +49,7 @@
             <div class="stat-card blue">
                 <div class="stat-content">
                     <span class="label">전체 사용자</span>
-                    <span class="value">*db 값 받아올곳*</span>
+                    <span class="value">${userCount} 명</span>
                 </div>
                 <div class="stat-icon-area">
 <img src="${pageContext.request.contextPath}/resources/img/peoples_red.png"
@@ -60,7 +60,7 @@
             <div class="stat-card red">
                  <div class="stat-content">
                     <span class="label">전체 리뷰</span>
-                    <span class="value">*db 값 받아올곳*</span>
+                    <span class="value">${reviewsCount }</span>
                 </div>
                 <div class="stat-icon-area">
 <img src="${pageContext.request.contextPath}/resources/img/message.png"
@@ -71,7 +71,7 @@
             <div class="stat-card green">
                  <div class="stat-content">
                     <span class="label">전체 예매</span>
-                    <span class="value">*db 값 받아올곳*</span>
+                    <span class="value">${reservations }</span>
                 </div>
                 <div class="stat-icon-area">
                 <img src="${pageContext.request.contextPath}/resources/img/rise.png"
@@ -82,7 +82,7 @@
             <div class="stat-card orange">
                  <div class="stat-content">
                     <span class="label">답변 문의</span>
-                    <span class="value">*db 값 받아올곳*</span>
+                    <span class="value">${inquieresCount }</span>
                 </div>
                 <div class="stat-icon-area" >
                 <img src="${pageContext.request.contextPath}/resources/img/question.png"
@@ -93,7 +93,7 @@
             <div class="stat-card gray">
                  <div class="stat-content">
                     <span class="label">대기 요청</span>
-                    <span class="value">*db 값 받아올곳*</span>
+                    <span class="value">${movie_RequestsCount }</span>
                 </div>
                 <div class="stat-icon-area">
                     <img src="${pageContext.request.contextPath}/resources/img/film_red.png"

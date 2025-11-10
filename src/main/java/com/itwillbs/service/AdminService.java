@@ -19,4 +19,28 @@ public class AdminService {
         return resultVO;
     }
 	
+    
+    public int getUserCount() {
+    	return adminMapper.getUserCount();
+    }
+    
+    public int getReviewsCount() {
+		return adminMapper.getReviewsCount();
+    }
+    
+    public int getReservationsCount() {
+    	return adminMapper.getReservationsCount();
+    }
+    
+    
+    public int getInquieresCount() {
+    	return adminMapper.getInquieresCount();
+    }
+    
+    public int getMovie_RequestsCount() {
+    	return adminMapper.getMovie_RequestsCount();
+    }
+    
+    
+    
 }
