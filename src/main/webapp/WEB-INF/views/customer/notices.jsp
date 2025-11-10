@@ -6,10 +6,9 @@
 <head>
 <meta charset="UTF-8">
 <title>공지사항</title>
-<link rel="stylesheet" href="<c:url value='/resources/css/notice.css?after'/>">
+<link rel="stylesheet" href="<c:url value='/resources/css/notice.css'/>">
 </head>
 <body>
-	<h1>고객센터/공지 목록</h1>
 	<h1 class="title">공지 사항</h1>
 	<h2 class="show">MovieList의 새로운 소식과 공지사항을 확인하세요</h2>
 	

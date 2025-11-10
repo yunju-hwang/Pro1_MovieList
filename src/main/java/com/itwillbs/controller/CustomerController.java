@@ -18,6 +18,10 @@ public class CustomerController {
 	public String notices() {
 		return "/customer/notices";
 	}
+	@GetMapping("/customer/notice_detail")
+	public String notice_detail() {
+		return "/customer/notice_detail";
+	}
 	
 	// 고객센터 FAQ
 	@GetMapping("/customer/faqs")
@@ -25,10 +29,16 @@ public class CustomerController {
 		return "/customer/faqs";
 	}
 	
+
+	
 	// 고객센터 1:1 문의
 	@GetMapping("/customer/inquiries")
 	public String inquiries() {
 		return "/customer/inquiries/inquiries";
+	}
+	@GetMapping("customer/write_inquiry")
+	public String write_inquiry() {
+		return "/customer/inquiries/write_inquiry";
 	}
 	
 	// 고객센터 영화 요청

@@ -34,14 +34,25 @@ body{
 	font-size: 1.5em;
 }
 
-.btn_con{
+
+
+.ma{
+	margin:auto;
+	font-size: 1.2em;
+}
+
+.inq-con{
+	margin:auto;
+	width:80%;
+	height: 40px;
+	background-color: #CD0000;
+	border-radius: 20px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
 
-.ma{
-	margin:auto;
-	font-size: 1.2em;
-	
+.inq{
+	text-decoration: none;
+	color: white;
 }

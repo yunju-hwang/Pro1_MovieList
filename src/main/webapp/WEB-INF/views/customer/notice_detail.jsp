@@ -9,7 +9,6 @@
 <link rel="stylesheet" href="<c:url value='/resources/css/notice_detail.css?after'/>">
 </head>
 <body>
-	<h1>고객센터/공지상세</h1>
 	<h1 class="name">공지사항</h1>
 	<div class="notice_detail">
 	<div class="not">공지	</div>

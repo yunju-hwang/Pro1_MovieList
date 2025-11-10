@@ -5,8 +5,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-<link rel="stylesheet" href="<c:url value='/resources/css/inquiries.css' />">
+<title>문의내역</title>
+<link rel="stylesheet" href="<c:url value='/resources/css/inquiries.css?after' />">
 
 
 </head>
@@ -15,10 +15,13 @@
 	<h1 class="inquery">문의 내역</h1>
 	<h4 class="many">총 0건의 문의 내역</h4>
 	<div class="container">
-		<p class="ma">문의 내역이 없습니다</p>
+		<p class="ma">문의 내역이 없습니다</p>	
 	</div>
-	<div class="btn_con">
-		<input type="button" value="1:1 문의하기" name="inquirey" class="inquirey">
+<a href="/movielist/customer/write_inquiry" class="inq">
+	<div class="inq-con">
+		<p>1:1 문의하기</p>
 	</div>
+	</a>
+
 </body>
 </html>
