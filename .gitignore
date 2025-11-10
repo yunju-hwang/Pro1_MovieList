@@ -1,5 +1,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/eclipse,java,maven
 # Edit at https://www.toptal.com/developers/gitignore?templates=eclipse,java,maven
+# 개인 환경 설정 파일
+src/main/resources/config/appdata.properties
 
 # 무시 규칙(properties 끝나는 제외)
 *.properties
