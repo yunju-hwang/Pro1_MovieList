@@ -44,12 +44,7 @@ public class MovieController {
     	return movieService.getMovieList();
     }
     
-    // 영화 찜하기
-    @GetMapping("/movies/favorite/{movieId}")
-    public void movieFavorite(@PathVariable("movieId") Long movieId) {
-    	
-    	return;
-    }
+    
     // 영화 상세 페이지 이동 (jsp)
     @GetMapping("/movies/detailPage")
     public String movieDetailPage() {
@@ -61,9 +56,15 @@ public class MovieController {
 	@GetMapping("/movies/detail")
 	@ResponseBody
 	public ResponseEntity<MovieVO> getmovieDetail(@RequestParam("tmdbId") int tmdbId) {
-		System.out.println("message");
 		MovieVO movieVO = movieService.getMovieById(tmdbId);
 		return ResponseEntity.ok(movieVO);
+	}
+	
+	// 영화 검색하기
+	@GetMapping(value="/movies/search", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String searchMovies(@RequestParam String query) {
+		return movieService.searchMovies(query);
 	}
 	
 	// AI 리뷰 페이지
@@ -77,6 +78,13 @@ public class MovieController {
 	public String reviewList() {
 		return "/movies/review_list";
 	}
+	
+	// 영화 찜하기
+    @GetMapping("/movies/favorite/{movieId}")
+    public void movieFavorite(@PathVariable("movieId") Long movieId) {
+    	
+    	return;
+    }
 
 	// 리뷰 작성하기
 	@GetMapping("/movies/review_write")
@@ -84,11 +92,7 @@ public class MovieController {
 		return "/movies/review_write";
 	}
 	
-	// 영화 검색하기
-	@GetMapping("/movies/search")
-	public String movieSearch() {
-		return "/movies/search";
-	}
+	
 	
 	// 영화 예약하기
 	@GetMapping("/reservation/info")
