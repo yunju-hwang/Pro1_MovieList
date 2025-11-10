@@ -1,4 +1,9 @@
 @charset "UTF-8";
+body{
+	margin: 0;
+	padding: 0;
+}
+
 
 .mnavbar {
     width: 100%;
@@ -49,4 +54,18 @@
 .movie-card-buttons a:hover {
     background-color: #a80000;   /* hover 시 진한 빨강 */
     transform: translateY(-2px); /* 살짝 뜨는 느낌 */
+}
+
+.favorite-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #cd0000;
+    margin-left: 5px;
+    transition: transform 0.2s;
+}
+
+.favorite-btn:hover {
+    transform: scale(1.2);
 }
