@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>고객센터/문의 작성하기</title>
-<link rel="stylesheet" href="<c:url value='/resources/css/write_inquiry.css?after'/>">
+<link rel="stylesheet" href="<c:url value='/resources/css/write_inquiry.css?after	'/>">
 <script>
 function changePlaceholder(value) {
   const select = document.getElementById('selectBox');
