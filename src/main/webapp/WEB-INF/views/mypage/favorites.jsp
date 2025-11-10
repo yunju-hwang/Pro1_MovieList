@@ -1,238 +1,300 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="/WEB-INF/views/common/navbar.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<style>
-body {
-  font-family: 'Pretendard', sans-serif;
-  background-color: #ffeef0;
-  margin: 0;
-  padding: 0;
-  color: #333;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지 | 관심 영화 목록</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* ========================================================== */
+        /* 1. 전역 스타일 및 NAV BAR 스타일 */
+        /* ========================================================== */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7; /* 배경색을 이미지에 맞게 밝게 조정 */
+            min-height: 100vh;
+        }
 
-/* (1) 상단 네비게이션 */
-.nav-bar {
-  background: #fff;
-  display: flex;
-  justify-content: center;
-  border-bottom: 1px solid #ddd;
-}
+        .header-nav {
+            width: 100%;
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
 
-.nav-bar ul {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+        .header-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
 
-.nav-bar li a {
-  display: block;
-  padding: 14px 20px;
-  color: #333;
-  text-decoration: none;
-  border-radius: 5px;
-  font-weight: 500;
-}
+        .header-nav li {
+            padding: 15px 25px;
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+            transition: color 0.3s;
+            border-bottom: 3px solid transparent; 
 
-.nav-bar li a.active {
-  background-color: #e60023;
-  color: #fff;
-}
+        }
 
-/* (2) 관심영화 섹션 */
-.favorite-section {
-  text-align: center;
-  margin: 40px auto;
-  width: 90%;
-  max-width: 1200px;
-}
+        .header-nav li:hover {
+            color: #ff4d4d;
+        }
+        
+        /* 🚨 A 태그 스타일 (링크 스타일 초기화 및 영역 확장) */
+        .header-nav li a {
+            text-decoration: none; /* 링크 밑줄 제거 */
+            color: inherit; /* 부모 li의 색상을 상속받음 */
+            display: flex; /* 아이콘과 텍스트 중앙 정렬 */
+            align-items: center; 
+        }
 
-.favorite-section h2 {
-  font-size: 24px;
-  margin-bottom: 5px;
-}
+        /* 🚨 관심 목록 메뉴를 활성화합니다. */
+        .header-nav li.active {
+            color: #ff4d4d; 
+            border-bottom: 3px solid #ff4d4d; 
+            font-weight: bold;
+        }
 
-.movie-count {
-  color: #777;
-  margin-bottom: 30px;
-}
+        .header-nav li i {
+            margin-right: 5px;
+        }
+        
+        /* ========================================================== */
+        /* 2. 메인 컨텐츠 스타일 */
+        /* ========================================================== */
 
-/* (3) 영화 카드 레이아웃 */
-.movie-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-}
+        /* 메인 컨테이너 및 콘텐츠 박스 */
+        .container {
+            padding: 40px 20px;
+            width: 100%;
+            max-width: 1200px; /* 영화 카드 4개 배치를 위해 너비 확장 */
+            margin: 40px auto; 
+        }
 
-.movie-card {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  width: 250px;
-  overflow: hidden;
-  transition: transform 0.2s;
-}
+        .content-box {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); 
+        }
 
-.movie-card:hover {
-  transform: translateY(-5px);
-}
+        /* 제목 스타일 */
+        .content-box h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+            color: #333;
+        }
+        
+        /* 총 개수 표시 부제 스타일 */
+        .content-box p.count {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #777;
+            font-size: 16px;
+        }
 
-.movie-card img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-}
+        /* 🚨 영화 목록 컨테이너 (Flexbox를 사용하여 4열 배치) */
+        .movie-list-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: flex-start;
+        }
 
-.movie-info {
-  padding: 15px;
-}
+        /* 🚨 영화 카드 스타일 */
+        .movie-card {
+            width: calc(25% - 15px); /* 4열 배치 */
+            min-width: 250px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+        
+        /* 임시 이미지 플레이스홀더 */
+        .poster {
+            height: 350px; /* 포스터 높이 지정 */
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #aaa;
+            position: relative;
+        }
+        
+        /* 19세 관람가 임시 마크 */
+        .rate-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ff4d4d;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
 
-.movie-info h3 {
-  margin: 0 0 5px;
-  font-size: 18px;
-}
+        .card-content {
+            padding: 15px;
+        }
+        
+        .card-content h3 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+            color: #333;
+        }
 
-.movie-info .movie-desc {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 10px;
-}
+        /* 평점 및 시간 정보 */
+        .movie-info {
+            font-size: 13px;
+            color: #777;
+            margin-bottom: 10px;
+        }
 
-.rating {
-  font-size: 13px;
-  color: #888;
-}
+        /* 상세 설명 */
+        .movie-description {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            height: 40px; /* 2줄 정도의 높이 */
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-.movie-actions {
-  display: flex;
-  justify-content: space-around;
-  padding: 10px 0 15px;
-}
+        /* 버튼 영역 */
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
 
-.review-btn,
-.book-btn {
-  border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-}
+        .action-button {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+            color: #555;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 13px;
+        }
 
-.review-btn {
-  background: #eee;
-  color: #333;
-}
+        .action-button:hover {
+            background-color: #f0f0f0;
+        }
 
-.book-btn {
-  background: #e60023;
-  color: #fff;
-}
+        .reservation-button {
+            background-color: #ff4d4d;
+            border: 1px solid #ff4d4d;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .reservation-button:hover {
+            background-color: #e63939;
+        }
 
-.book-btn:hover {
-  background: #c5001f;
-}
+        /* 리브작성/예매하기 버튼 스타일링 (이미지와 유사하게) */
+        .action-button-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* 리뷰바 스타일 */
+        .review-bar-container {
+            margin-bottom: 15px;
+        }
 
-</style>
+        .review-bar {
+            height: 10px;
+            background-color: #ff4d4d;
+            width: 95%; /* 95% 긍정리뷰 예시 */
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+        
+        .review-label {
+            font-size: 12px;
+            color: #ff4d4d;
+            font-weight: bold;
+        }
+
+    </style>
 </head>
 <body>
-	<h1>마이페이지/관심영화</h1>
-	<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>관심 영화 목록</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-
-  <!-- (1) 상단 메뉴 -->
-  <nav class="nav-bar">
-    <ul>
-      <li><a href="#">예매 내역</a></li>
-      <li><a href="#" class="active">관심 목록</a></li>
-      <li><a href="#">회원 정보</a></li>
-      <li><a href="#">선호 영화관</a></li>
-      <li><a href="#">결제 수단</a></li>
-      <li><a href="#">문의 내역</a></li>
-      <li><a href="#">영화 요청</a></li>
-    </ul>
-  </nav>
-
-  <!-- (2) 관심 영화 섹션 -->
-  <section class="favorite-section">
-    <h2>관심영화</h2>
-    <p class="movie-count">총 4개의 영화</p>
-
-    <!-- (3) 영화 카드 리스트 -->
-    <div class="movie-list">
-      <div class="movie-card">
-        <img src="titanic.jpg" alt="타이타닉 포스터" />
-        <div class="movie-info">
-          <h3>타이타닉</h3>
-          <p class="movie-desc">
-            1912년, 세기의 비극적 멜로를 그린 타이타닉의 선상 이야기.
-          </p>
-          <p class="rating">관람평점: 95%</p>
-        </div>
-        <div class="movie-actions">
-          <button class="review-btn">리뷰작성</button>
-          <button class="book-btn">예매하기</button>
-        </div>
-      </div>
-
-      <!-- 동일한 형식의 카드 복제 -->
-      <div class="movie-card">
-        <img src="titanic.jpg" alt="타이타닉 포스터" />
-        <div class="movie-info">
-          <h3>타이타닉</h3>
-          <p class="movie-desc">1912년, 세기의 비극적 멜로를 그린 타이타닉의 선상 이야기.</p>
-          <p class="rating">관람평점: 95%</p>
-        </div>
-        <div class="movie-actions">
-          <button class="review-btn">리뷰작성</button>
-          <button class="book-btn">예매하기</button>
-        </div>
-      </div>
-
-      <div class="movie-card">
-        <img src="titanic.jpg" alt="타이타닉 포스터" />
-        <div class="movie-info">
-          <h3>타이타닉</h3>
-          <p class="movie-desc">1912년, 세기의 비극적 멜로를 그린 타이타닉의 선상 이야기.</p>
-          <p class="rating">관람평점: 95%</p>
-        </div>
-        <div class="movie-actions">
-          <button class="review-btn">리뷰작성</button>
-          <button class="book-btn">예매하기</button>
-        </div>
-      </div>
-
-      <div class="movie-card">
-        <img src="titanic.jpg" alt="타이타닉 포스터" />
-        <div class="movie-info">
-          <h3>타이타닉</h3>
-          <p class="movie-desc">1912년, 세기의 비극적 멜로를 그린 타이타닉의 선상 이야기.</p>
-          <p class="rating">관람평점: 95%</p>
-        </div>
-        <div class="movie-actions">
-          <button class="review-btn">리뷰작성</button>
-          <button class="book-btn">예매하기</button>
-        </div>
-      </div>
+    
+    <div class="header-nav">
+        <ul>
+            <li><a href="/movielist/mypage/reservations"><i class="fa-solid fa-calendar-check"></i> 예매 내역</a></li>
+            <li class="active"><a href="/movielist/mypage/favorites"><i class="fa-regular fa-heart"></i> 관심 목록</a></li>
+            <li><a href="/movielist/mypage/profile"><i class="fa-regular fa-user"></i> 회원 정보</a></li>
+            <li><a href="/movielist/mypage/theaters"><i class="fa-solid fa-map-pin"></i> 선호 영화관</a></li>
+            <li><a href="/movielist/mypage/paymentmethod"><i class="fa-solid fa-credit-card"></i> 결제 수단</a></li>
+            <li><a href="/movielist/mypage/inquiries"><i class="fa-regular fa-clipboard"></i> 문의 내역</a></li>
+            <li><a href="/movielist/mypage/movierequest"><i class="fa-solid fa-film"></i> 영화 요청</a></li>
+        </ul>
     </div>
-  </section>
 
+    <div class="container">
+        <div class="content-box">
+            <h1>관심 영화</h1>
+            <p class="count">총 ${favoriteList.size()}개의 영화</p>
+
+            <div class="movie-list-container">
+                
+            <c:choose>
+                    <c:when test="${not empty favoriteList}">
+                        <c:forEach var="movie" items="${favoriteList}">
+                            <div class="movie-card">
+                                <div class="poster">
+                                    <c:if test="${movie.ageRating eq '19'}"><div class="rate-badge">19금</div></c:if>
+                                </div>
+                                <div class="card-content">
+                                    <h3>${movie.title}</h3>
+                                    <div class="movie-info">⭐ ${movie.rating} | ${movie.runningTime}분</div>
+                                    <div class="movie-description">
+                                        ${movie.description}
+                                    </div>
+                                    <div class="review-bar-container">
+                                        <div class="review-label">긍정리뷰 ${movie.positiveReviewRate}%</div>
+                                        <div class="review-bar" style="width: ${movie.positiveReviewRate}%;"></div>
+                                    </div>
+                                    <div class="action-button-group">
+                                        <button class="action-button">리뷰 작성</button>
+                                        <button class="action-button reservation-button">예매하기</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <div style="width: 100%; text-align: center; padding: 50px; color: #888; border: 1px dashed #ddd; border-radius: 4px;">
+                            <i class="fa-regular fa-heart fa-2x" style="margin-bottom: 10px;"></i>
+                            <p>관심 영화 목록이 비어있습니다. 좋아하는 영화를 추가해 보세요!</p>
+                        </div>
+                    </c:otherwise>
+                </c:choose>    
+                
+            </div>
+        </div>
+    </div>
 </body>
-</html>
-	
-</body>
-
-
 </html>
