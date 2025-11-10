@@ -22,13 +22,13 @@ from users
 </select>
   
 <!--   대쉬보드 전체 리뷰 -->
-  <select id="getReviewCount" resultType="int">
+  <select id="getReviewsCount" resultType="int">
   select count(*)
   from reviews
   </select>
   
   <!--   대쉬보드 전체 예매 -->
-<select id="getReservationCount" resultType="int">
+<select id="getReservationsCount" resultType="int">
   select count(*)
   from reservations
 </select>
@@ -40,9 +40,47 @@ from users
 </select>
 
 <!--   대쉬보드 대기 요청 -->
-<select id="getMovie_requestsCount" resultType="int">
+<select id="getMovie_RequestsCount" resultType="int">
   select count(*)
-  from movie_requests
+  from movie_request
 </select>
+  
+<!-- 영화관리 db -->
+<select id="AdminMovieList" resultType="com.itwillbs.domain.MovieVO">
+    SELECT
+        m.tmdb_id AS tmdbId,           
+        m.title,                         
+        m.poster_path AS posterPath,
+        m.release_date AS releaseDate,   
+        m.overview,
+        m.runtime,                       
+        m.popularity,
+        
+        ROUND(AVG(r.rating), 1) AS rating, 
+        
+<!--         SUM(CASE WHEN r.rating >= 4 THEN 1 ELSE 0 END) AS positiveReviewCount, -->
+<!--         SUM(CASE WHEN r.rating <= 2 THEN 1 ELSE 0 END) AS negativeReviewCount, -->
+        SUM(CASE WHEN r.rating &gt;= 4 THEN 1 ELSE 0 END) AS positiveReviewCount,
+        SUM(CASE WHEN r.rating &lt;= 2 THEN 1 ELSE 0 END) AS negativeReviewCount,
+        GROUP_CONCAT(g.genre_name SEPARATOR ', ') AS genres 
+        
+    FROM 
+        movies m
+    
+    LEFT JOIN
+        reviews r ON m.tmdb_id = r.tmdb_id  
+    
+    LEFT JOIN
+        movie_genres mg ON m.tmdb_id = mg.tmdb_id
+    LEFT JOIN
+        genres g ON mg.genre_id = g.id
+        
+    GROUP BY
+        m.tmdb_id, m.title, m.release_date, m.runtime, m.poster_path, m.overview, m.popularity
+    
+    ORDER BY 
+        m.tmdb_id DESC
+</select>
+  
   
 </mapper>
