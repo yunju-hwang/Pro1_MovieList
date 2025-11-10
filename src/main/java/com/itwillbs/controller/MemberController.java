@@ -1,10 +1,15 @@
 package com.itwillbs.controller;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
+import com.itwillbs.domain.MemberVO;
+import com.itwillbs.service.AdminService;
 import com.itwillbs.service.MemberService;
 
 @Controller
@@ -38,9 +43,33 @@ public class MemberController {
 		return "/user/register_step3";
 	}
 	
-
+// ------------------------------------------------
 		
-
-	
-	
+    @Inject
+    private AdminService adminService; 
+    
+//    @PostMapping("/login")
+//    public String loginPOST(MemberVO loginVO, HttpSession session, Model model) {
+//        
+//
+//        MemberVO resultVO = adminService.loginAdmin(loginVO); 
+//        
+//        if (resultVO != null) {
+//            session.setAttribute("user_id", resultVO.getUser_id());
+//            session.setAttribute("role", "admin");
+//            
+//            return "redirect:/admin/dashboard"; 
+//            
+//        } else {
+//
+//            // TODO: (다음 할 일) 일반 사용자 로그인 Service 호출 로직 추가
+//            
+//
+//            model.addAttribute("msg", "아이디 또는 비밀번호가 일치하지 않습니다."); // 실패 메시지 전달
+//            return "/user/login"; 
+//        }
+//    }
 }
+	
+	
+

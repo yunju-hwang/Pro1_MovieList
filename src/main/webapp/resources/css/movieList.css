@@ -1,0 +1,60 @@
+@charset "UTF-8";
+
+        body { font-family: Arial; background: #f7f7f7; padding: 20px; }
+        #movie-list {
+    		display: flex;
+    		flex-wrap: wrap;       /* ✅ 줄바꿈 발생 */
+    		gap: 20px;             /* 카드 사이 간격 */
+    		justify-content: center; 
+    		padding: 20px;
+		}
+        .movie-container { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 20px; 
+        }
+        .movie-card {
+               	display: flex;                 /* 카드 전체를 flex로 */
+			    flex-direction: column;        /* 위->아래로 쌓이게 */
+			    justify-content: space-between; /* 버튼을 맨 아래로 밀기 */
+			    width: 230px;
+			    background: white;
+			    padding: 10px;
+			    border-radius: 10px;
+			    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+			    cursor: pointer; 
+        }
+        .poster {
+            width: 100%;
+            border-radius: 8px;
+        }
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .date {
+            font-size: 14px;
+            color: #555;
+        }
+        .overview {
+            font-size: 13px;
+            margin-top: 8px;
+            color: #333;
+        }
+        
+        .genres {
+    		display: flex;           /* 태그를 가로로 나열 */
+    		flex-wrap: wrap;         /* 여러 줄 가능 */
+    		justify-content: flex-start; /* 왼쪽 정렬 */
+    		margin-top: 5px;
+		}
+        .genre-tag {
+    		display: inline-block;
+    		background: #ffdddd;
+    		color: #333;
+    		padding: 4px 8px;
+    		margin: 2px;
+    		border-radius: 8px;
+    		font-size: 12px;
+}

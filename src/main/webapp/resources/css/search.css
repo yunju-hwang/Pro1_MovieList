@@ -1,30 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+@charset "UTF-8";
 
-<!-- 검색창 -->
-<div class="movie-search">
-    <form id="movieSearchForm">
-        <input type="text" id="searchInput" placeholder="영화 제목을 입력하세요" />
-         <img src="${pageContext.request.contextPath}/resources/img/search.png" 
-         id="searchBtn" alt="검색" />
-         <select id="sort-section">
-        	<option value="인기순">인기순</option>
-        	<option value="최신순">최신순</option>
-        	<option value="추천순">추천순</option>
-    	</select>
-    </form>
-</div>
-
-
-<!-- css -->
-<style>
 .movie-search {
     width: 100%;
     display: flex;
@@ -80,6 +55,34 @@
     outline: none;
 }
 
-</style>
-</body>
-</html>
+#movie-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.movie-item {
+    width: 150px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.movie-item img {
+    width: 150px;
+    height: 225px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.movie-item p {
+    margin: 5px 0 0;
+    font-size: 14px;
+}
+
+.movie-item:hover {
+    transform: scale(1.05);
+}
+
