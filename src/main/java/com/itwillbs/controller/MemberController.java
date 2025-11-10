@@ -48,27 +48,27 @@ public class MemberController {
     @Inject
     private AdminService adminService; 
     
-    @PostMapping("/login")
-    public String loginPOST(MemberVO loginVO, HttpSession session, Model model) {
-        
-
-        MemberVO resultVO = adminService.loginAdmin(loginVO); 
-        
-        if (resultVO != null) {
-            session.setAttribute("user_id", resultVO.getUser_id());
-            session.setAttribute("role", "admin");
-            
-            return "redirect:/admin/dashboard"; 
-            
-        } else {
-
-            // TODO: (다음 할 일) 일반 사용자 로그인 Service 호출 로직 추가
-            
-
-            model.addAttribute("msg", "아이디 또는 비밀번호가 일치하지 않습니다."); // 실패 메시지 전달
-            return "/user/login"; 
-        }
-    }
+//    @PostMapping("/login")
+//    public String loginPOST(MemberVO loginVO, HttpSession session, Model model) {
+//        
+//
+//        MemberVO resultVO = adminService.loginAdmin(loginVO); 
+//        
+//        if (resultVO != null) {
+//            session.setAttribute("user_id", resultVO.getUser_id());
+//            session.setAttribute("role", "admin");
+//            
+//            return "redirect:/admin/dashboard"; 
+//            
+//        } else {
+//
+//            // TODO: (다음 할 일) 일반 사용자 로그인 Service 호출 로직 추가
+//            
+//
+//            model.addAttribute("msg", "아이디 또는 비밀번호가 일치하지 않습니다."); // 실패 메시지 전달
+//            return "/user/login"; 
+//        }
+//    }
 }
 	
 	
