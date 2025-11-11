@@ -19,7 +19,7 @@ public class MemberController {
 	@Inject
 	private MemberService memberService;
 	
-	//로그인
+	//로그인 페이지 이동
 	@GetMapping("/login")
 	public String login() {
 		return "/user/login";
@@ -45,30 +45,32 @@ public class MemberController {
 	
 // ------------------------------------------------
 		
-    @Inject
-    private AdminService adminService; 
     
-//    @PostMapping("/login")
-//    public String loginPOST(MemberVO loginVO, HttpSession session, Model model) {
-//        
-//
-//        MemberVO resultVO = adminService.loginAdmin(loginVO); 
-//        
-//        if (resultVO != null) {
-//            session.setAttribute("user_id", resultVO.getUser_id());
-//            session.setAttribute("role", "admin");
-//            
-//            return "redirect:/admin/dashboard"; 
-//            
-//        } else {
-//
-//            // TODO: (다음 할 일) 일반 사용자 로그인 Service 호출 로직 추가
-//            
-//
-//            model.addAttribute("msg", "아이디 또는 비밀번호가 일치하지 않습니다."); // 실패 메시지 전달
-//            return "/user/login"; 
-//        }
-//    }
+    // 로그인 POST 
+    @PostMapping("/login")
+    public String loginPOST(MemberVO memberVO, HttpSession session, Model model) {
+        
+    	// 1.로그인 service -> db에서 로그인 결과값 받아오기 (일치하는 회원값)
+        MemberVO resultVO = memberService.loginMember(memberVO); 
+        
+        
+        // 2. 세션에 사용자 정보 저장 -> 나중에 role = admin이면 navbar 변경해 주셔야 합니다
+        if (resultVO != null) {
+            session.setAttribute("user_id", resultVO.getUser_id());
+            session.setAttribute("role", resultVO.getRole());
+            
+            // JSP에서 편하게 체크할 수 있도록 ${not empty sessionScope.loginUser} 체크
+            session.setAttribute("loginUser", resultVO);
+            
+            return "redirect:/main"; 
+            
+        } else {
+            
+        	// 로그인 실패 처리
+            model.addAttribute("msg", "아이디 또는 비밀번호가 일치하지 않습니다."); // 실패 메시지 전달
+            return "/user/login"; 
+        }
+    }
 }
 	
 	
