@@ -22,7 +22,7 @@ public class AdminService {
         return resultVO;
     }
 	
-    
+//    대쉬보드 
     public int getUserCount() {
     	return adminMapper.getUserCount();
     }
@@ -44,8 +44,26 @@ public class AdminService {
     	return adminMapper.getMovie_RequestsCount();
     }
     
+//    영화 관리
     public List<MovieVO> AdminMovieList(){
     	return adminMapper.AdminMovieList();
     }
+    
+    
+    public int deleteMovie(int tmdbId) {
+		return adminMapper.deleteMovie(tmdbId);
+	}
+
+//    사용자 관리
+    public List<MemberVO> AdminUserList(){
+    	return adminMapper.AdminUserList();
+    }
+    
+    public int deleteUsers(String user_id) {
+		return adminMapper.deleteUsers(user_id);
+	}
+    
+    
+    
     
 }

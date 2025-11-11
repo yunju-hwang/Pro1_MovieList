@@ -61,9 +61,10 @@ public class MemberController {
             
             // JSP에서 편하게 체크할 수 있도록 ${not empty sessionScope.loginUser} 체크
             session.setAttribute("loginUser", resultVO);
-            
-            return "redirect:/main"; 
-            
+            if ("admin".equals(resultVO.getRole())) { // role이 'admin'이면
+                return "redirect:/admin/dashboard"; // 관리자 대시보드로 이동
+            } else {
+            return "redirect:/main"; }
         } else {
             
         	// 로그인 실패 처리
