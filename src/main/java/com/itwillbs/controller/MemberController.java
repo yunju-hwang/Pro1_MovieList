@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.service.AdminService;
@@ -42,6 +44,30 @@ public class MemberController {
 	public String register3() {
 		return "/user/register_step3";
 	}
+
+	
+	 // STEP1: 약관 제출 처리
+    @PostMapping("/step1")
+    public String handleStep1(
+            @RequestParam(value = "agreed_term1", required = false) String t1,
+            @RequestParam(value = "agreed_term2", required = false) String t2,
+            @RequestParam(value = "agreed_term3", required = false) String t3,
+            HttpSession session,
+            RedirectAttributes rt) {
+
+        if (!"Y".equals(t1) || !"Y".equals(t2)) {
+            rt.addFlashAttribute("error", "필수 약관에 모두 동의하셔야 합니다.");
+            return "redirect:/register/step1";
+        }
+
+        session.setAttribute("REG_AGREED_TERMS", true);
+        session.setAttribute("REG_AGREED_TERM1", t1);
+        session.setAttribute("REG_AGREED_TERM2", t2);
+        session.setAttribute("REG_AGREED_TERM3", t3);
+
+        return "redirect:/register/step2";
+    }
+
 	
 // ------------------------------------------------
 		

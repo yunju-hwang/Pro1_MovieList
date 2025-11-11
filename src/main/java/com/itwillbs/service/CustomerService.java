@@ -9,6 +9,6 @@ import com.itwillbs.mapper.CustomerMapper;
 @Service
 public class CustomerService {
 	@Inject
-	private CustomerMapper custoemrMapper;
+	private CustomerMapper customerMapper;
 
 }

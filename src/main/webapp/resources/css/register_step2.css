@@ -1,0 +1,49 @@
+@charset "UTF-8";
+
+/* regester_step2.css — 회원가입 단계2 전용 스타일 */
+:root{
+  --card-width: 720px;
+  --bg-start: #fff6f7;
+  --bg-end: #fff1f3;
+  --card-bg: #fff;
+  --accent: #e60012;
+  --muted: #888;
+  --input-bg: #f7f7f8;
+  --input-border: #eee;
+  --radius: 12px;
+  --field-padding: 12px 14px;
+}
+
+/* 기본 레이아웃 */
+html,body{height:100%;margin:0;font-family:"Noto Sans KR","Segoe UI",Arial,sans-serif;background:linear-gradient(180deg,var(--bg-start),var(--bg-end));-webkit-font-smoothing:antialiased;}
+.wrapper { min-height:100vh; display:flex; align-items:flex-start; justify-content:center; padding:40px 16px; box-sizing:border-box; }
+.card { width:var(--card-width); max-width:96%; background:var(--card-bg); border-radius:var(--radius); padding:26px 28px; box-shadow:0 6px 18px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.04); box-sizing:border-box; }
+
+.card h2 { margin:0 0 14px; font-size:18px; color:#222; font-weight:600; }
+.small-note { font-size:13px; color:var(--muted); margin-bottom:12px; }
+
+/* 폼 필드 */
+.form-group { margin-bottom:14px; }
+.form-label { display:block; margin-bottom:8px; color:#666; font-size:13px; }
+.input-field { width:100%; padding:var(--field-padding); border-radius:8px; border:1px solid var(--input-border); background:var(--input-bg); box-sizing:border-box; font-size:14px; color:#333; outline:none; }
+
+.inline { display:flex; gap:10px; align-items:center; }
+.btn-check { min-width:96px; height:36px; border-radius:8px; border:1px solid #ddd; background:#fff; color:#333; cursor:pointer; font-size:13px; }
+
+/* 라디오/체크박스 인라인 */
+.inline > label { font-size:14px; color:#444; }
+
+/* 하단 버튼 */
+.actions { display:flex; gap:12px; margin-top:18px; }
+.btn-cancel, .btn-next { flex:1; height:44px; border-radius:10px; font-size:15px; cursor:pointer; border:none; }
+.btn-cancel { background:#fff; border:1px solid #eee; color:#333; }
+.btn-next { background:var(--accent); color:#fff; }
+
+/* 에러 메시지 */
+.error { color:#d93025; font-size:13px; margin-top:6px; }
+
+/* 반응형 */
+@media (max-width:540px){
+  .card{ padding:18px; }
+  .btn-check{ min-width:76px; }
+}

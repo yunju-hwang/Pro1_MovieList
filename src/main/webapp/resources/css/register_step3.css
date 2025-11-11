@@ -1,0 +1,125 @@
+@charset "UTF-8";
+
+/* regester_step3.css - 영화 장르 선택 스타일 (이미지 스타일 기반) */
+:root{
+  --bg-start: #fff6f7;
+  --bg-end: #fff1f3;
+  --card-bg: #fff;
+  --accent: #e60012;
+  --muted: #9b9b9b;
+  --radius: 12px;
+  --genre-bg: #fff;
+  --genre-border: #eee;
+  --genre-selected-bg: #ffecec;
+  --genre-selected-border: #e60012;
+}
+
+/* 페이지 기본 */
+html,body{
+  height:100%;
+  margin:0;
+  font-family: "Noto Sans KR","Helvetica Neue", Arial, sans-serif;
+  background: linear-gradient(180deg, var(--bg-start), var(--bg-end));
+  -webkit-font-smoothing:antialiased;
+  box-sizing:border-box;
+}
+
+.wrapper { min-height:100vh; display:flex; align-items:flex-start; justify-content:center; padding:48px 16px; }
+
+/* 카드 */
+.card {
+  width:720px;
+  max-width:96%;
+  background:var(--card-bg);
+  border-radius:12px;
+  padding:22px 26px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.06);
+  border:1px solid rgba(0,0,0,0.04);
+  box-sizing:border-box;
+}
+
+.card h2 {
+  margin:0 0 6px;
+  font-size:16px;
+  color:#222;
+  font-weight:600;
+}
+
+.card .sub {
+  margin:0 0 18px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* 장르 그리드 */
+.genre-grid {
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:14px;
+  margin-bottom:18px;
+}
+
+/* 장르 버튼(토글) */
+.genre-item {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:14px 12px;
+  border-radius:10px;
+  background:var(--genre-bg);
+  border:1px solid var(--genre-border);
+  cursor:pointer;
+  color:#222;
+  font-size:15px;
+  transition:all .12s ease;
+  user-select:none;
+  min-height:48px;
+  text-align:center;
+}
+
+.genre-item:hover {
+  transform:translateY(-2px);
+}
+
+.genre-item.selected {
+  background: var(--genre-selected-bg);
+  border-color: var(--genre-selected-border);
+  color: var(--accent);
+  box-shadow: 0 4px 12px rgba(230,0,18,0.08);
+}
+
+/* 장르 전체 너비로 1열 항목(예: 다큐멘터리) */
+.genre-item.full { grid-column: 1 / -1; }
+
+/* 하단 액션바 */
+.actions {
+  display:flex;
+  gap:12px;
+  margin-top:8px;
+}
+
+.btn-back, .btn-complete {
+  flex:1;
+  height:44px;
+  border-radius:10px;
+  font-size:15px;
+  cursor:pointer;
+  border:none;
+}
+
+.btn-back {
+  background:#fff;
+  border:1px solid #eee;
+  color:#333;
+}
+
+.btn-complete {
+  background:var(--accent);
+  color:#fff;
+}
+
+/* 반응형: 모바일에서는 2열 */
+@media (max-width:520px) {
+  .genre-grid { grid-template-columns: repeat(2, 1fr); gap:10px; }
+  .card { padding:18px; }
+}
