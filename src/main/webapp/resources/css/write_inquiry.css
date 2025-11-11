@@ -78,14 +78,22 @@ body{
 }
 
 .text{
-  align-items: center;
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+    flex: 1;
+    padding: 10px;
+    font-size: 20px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
+.text-con{
+display: flex;
+    align-items: center;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
     background-color: #f9f9f9;
-      transition: box-shadow 0.2s, border-color 0.2s, background-color 0.2s;
-      font-size: 20px;
-      padding: 10px 0px;
+    transition: box-shadow 0.2s, border-color 0.2s, background-color 0.2s;
 }
 
 .under{
@@ -97,8 +105,9 @@ body{
 .notification{
 	background-color: #f7f7f7;
 	width: 100%;
-	height:150px;
+	height:180px;
 	border-radius: 8px;
+	border: 1px solid #ccc
 }
 
 .not-title{

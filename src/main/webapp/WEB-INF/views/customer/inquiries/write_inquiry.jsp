@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>고객센터/문의 작성하기</title>
-<link rel="stylesheet" href="<c:url value='/resources/css/write_inquiry.css?after	'/>">
+<link rel="stylesheet" href="<c:url value='/resources/css/write_inquiry.css'/>">
 <script>
 function changePlaceholder(value) {
   const select = document.getElementById('selectBox');
@@ -46,14 +46,24 @@ function changePlaceholder(value) {
   </select>
 </div>
 	<p class="unity">문의 제목 *</p>
+	<div class="text-con">
 	<input type="text" placeholder="문의 제목을 입력하세요" class="text">
+</div>
 
 <p class="unity">이메일 주소 *</p>
+<div class="text-con">
 <input type="email" placeholder="답변 받으실 이메일 주소를 입력하세요" class="text">
+</div>
 <p class="under">답변은 입력하신 이메일및 마이페이지에서 확인 가능합니다</p>
+
 <p class="unity">문의 내용 *</p>
+
+<div class="text-con">
 	<input type="text" placeholder="문의 내용을 입력하세요" class="text">
+</div>
+
 <p class="under">최소 10자 이상 작성해주세요</p>
+
 <div class="notification">
 	<h1 class="not-title">안내사항</h1>
 	<ul class="listcon">

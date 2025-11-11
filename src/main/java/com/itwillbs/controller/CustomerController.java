@@ -46,6 +46,11 @@ public class CustomerController {
 	public String movieRequest() {
 		return "/customer/movie_request/movie_request";
 	}
+	
+	@GetMapping("/customer/write_movie_request")
+	public String writeMovieRequest() {
+		return "/customer/movie_request/write_movie_request";
+	}
 
 	// 약관 및 정책 (이용약관)
 	@GetMapping("/terms")

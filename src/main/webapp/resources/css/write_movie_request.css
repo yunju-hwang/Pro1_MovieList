@@ -1,0 +1,187 @@
+@charset "UTF-8";
+
+body{
+	background-color: #f7f7f7;
+	height: 1200px;
+}
+
+.title{
+	text-align: center;
+}
+.sub-title{
+	text-align: center;
+	color: gray;
+}
+
+.container{
+	margin:auto;
+	width:60%;
+	height:900px;
+	background: white;
+	border: 1px solid #CCC;
+	border-radius: 30px;
+	padding-left: 30px;	
+	padding-right: 30px;
+}
+.unity{
+	font-size: 1.5em;
+	font-weight: 700;
+	margin-bottom: 10px;
+}
+
+
+.input-row {
+    display: flex;
+    align-items: center;
+    gap: 87px; /* 간격 */
+  }
+
+  /* ===== 기존 드롭다운 ===== */
+  .input-dropdown {
+    display: flex;
+    align-items: center;
+    width: 60%;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #f9f9f9;
+    transition: box-shadow 0.2s, border-color 0.2s, background-color 0.2s;
+  }
+  .input-dropdown:hover {
+    border-color: #888;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    background-color: #f2f2f2;
+  }
+  .input-dropdown input {
+    flex: 1;
+    padding: 10px;
+    font-size: 20px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: not-allowed;
+    color: #666;
+  }
+  .input-dropdown input.editable {
+    cursor: text;
+    color: #000;
+  }
+  .input-dropdown select {
+    padding: 10px;
+    font-size: 16px;
+    width: 100px;
+    border: none;
+    border-left: 1px solid #ccc;
+    background-color: transparent;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.2s;
+  }
+  .input-dropdown select:hover {
+    background-color: #eaeaea;
+  }
+
+  /* ===== 날짜 선택 ===== */
+  .date-picker {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    padding: 10px;
+    transition: box-shadow 0.2s, border-color 0.2s, background-color 0.2s;
+  }
+  .date-picker:hover {
+    border-color: #888;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    background-color: #f2f2f2;
+  }
+  .date-picker label {
+    margin-right: 10px;
+    font-weight: 600;
+    color: #333;
+    font-size: 16px;
+  }
+  .date-picker input[type="date"] {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+  }
+
+.text{
+    flex: 1;
+    padding: 10px;
+    font-size: 20px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
+.textarea{
+	flex:1;
+	width:100%;
+	max-height:115px;
+	min-height:115px;
+	padding: 10px;
+	font-size: 20px;
+	border: none;
+	outline: none;
+	background-color: transparent;
+	font-weight: 500;
+}
+
+.text-con{
+display: flex;
+    align-items: center;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #f9f9f9;
+    transition: box-shadow 0.2s, border-color 0.2s, background-color 0.2s;
+}
+.not-title{
+	margin-left: 30px;
+	margin-bottom: 0px;
+}
+.ul{
+	margin-top: 6px;
+}
+.notification{
+	margin-top:30px;
+	width:100%;
+	background-color: #f7f7f7;
+	border: 1px solid #CCC;
+	border-radius: 8px;
+	
+}
+.sta-title{
+	padding-left: 30px;
+	font-weight: 700;
+	
+}
+.standard{
+	border: 1px solid #CCC;
+	background-color: #f7f7f7;
+	width:100%;
+	margin-top:30px;
+	border-radius: 8px;
+}
+
+.standard-con{
+	display: flex;
+	gap:30%;
+	padding-left: 30px;
+}
+.standard-container{
+	display: flex;
+	gap:20%;
+	padding-left: 30px;
+}
+
+
+.sta{
+	padding-left: 25px;
+}

@@ -6,8 +6,17 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" href="<c:url value='/resources/css/movie_request.css?after'/>">
 </head>
 <body>
-	<h1>고객센터/영화요청목록</h1>
+	<h1 class="movie-req">영화 등록 요청 내역</h1>
+	<h4 class="req">총 0건의 요청</h4>
+	<div class="container">
+		<p class="ma">요청 내역이 없습니다</p>	
+	</div>
+<a href="/movielist/customer/write_movie_request" class="mov-write">
+	<div class="movie">
+		<p>영화 등록 요청하기</p>
+	</div>
 </body>
 </html>
