@@ -36,4 +36,9 @@ public interface MovieMapper {
 	// 영화 업데이트
 	// popularity, runtime 업데이트
     void updateMovieDetail(MovieVO movie);
+    
+    // 영화 정렬 (인기순, 최신순)
+    List<MovieVO> findAllByOrderByPopularityDesc();
+    List<MovieVO> findAllByOrderByReleaseDateDesc();
+    
 }

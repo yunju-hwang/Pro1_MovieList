@@ -26,6 +26,13 @@
 <!-- </div> -->
 <div id="search-container"></div>
 
+<div id="search-container">
+    <select id="sort-section">
+        <option value="latest">최신순</option>
+        <option value="popularity">인기순</option>
+    </select>
+</div>
+
 
 <!-- 영화 목록 표시 -->
 <div id="movie-list" data-ctx="${ctx}" data-islogin="<c:out value='${not empty sessionScope.loginUser}' default='false'/>"></div>

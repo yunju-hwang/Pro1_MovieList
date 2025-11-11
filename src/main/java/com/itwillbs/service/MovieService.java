@@ -203,4 +203,12 @@ public class MovieService {
 		return rest.getForObject(url, Map.class);
 	}
 	
+	// 영화 정렬
+	public List<MovieVO> getMovieListOrderByPopularity() {
+	    return movieMapper.findAllByOrderByPopularityDesc();
+	}
+	
+	public List<MovieVO> getMovieListOrderByReleaseDate() {
+	    return movieMapper.findAllByOrderByReleaseDateDesc();
+	}
 }
