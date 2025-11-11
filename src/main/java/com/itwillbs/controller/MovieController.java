@@ -108,6 +108,8 @@ public class MovieController {
 		
 	}
 	
+	
+	
 	// AI 리뷰 페이지
 	@GetMapping("/movies/ai_review")
 	public String aiReviews() {
