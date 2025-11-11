@@ -43,8 +43,22 @@ public class MovieController {
 	// json으로 제공 (javaScript 파일)
     @GetMapping("/movies/list")
     @ResponseBody
-    public List<MovieVO> movieList() {
-    	return movieService.getMovieList();
+    public List<MovieVO> movieList(@RequestParam(value = "sort", defaultValue = "latest") String sort) {
+    	List<MovieVO> movies;
+    	System.out.println(sort);
+        switch (sort) {
+        	//인기순 
+            case "popularity":
+                movies = movieService.getMovieListOrderByPopularity();
+                break;
+            //최신순
+            case "latest":
+            default:
+                movies = movieService.getMovieListOrderByReleaseDate();
+                break;
+        }
+
+        return movies;
     }
     
     
