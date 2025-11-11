@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>마이페이지 | 회원 정보 수정</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -27,7 +27,7 @@ body {
     width: 100%;
     background-color: #ffffff;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 3px 0; 
+    padding: 3px 0;    
 }
 
 .header-nav ul {
@@ -39,37 +39,37 @@ body {
 }
 
 .header-nav li {
-    padding: 12px 20px; 
+    padding: 12px 20px;    
     font-size: 14px;
     color: #555;
     cursor: pointer;
-    transition: color 0.3s, background-color 0.3s; 
-    border-bottom: none; 
-    border-radius: 4px; 
-    margin: 0 7px; 
+    transition: color 0.3s, background-color 0.3s;    
+    border-bottom: none;    
+    border-radius: 4px;    
+    margin: 0 7px;    
 }
 
 .header-nav li:hover {
-    color: white; 
-    background-color: #cd0000; 
+    color: white;    
+    background-color: #cd0000;    
 }
- 
+
 .header-nav li a {
-    text-decoration: none; 
-    color: inherit; 
-    display: flex; 
-    align-items: center; 
+    text-decoration: none;    
+    color: inherit;    
+    display: flex;    
+    align-items: center;    
 }
 
 .header-nav li.active {
-    color: white; 
-    background-color: #cd0000; 
-    border-bottom: none; 
+    color: white;    
+    background-color: #cd0000;    
+    border-bottom: none;    
     font-weight: bold;
 }
 
 .header-nav li.active:hover {
-    background-color: #a00000; 
+    background-color: #a00000;    
     color: white;
 }
 
@@ -83,15 +83,15 @@ body {
         .container {
             padding: 40px 20px;
             width: 100%;
-            max-width: 500px; 
-            margin: 40px auto; 
+            max-width: 500px;    
+            margin: 40px auto;    
         }
 
         .content-box {
             background-color: #ffffff;
             padding: 40px;
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);    
         }
 
         .content-box h1 {
@@ -198,7 +198,7 @@ body {
         /* 저장 버튼 */
         .submit-button {
             width: 100%;
-            background-color: #cd0000; 
+            background-color: #cd0000;    
             color: white;
             border: none;
             padding: 15px;
@@ -217,7 +217,7 @@ body {
         /* 회원 탈퇴 버튼 스타일 */
         .btn-withdrawal {
             width: 100%;
-            background-color: #6c757d; 
+            background-color: #6c757d;    
             color: white;
             border: none;
             padding: 10px;
@@ -234,41 +234,41 @@ body {
 
         /* 프로필 이미지 및 파일 업로드 관련 스타일 */
         .profile-section {
-            text-align: center; 
+            text-align: center;    
             margin-bottom: 30px;
         }
 
         .profile-image-container {
-            position: relative; 
-            display: inline-block; 
-            width: 90px; 
+            position: relative;    
+            display: inline-block;    
+            width: 90px;    
             height: 90px;
             margin-bottom: 10px;
         }
 
         /* 기본 프로필 아이콘 */
         .profile-circle-icon {
-            font-size: 80px; 
+            font-size: 80px;    
             color: #ccc;
-            line-height: 90px; 
-            position: absolute; 
+            line-height: 90px;    
+            position: absolute;    
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            display: block; 
+            display: block;    
         }
 
         /* 프로필 미리보기 이미지 스타일 */
         #profileImagePreview {
             width: 90px;
             height: 90px;
-            border-radius: 50%; 
-            object-fit: cover; 
+            border-radius: 50%;    
+            object-fit: cover;    
             position: absolute;
             top: 0;
             left: 0;
-            display: none; 
+            display: none;    
         }
 
         /* 연필 아이콘 스타일 */
@@ -276,24 +276,24 @@ body {
             position: absolute;
             bottom: 0;
             right: 0;
-            background-color: #cd0000; 
+            background-color: #cd0000;    
             color: white;
-            border-radius: 50%; 
-            padding: 3px; 
-            font-size: 10px; 
+            border-radius: 50%;    
+            padding: 3px;    
+            font-size: 10px;    
             cursor: pointer;
-            width: 18px; 
-            height: 18px; 
+            width: 18px;    
+            height: 18px;    
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid #fff; 
-            box-shadow: 0 0 3px rgba(0,0,0,0.2); 
-            z-index: 10; 
+            border: 2px solid #fff;    
+            box-shadow: 0 0 3px rgba(0,0,0,0.2);    
+            z-index: 10;    
         }
         
         .profile-section input[type="file"] {
-            display: none; 
+            display: none;    
         }
 
         /* 아이디와 이름 표시 스타일 */
@@ -311,35 +311,29 @@ body {
 
         /* 이메일 입력 그룹 스타일 */
         .email-input-group {
-            display: flex;
+            /* 이메일 필드를 하나로 통일했으므로 flex 속성은 유지해도 되지만, input이 100%를 차지하게 됩니다. */
+            display: flex; 
             align-items: center;
-            gap: 10px; 
+            gap: 10px;    
         }
         
-        /* 🚨 이메일 입력 필드 너비 조정 */
-        /* 개별 input/select에는 width 100%를 주지 않고, HTML에서 inline style로 비율 지정 */
-        .email-input-group input[type="text"],
-        .email-input-group select {
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 15px;
-            box-sizing: border-box;
-            background-color: #fff;
+        /* 단일 이메일 input에 100% 적용 */
+        .email-input-group input[type="text"] {
+             width: 100% !important; 
         }
 
         .email-input-group .at-sign {
             font-weight: bold;
             color: #333;
             font-size: 16px;
-            flex-shrink: 0; /* @ 기호는 크기가 변하지 않게 고정 */
+            flex-shrink: 0; 
         }
     </style>
 </head>
 <body>
     
     <div class="header-nav">
-        <ul>
+    <ul>
             <li><a href="/movielist/mypage/reservations"><i class="fa-solid fa-calendar-check"></i> 예매 내역</a></li>
             <li><a href="/movielist/mypage/favorites"><i class="fa-regular fa-heart"></i> 관심 목록</a></li>
             <li class="active"><a href="/movielist/mypage/profile"><i class="fa-regular fa-user"></i> 회원 정보</a></li>
@@ -348,7 +342,7 @@ body {
             <li><a href="/movielist/mypage/inquiries"><i class="fa-regular fa-clipboard"></i> 문의 내역</a></li>
             <li><a href="/movielist/mypage/movierequest"><i class="fa-solid fa-film"></i> 영화 요청</a></li>
         </ul>
-    </div>
+        </div>
 
     <div class="container">
         <div class="content-box">
@@ -356,21 +350,35 @@ body {
             
             <div class="profile-section">
                 <div class="profile-image-container">
-                    <img id="profileImagePreview" src="#" alt="Profile Image Preview">
                     
-                    <i id="profileIcon" class="fa-regular fa-circle-user profile-circle-icon"></i>
+                    <c:set var="hasProfileImage" value="${not empty loginMember.profileImage}"/>
+
+                    <img id="profileImagePreview" 
+                         src="${loginMember.profileImage}" 
+                         alt="Profile Image Preview"
+                         style="display: ${hasProfileImage ? 'block' : 'none'};"> 
                     
+                    <i id="profileIcon" 
+                       class="fa-regular fa-circle-user profile-circle-icon"
+                       style="display: ${hasProfileImage ? 'none' : 'block'};">
+                    </i>
+
                     <i class="fa-solid fa-pencil profile-pencil-icon" onclick="document.getElementById('profileImageUpload').click();"></i>
                     
                     <input type="file" id="profileImageUpload" name="profileImage" accept="image/*" onchange="handleImageUpload(event)">
                 </div>
                 
-                <p class="profile-name-id">${loginMember.memberName}</p>
-                <p class="profile-id">${loginMember.memberId}</p>
+                <p class="profile-name-id">${loginMember.username} 님</p>
+                <p class="profile-id">ID: ${loginMember.user_id}</p>
             </div>
             
             <form action="/mypage/updateMember" method="POST" onsubmit="return validateForm()">
                 
+                <div class="form-group">
+                    <label>아이디</label>
+                    <input type="text" value="${loginMember.user_id}" readonly>    
+                </div>
+
                 <div class="form-group">
                     <label>비밀번호 <span class="required">*</span></label>
                     <input type="password" readonly> 
@@ -383,34 +391,23 @@ body {
                 </div>
 
                 <div class="form-group">
-                    <label for="memberEmailId">이메일 <span class="required">*</span></label>
+                    <label for="memberEmail">이메일 <span class="required">*</span></label>
                     <div class="email-input-group">
-                        <input type="text" id="memberEmailId" name="memberEmailId" style="width: 35%;" value="">
+                        <input type="text" id="memberEmail" name="memberEmail" value="${loginMember.email}">
                         
-                        <span class="at-sign">@</span>
-                        
-                        <input type="text" id="memberEmailDomain" name="memberEmailDomain" style="width: 35%;" value="" readonly>
-                        
-                        <select id="emailDomainSelect" onchange="changeEmailDomain(this.value)" style="width: 30%;">
-                            <option value="direct">직접 입력</option>
-                            <option value="naver.com">naver.com</option>
-                            <option value="gmail.com">gmail.com</option>
-                            <option value="daum.net">daum.net</option>
-                            <option value="nate.com">nate.com</option>
-                        </select>
-                    </div>
+                        </div>
                     <div id="emailError" class="error-message"></div>
                 </div>
                 
                 <div class="form-group">
                     <label>성별 <span class="required">*</span></label>
                     <div class="radio-group" id="genderGroup">
-                        <input type="radio" id="genderM" name="memberGender" value="M" 
-                               <c:if test="${loginMember.memberGender eq 'M'}">checked</c:if>>
+                        <input type="radio" id="genderM" name="memberGender" value="M"    
+                                <c:if test="${loginMember.gender eq 'M'}">checked</c:if>>
                         <label for="genderM" style="font-weight: normal; margin-bottom: 0;">남성</label>
                         
-                        <input type="radio" id="genderF" name="memberGender" value="F" 
-                               <c:if test="${loginMember.memberGender eq 'F'}">checked</c:if>>
+                        <input type="radio" id="genderF" name="memberGender" value="F"    
+                                <c:if test="${loginMember.gender eq 'F'}">checked</c:if>>
                         <label for="genderF" style="font-weight: normal; margin-bottom: 0;">여성</label>
                     </div>
                     <div id="genderError" class="error-message"></div>
@@ -418,13 +415,13 @@ body {
 
                 <div class="form-group">
                     <label for="memberBirth">생년월일 <span class="required">*</span></label>
-                    <input type="date" id="memberBirth" name="memberBirth" value="${loginMember.memberBirth}">
+                    <input type="date" id="memberBirth" name="memberBirth" value="${loginMember.birthDate}">
                     <div id="birthError" class="error-message"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="memberPhone">전화번호 <span class="required">*</span></label>
-                    <input type="text" id="memberPhone" name="memberPhone" value="${loginMember.memberPhone}">
+                    <input type="text" id="memberPhone" name="memberPhone" value="${loginMember.phone}">
                     <div id="phoneError" class="error-message"></div>
                 </div>
 
@@ -433,24 +430,17 @@ body {
                 </button>
             </form>
             
-            <hr style="border: 0; border-top: 1px solid #eee; margin: 40px 0 20px 0;">
+            <button type="button" class="btn-withdrawal" onclick="openWithdrawalConfirm()">
+                회원 탈퇴
+            </button>
             
-            <div class="withdrawal-area">
-                <p style="font-size: 14px; color: #333; font-weight: bold; margin-bottom: 10px;">회원 탈퇴</p>
-                <p style="font-size: 13px; color: #666; margin-bottom: 15px;">
-                    회원 탈퇴 시 모든 정보가 삭제되며 복구할 수 없습니다. 신중하게 결정해 주세요.
-                </p>
-                <button type="button" class="btn-withdrawal" onclick="openWithdrawalConfirm()">
-                    회원 탈퇴
-                </button>
             </div>
-            
-        </div>
     </div>
 
     <script>
         // 헬퍼 함수: 오류 메시지 표시
         function displayError(elementId, message) {
+            // memberEmail의 오류 메시지는 id="emailError"에 표시해야 합니다.
             const errorElement = document.getElementById(elementId + 'Error');
             if (errorElement) {
                 errorElement.textContent = message;
@@ -466,24 +456,8 @@ body {
             });
         }
         
-        // 이메일 도메인 변경 함수 (기존 유지)
-        function changeEmailDomain(value) {
-            const domainInput = document.getElementById('memberEmailDomain');
-            const selectElement = document.getElementById('emailDomainSelect');
-
-            if (value === "direct") {
-                domainInput.value = ""; 
-                domainInput.readOnly = false; 
-                domainInput.focus();
-                domainInput.style.backgroundColor = '#fff';
-            } else {
-                domainInput.value = value; 
-                domainInput.readOnly = true; 
-                domainInput.style.backgroundColor = '#f0f0f0'; 
-            }
-            // 도메인 선택 후에도 포커스를 잃어버리지 않도록 드롭다운에 포커스
-            selectElement.focus();
-        }
+        // 🚨 이메일 도메인 변경 함수는 사용하지 않으므로 제거하거나 주석 처리합니다.
+        // function changeEmailDomain(value) { ... } 
         
         // 이미지 업로드 및 미리보기 처리 함수 (기존 유지)
         function handleImageUpload(event) {
@@ -502,7 +476,11 @@ body {
 
                 reader.readAsDataURL(file);
             } else {
-                preview.src = '#';
+                // 파일 선택 취소 시, 기존 DB 값(loginMember.profileImage)이 남아있다면 그걸 표시하도록 로직을 추가할 수 있지만, 
+                // 간단하게는 기본 아이콘을 다시 표시하도록 합니다.
+                // **DB 저장된 이미지가 있을 경우:** 파일 선택 취소 시 DB 이미지를 보여주는 로직이 필요할 수 있으나, 
+                // 여기서는 파일 업로드 input 기준의 로직만 유지합니다.
+                preview.src = '';
                 preview.style.display = 'none';
                 icon.style.display = 'block';
             }
@@ -510,60 +488,52 @@ body {
 
         // 폼 유효성 검사 (인라인 오류 메시지 사용)
         function validateForm() {
-            clearErrors(); 
+            clearErrors();    
             let isValid = true;
             
-            const emailId = document.getElementById('memberEmailId');
-            const emailDomain = document.getElementById('memberEmailDomain');
+            // 🚨 단일 이메일 필드로 변경
+            const email = document.getElementById('memberEmail');
             const birth = document.getElementById('memberBirth');
             const phone = document.getElementById('memberPhone');
             const genderSelected = document.querySelector('input[name="memberGender"]:checked');
             
-            // 1. 이메일 아이디 검사
-            if (emailId.value.trim() === "") {
-                displayError('email', "이메일 아이디를 입력해주세요.");
-                emailId.focus();
+            // 1. 이메일 검사 (단일 필드)
+            if (email.value.trim() === "") {
+                displayError('email', "이메일을 입력해주세요.");
+                email.focus();
                 isValid = false;
-            } 
-            
-            // 2. 이메일 도메인 검사
-            else if (emailDomain.value.trim() === "") {
-                displayError('email', "이메일 도메인을 입력하거나 선택해주세요.");
-                // 도메인 입력 필드가 비활성화되어 있을 수 있으므로 드롭다운에 포커스
-                document.getElementById('emailDomainSelect').focus();
-                isValid = false;
+            } else {
+                // 2. 이메일 형식 검사 (간단한 @와 . 포함 여부)
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailPattern.test(email.value.trim())) {
+                    displayError('email', "유효한 이메일 형식(예: user@example.com)을 입력해주세요.");
+                    email.focus();
+                    isValid = false;
+                }
             }
             
-            // 3. 이메일 도메인 형식 검사
-            else if (emailDomain.value.trim().indexOf('.') === -1) {
-                displayError('email', "유효한 이메일 도메인 형식(예: example.com)을 입력해주세요.");
-                emailDomain.focus();
-                isValid = false;
-            }
-            
-            // 4. 성별 선택 검사
-            else if (!genderSelected || (genderSelected.value !== 'M' && genderSelected.value !== 'F')) {
+            // 3. 성별 선택 검사
+            if (isValid && (!genderSelected || (genderSelected.value !== 'M' && genderSelected.value !== 'F'))) {
                 displayError('gender', "성별을 선택해주세요.");
-                // 성별 그룹에 포커스를 직접 맞추기 어려우므로 메시지만 표시
                 isValid = false;
             }
             
-            // 5. 생년월일 검사
-            else if (birth.value.trim() === "") {
+            // 4. 생년월일 검사
+            if (isValid && birth.value.trim() === "") {
                 displayError('birth', "생년월일을 입력해주세요.");
                 birth.focus();
                 isValid = false;
             }
             
-            // 6. 전화번호 검사
-            else if (phone.value.trim() === "") {
+            // 5. 전화번호 검사
+            if (isValid && phone.value.trim() === "") {
                 displayError('phone', "전화번호는 필수 입력 항목입니다.");
                 phone.focus();
                 isValid = false;
             }
             
-            // 7. 전화번호 형식 검사
-            else {
+            // 6. 전화번호 형식 검사
+            if (isValid) {
                 const phonePattern = /^\d{2,3}-\d{3,4}-\d{4}$/;
                 if (phone.value.trim().length > 0 && !phonePattern.test(phone.value.trim())) {
                     displayError('phone', "유효한 전화번호 형식(010-XXXX-XXXX)으로 입력해주세요.");

@@ -1,13 +1,20 @@
 package com.itwillbs.controller;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.itwillbs.domain.MemberVO;
+import com.itwillbs.service.MypageService;
+
 @Controller
 public class MypageController {
+	
+	@Inject // 또는 @Autowired
+    private MypageService mypageService;
 
 	// 마이페이지 -> 관심 영화 목록
 	@GetMapping("/mypage/favorites")
@@ -60,8 +67,28 @@ public String inquiries(Model model, HttpSession session) {
 	
 	// 마이페이지 -> 회원정보수정
 	@GetMapping("/mypage/profile")
-	public String profile() {
+	public String profile(HttpSession session, Model model) {
+		
+		MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
+		
+		if (loginUser == null) {
+            // 2-1. 로그인 정보가 없으면 로그인 페이지로 리다이렉트
+            return "redirect:/login"; // 또는 다른 적절한 로그인 페이지 경로
+        }
+		
+		String userId = loginUser.getUser_id();
+		
+		MemberVO memberInfoFromDB = mypageService.getMember(userId);
+		
+		if (memberInfoFromDB != null) {
+            model.addAttribute("loginMember", memberInfoFromDB);
+        } else {
+            // (선택) DB에서 정보를 찾지 못한 경우 처리
+            model.addAttribute("msg", "회원 정보를 찾을 수 없습니다.");
+        }
+		
 		return "/mypage/profile";
+		
 	}
 	
 	// 마이페이지 -> 영화 예약 조회
