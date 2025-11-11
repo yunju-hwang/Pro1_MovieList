@@ -1,16 +1,23 @@
 package com.itwillbs.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.itwillbs.domain.MemberVO;
 import com.itwillbs.domain.MovieVO;
 import com.itwillbs.service.MovieService;
 
@@ -40,8 +47,31 @@ public class MovieController {
 	// json으로 제공 (javaScript 파일)
     @GetMapping("/movies/list")
     @ResponseBody
-    public List<MovieVO> movieList() {
-    	return movieService.getMovieList();
+    public List<MovieVO> movieList(@RequestParam(value = "sort", defaultValue = "latest") String sort, HttpSession session) {
+    	String userId = null;
+    	if (session.getAttribute("loginUser") != null) {
+            MemberVO user = (MemberVO) session.getAttribute("loginUser");
+            userId = user.getUser_id();
+        }
+    	
+    	
+    	// 정렬 + userId 기준으로 영화 조회
+    	List<MovieVO> movies;
+    	System.out.println(sort);
+    	
+        switch (sort) {
+        	//인기순 
+            case "popularity":
+                movies = movieService.getMovieListOrderByPopularity(userId);
+                break;
+            //최신순
+            case "latest":
+            default:
+                movies = movieService.getMovieListOrderByReleaseDate(userId);
+                break;
+        }
+
+        return movies;
     }
     
     
@@ -52,7 +82,7 @@ public class MovieController {
         return "movies/detail";  // detail.jsp
     }
 
-	// 영화 상세 페이지 값 반환 (json)
+	// 영화 상세 페이지 값 반환 (json) -> DB 이용
 	@GetMapping("/movies/detail")
 	@ResponseBody
 	public ResponseEntity<MovieVO> getmovieDetail(@RequestParam("tmdbId") int tmdbId) {
@@ -67,6 +97,69 @@ public class MovieController {
 		return movieService.searchMovies(query);
 	}
 	
+	// 영화 상세 페이지 -> tmdb api 이용 [검색 페이지]
+	@GetMapping("/movies/search/detail/{id}")
+	public String searchMovieDetail(@PathVariable("id") int tmdbId, Model model) {
+		Map<String, Object> movie = movieService.getSearchMovieDetail(tmdbId);
+		
+		// 안전하게 문자열 처리
+	    String title = (String) movie.get("title");
+	    String overview = (String) movie.get("overview");
+	    String releaseDate = movie.get("release_date") != null ? (String) movie.get("release_date") : "정보 없음";
+	    String posterPath = movie.get("poster_path") != null ? (String) movie.get("poster_path") : "/resources/images/default_poster.png";
+	    Double popularityValue = movie.get("popularity") != null ? (Double) movie.get("popularity") : null;
+	    int popularity = (popularityValue != null) ? (int) Math.round(popularityValue) : 0;
+	    
+	    // runtime 처리
+	    Object runtimeObj = movie.get("runtime");
+	    String runtimeText = (runtimeObj != null) ? runtimeObj.toString() + "분" : "정보 없음";
+
+	    // 장르 처리
+	    List<Map<String, Object>> genresList = (List<Map<String, Object>>) movie.get("genres");
+	    String genresText = "정보 없음";
+	    if (genresList != null && !genresList.isEmpty()) {
+	        genresText = genresList.stream()
+	                .map(g -> (String) g.get("name"))
+	                .collect(Collectors.joining(", "));
+	    }
+
+	    model.addAttribute("title", title);
+	    model.addAttribute("overview", overview);
+	    model.addAttribute("releaseDate", releaseDate);
+	    model.addAttribute("posterPath", posterPath);
+	    model.addAttribute("runtimeText", runtimeText);
+	    model.addAttribute("genresText", genresText);
+	    model.addAttribute("popularity", popularity);
+	    
+		return "movies/searchDetail";
+		
+	}
+	
+	// 영화 찜하기
+    @PostMapping("/movies/favorite/{tmdbId}")
+    @ResponseBody
+    public Map<String, Object> toggleFavorite(@PathVariable("tmdbId") int tmdbId, HttpSession session) {
+    	Map<String, Object> result = new HashMap<>();
+    	
+    	MemberVO user = (MemberVO) session.getAttribute("loginUser");
+    	
+    	if(user == null) {
+    		result.put("success", false);
+    		return result;
+    	}
+    	
+    	String userId = user.getUser_id();
+    	
+    	boolean isFavorite = movieService.toggleFavorite(userId, tmdbId);
+    	
+    	result.put("success", true);
+    	result.put("isFavorite", isFavorite);
+    	
+    	return result;
+    }
+    
+    
+	
 	// AI 리뷰 페이지
 	@GetMapping("/movies/ai_review")
 	public String aiReviews() {
@@ -79,12 +172,7 @@ public class MovieController {
 		return "/movies/review_list";
 	}
 	
-	// 영화 찜하기
-    @GetMapping("/movies/favorite/{movieId}")
-    public void movieFavorite(@PathVariable("movieId") Long movieId) {
-    	
-    	return;
-    }
+	
 
 	// 리뷰 작성하기
 	@GetMapping("/movies/review_write")

@@ -1,10 +1,13 @@
 package com.itwillbs.service;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 
 import com.itwillbs.domain.MemberVO;
+import com.itwillbs.domain.MovieVO;
 import com.itwillbs.mapper.AdminMapper;
 
 @Service
@@ -19,7 +22,7 @@ public class AdminService {
         return resultVO;
     }
 	
-    
+//    대쉬보드 
     public int getUserCount() {
     	return adminMapper.getUserCount();
     }
@@ -33,13 +36,33 @@ public class AdminService {
     }
     
     
-    public int getInquieresCount() {
-    	return adminMapper.getInquieresCount();
+    public int getInquiriesCount() {
+    	return adminMapper.getInquiriesCount();
     }
     
     public int getMovie_RequestsCount() {
     	return adminMapper.getMovie_RequestsCount();
     }
+    
+//    영화 관리
+    public List<MovieVO> AdminMovieList(){
+    	return adminMapper.AdminMovieList();
+    }
+    
+    
+    public int deleteMovie(int tmdbId) {
+		return adminMapper.deleteMovie(tmdbId);
+	}
+
+//    사용자 관리
+    public List<MemberVO> AdminUserList(){
+    	return adminMapper.AdminUserList();
+    }
+    
+    public int deleteUsers(String user_id) {
+		return adminMapper.deleteUsers(user_id);
+	}
+    
     
     
     

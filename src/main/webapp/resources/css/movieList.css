@@ -1,6 +1,11 @@
 @charset "UTF-8";
 
-        body { font-family: Arial; background: #f7f7f7; padding: 20px; }
+        body { 
+		    font-family: Arial; 
+		    background: #f7f7f7; 
+		    padding: 20px; 
+		}
+
         #movie-list {
     		display: flex;
     		flex-wrap: wrap;       /* ✅ 줄바꿈 발생 */
@@ -28,11 +33,26 @@
             width: 100%;
             border-radius: 8px;
         }
-        .title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 10px;
-        }
+       .favorite-btn {
+	    background: none;
+	    border: none;
+	    font-size: 20px;
+	    cursor: pointer;
+	    color: #ff6b81;
+	    margin-left: 8px;
+	    transition: transform 0.2s ease-in-out;
+		}
+		
+		.favorite-btn:hover {
+		    transform: scale(1.2);
+		}
+		
+		.title {
+		    display: flex;
+		    justify-content: space-between;
+		    align-items: center;
+		}
+
         .date {
             font-size: 14px;
             color: #555;
@@ -58,3 +78,74 @@
     		border-radius: 8px;
     		font-size: 12px;
 }
+
+/* MovieListMain.jsp의 <div id="search-wrapper">에 적용 */
+#search-wrapper {
+	width: 100%;
+    display: flex; 
+    justify-content: center; /* 💡 전체 섹션을 화면 중앙으로 정렬 */
+    align-items: center;
+    padding: 0 20px; 
+    margin: 20px 0;
+    gap: 20px; /* 정렬 드롭다운과 검색창 사이의 간격 */
+}
+
+/* sort-select 크기 및 스타일 수정 */
+#sort-select {
+    /* 기본 외형 초기화 */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    /* 패딩 및 폰트 크기 축소 */
+    padding: 8px 30px 8px 12px; /* 패딩 축소 */
+    font-size: 15px; /* 폰트 크기 약간 축소 */
+    font-weight: 500;
+
+    /* 테두리 및 배경 */
+    border: 1px solid #ccc;
+    border-radius: 10px; /* 둥근 정도 약간 축소 */
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    /* 크기 축소 */
+    min-width: 110px; /* 최소 너비 축소 */
+    height: 44px; /* 높이 축소 (이전 48px) */
+    line-height: 1.2;
+
+    /* 커스텀 화살표 아이콘 유지 */
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='16' height='16' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23555555' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px 16px;
+}
+
+/* 호버 및 포커스 효과 유지 */
+#sort-select:hover {
+    border-color: #777;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+#sort-select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+/* 옵션 스타일 (필요하다면) */
+#sort-select option {
+    padding: 5px 10px;
+    background-color: #fff;
+}
+
+/* search.js에서 동적으로 생성되는 검색창 컨테이너에 적용 */
+#search-container {
+    /* flex로 나열된 #search-wrapper 내에서 왼쪽으로 가지 않도록 수정 */
+    display: flex;
+    align-items: center;
+    /* search-wrapper에 flex-end를 적용했으므로 별도 justify-content는 불필요 */
+}
+
+
