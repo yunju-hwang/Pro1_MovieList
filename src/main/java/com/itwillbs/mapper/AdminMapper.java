@@ -3,7 +3,9 @@ package com.itwillbs.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
+import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.domain.MovieVO;
 
@@ -35,6 +37,19 @@ public int deleteMovie(int tmdbId);
 public List<MemberVO> AdminUserList();
 
 public int deleteUsers(String user_id);
+
+//1:1문의
+public List<InquiriesVO> AdminInquiriesList();
+
+
+public void answerInquiry(@Param("id") int id, @Param("answerContent") String answerContent);
+
+public InquiriesVO getInquiryDetail(int id);
+
+
+
+
+
 
 
 

@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 
+import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.domain.MovieVO;
 import com.itwillbs.mapper.AdminMapper;
@@ -63,7 +64,20 @@ public class AdminService {
 		return adminMapper.deleteUsers(user_id);
 	}
     
-    
-    
+//   1:1문의 
+    public List<InquiriesVO> AdminInquiriesList() {
+		return adminMapper.AdminInquiriesList();
+	}
+
+    public void answerInquiry(int id, String answerContent) {
+    	adminMapper.answerInquiry(id, answerContent);
+	}
+
+    public InquiriesVO getInquiryDetail(int id) {
+		return adminMapper.getInquiryDetail(id);
+    	
+    }
+
+  
     
 }
