@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.domain.MovieVO;
@@ -161,23 +162,44 @@ public class AdminController {
 			return "/admin/dashboard";
 		}
 		
-		// 사용자 관리
-		@GetMapping("/users")
-		public String users(Model model) {
-			dashboardStats(model);
-			return "/admin/users";
-
-		}
-		
 		// 영화 관리
 		@GetMapping("/movie")
 		public String movie(Model model) {
 			dashboardStats(model);
 			
 			List<MovieVO> adminmovieList = adminService.AdminMovieList();
-			
+			model.addAttribute("adminmovieList", adminmovieList);
 			return "/admin/movie";
 		}
+		
+		@PostMapping("/movie/delete") 
+		public String deleteMovie(@RequestParam("tmdbId") int tmdbId) {
+		    
+
+		    adminService.deleteMovie(tmdbId); 
+
+		    return "redirect:/admin/movie"; 
+		}
+		
+		// 사용자 관리
+		@GetMapping("/users")
+		public String users(Model model) {
+			dashboardStats(model);
+			
+			List<MemberVO> adminuserList = adminService.AdminUserList();
+			model.addAttribute("adminuserList", adminuserList);
+			
+			return "/admin/users";
+
+		}
+		
+		@PostMapping("/users/delete") 
+		public String deleteUsers(@RequestParam("user_id") String user_id) {
+		    adminService.deleteUsers(user_id); 
+
+		    return "redirect:/admin/users"; 
+		}
+		
 		
 		// 리뷰 관리
 		@GetMapping("/reviews")
@@ -221,8 +243,6 @@ public class AdminController {
 			return "/admin/faqs";
 		}
 	// ----------------------------------
-
-	
 		
 
 	
