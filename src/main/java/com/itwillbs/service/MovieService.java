@@ -1,6 +1,12 @@
 package com.itwillbs.service;
 
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -11,11 +17,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itwillbs.domain.GenresVO;
 import com.itwillbs.domain.MovieVO;
@@ -154,6 +157,41 @@ public class MovieService {
 		return movie;
 		
 		
+	}
+	
+	// movie 검색
+	public String searchMovies(String query) {
+		String result = "";
+		try {
+			//tmdb 검색 URL
+			String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
+			String tmdbUrl = "https://api.themoviedb.org/3/search/movie"
+					+"?api_key=" +tmdbApiKey 
+					+"&language=ko-KR"
+					+"&query=" + encodedQuery
+					+"&page=1&include_adult=false";
+			
+			URL url = new URL(tmdbUrl);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+			
+			// 결과 읽기
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(),StandardCharsets.UTF_8));
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while((line=br.readLine())!=null) {
+				sb.append(line);
+			}
+			br.close();
+			result = sb.toString();
+			
+			
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			result = "{\"error\":\"검색 중 문제가 발생했습니다.\"}";
+		}
+		 return result;
 	}
 	
 }

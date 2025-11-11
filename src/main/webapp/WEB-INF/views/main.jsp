@@ -11,6 +11,7 @@
 <title>MovieList Main</title>
 <link rel="stylesheet" href="${ctx}/resources/css/movieList.css">
 <link rel="stylesheet" href="${ctx}/resources/css/main.css">
+<link rel="stylesheet" href="${ctx}/resources/css/search.css">
 </head>
 <body>
 
@@ -20,9 +21,11 @@
 </div>
 
 <!-- search section -->
-<div class="search-section">
-    <%@ include file="/WEB-INF/views/movies/search.jsp" %>
-</div>
+<!-- <div class="search-section"> -->
+<%--     <%@ include file="/WEB-INF/views/movies/search.jsp" %> --%>
+<!-- </div> -->
+<div id="search-container"></div>
+
 
 <!-- 영화 목록 표시 -->
 <div id="movie-list" data-ctx="${ctx}" data-islogin="<c:out value='${not empty sessionScope.loginUser}' default='false'/>"></div>
@@ -39,6 +42,8 @@
     const isLogin = container.dataset.islogin === 'true';
 </script>
 <script src="${ctx}/resources/js/movieList.js"></script>
+<script src="${ctx}/resources/js/search.js"></script>
+
 
 </body>
 </html>
