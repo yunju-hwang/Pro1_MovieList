@@ -1,19 +1,23 @@
 package com.itwillbs.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.itwillbs.domain.MemberVO;
 import com.itwillbs.domain.MovieVO;
 import com.itwillbs.service.MovieService;
 
@@ -43,18 +47,27 @@ public class MovieController {
 	// json으로 제공 (javaScript 파일)
     @GetMapping("/movies/list")
     @ResponseBody
-    public List<MovieVO> movieList(@RequestParam(value = "sort", defaultValue = "latest") String sort) {
+    public List<MovieVO> movieList(@RequestParam(value = "sort", defaultValue = "latest") String sort, HttpSession session) {
+    	String userId = null;
+    	if (session.getAttribute("loginUser") != null) {
+            MemberVO user = (MemberVO) session.getAttribute("loginUser");
+            userId = user.getUser_id();
+        }
+    	
+    	
+    	// 정렬 + userId 기준으로 영화 조회
     	List<MovieVO> movies;
     	System.out.println(sort);
+    	
         switch (sort) {
         	//인기순 
             case "popularity":
-                movies = movieService.getMovieListOrderByPopularity();
+                movies = movieService.getMovieListOrderByPopularity(userId);
                 break;
             //최신순
             case "latest":
             default:
-                movies = movieService.getMovieListOrderByReleaseDate();
+                movies = movieService.getMovieListOrderByReleaseDate(userId);
                 break;
         }
 
@@ -122,7 +135,30 @@ public class MovieController {
 		
 	}
 	
-	
+	// 영화 찜하기
+    @PostMapping("/movies/favorite/{tmdbId}")
+    @ResponseBody
+    public Map<String, Object> toggleFavorite(@PathVariable("tmdbId") int tmdbId, HttpSession session) {
+    	Map<String, Object> result = new HashMap<>();
+    	
+    	MemberVO user = (MemberVO) session.getAttribute("loginUser");
+    	
+    	if(user == null) {
+    		result.put("success", false);
+    		return result;
+    	}
+    	
+    	String userId = user.getUser_id();
+    	
+    	boolean isFavorite = movieService.toggleFavorite(userId, tmdbId);
+    	
+    	result.put("success", true);
+    	result.put("isFavorite", isFavorite);
+    	
+    	return result;
+    }
+    
+    
 	
 	// AI 리뷰 페이지
 	@GetMapping("/movies/ai_review")
@@ -136,12 +172,7 @@ public class MovieController {
 		return "/movies/review_list";
 	}
 	
-	// 영화 찜하기
-    @GetMapping("/movies/favorite/{movieId}")
-    public void movieFavorite(@PathVariable("movieId") Long movieId) {
-    	
-    	return;
-    }
+	
 
 	// 리뷰 작성하기
 	@GetMapping("/movies/review_write")
