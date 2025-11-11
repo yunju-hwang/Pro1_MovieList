@@ -204,11 +204,40 @@ public class MovieService {
 	}
 	
 	// 영화 정렬
-	public List<MovieVO> getMovieListOrderByPopularity() {
-	    return movieMapper.findAllByOrderByPopularityDesc();
+	public List<MovieVO> getMovieListOrderByPopularity(String userId) {
+		List<MovieVO> movies = movieMapper.findAllByOrderByPopularityDesc(userId);
+        addFavoriteStatus(movies, userId);
+        return movies;
 	}
 	
-	public List<MovieVO> getMovieListOrderByReleaseDate() {
-	    return movieMapper.findAllByOrderByReleaseDateDesc();
+	public List<MovieVO> getMovieListOrderByReleaseDate(String userId) {
+		List<MovieVO> movies = movieMapper.findAllByOrderByReleaseDateDesc(userId);
+        addFavoriteStatus(movies, userId);
+        return movies;
+	}
+	
+	// 찜 여부 반영 (isFavorite 세팅)
+    private void addFavoriteStatus(List<MovieVO> movies, String userId) {
+        if (userId != null) {
+            for (MovieVO m : movies) {
+                int count = movieMapper.isFavorite(userId, m.getTmdbId());
+                m.setFavorite(count > 0);
+            }
+        }
+    }
+
+	
+	// 영화 찜하기 
+	public boolean toggleFavorite(String userId, int tmdbId) {
+		int count = movieMapper.isFavorite(userId, tmdbId);
+		
+		if(count > 0) {
+	        movieMapper.removeFavorite(userId, tmdbId);
+	        return false; // 찜 해제됨
+	    } else {
+	        movieMapper.addFavorite(userId, tmdbId);
+	        return true; // 찜 추가됨
+	    }
+		
 	}
 }

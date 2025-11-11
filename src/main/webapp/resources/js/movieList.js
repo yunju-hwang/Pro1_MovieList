@@ -40,9 +40,9 @@ function loadMovies(ctx, sort = 'latest') {
             return res.json();
         })
         .then(movies => {
-	        console.log(movies); // <- 여기서 genres와 posterPath가 있는지 확인
-	        renderMovies(movies, ctx);
-    	})
+            console.log(movies); // genres와 favorite 상태 확인
+            renderMovies(movies, ctx);
+        })
         .catch(err => {
             console.error(err);
             document.getElementById("movie-list").innerHTML = "<p>영화 정보를 불러올 수 없습니다.</p>";
@@ -68,12 +68,17 @@ function renderMovies(movies, ctx) {
             ? `https://image.tmdb.org/t/p/w300${movie.posterPath}`
             : `${ctx}/resources/images/default_poster.png`;
 
+        // 초기 찜 상태 버튼
+        const favoriteIcon = movie.favorite ? '♥' : '♡';
+
         const html = `
-            <div class="movie-card" data-id="${movie.tmdbId}">
+            <div class="movie-card" 
+                 data-id="${movie.tmdbId}" 
+                 data-favorite="${movie.favorite}">
                 <img class="poster" src="${posterUrl}" alt="${movie.title}">
                 <div class="title">
                     ${movie.title}
-                    <button class="favorite-btn">${movie.isFavorite ? '♥' : '♡'}</button>
+                    <button class="favorite-btn">${favoriteIcon}</button>
                 </div>
                 <div class="date">${movie.releaseDate || '정보 없음'}</div>
                 <div class="genres">${genreHtml}</div>
@@ -84,11 +89,10 @@ function renderMovies(movies, ctx) {
                 </div>
             </div>
         `;
-
         container.insertAdjacentHTML("beforeend", html);
     });
 
-    // 카드 이벤트 등록
+    // 카드 클릭 및 찜 버튼 이벤트 등록
     addEventListeners(ctx);
 }
 
@@ -106,7 +110,7 @@ function addEventListeners(ctx) {
         });
     });
 
-    // a 태그 클릭 시 JS 이동
+    // a 태그 클릭 시 이동
     container.querySelectorAll(".movie-card-buttons a").forEach(a => {
         a.addEventListener("click", (e) => {
             e.preventDefault();
@@ -115,7 +119,7 @@ function addEventListeners(ctx) {
         });
     });
 
-    // 찜 버튼 이벤트
+    // 찜 버튼 클릭
     container.querySelectorAll(".favorite-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -126,12 +130,23 @@ function addEventListeners(ctx) {
                 method: "POST",
                 headers: { "Content-Type": "application/json" }
             })
-            .then(res => res.json())
+            .then(res => {
+                if (res.status === 401 || res.status === 403) {
+                    alert("로그인이 필요합니다.");
+                    return;
+                }
+                return res.json();
+            })
             .then(data => {
                 if (data.success) {
-                    btn.textContent = data.isFavorite ? '♥' : '♡';
+                     // 서버에서 favorite을 내려주지 않으면 dataset으로 toggle
+			        const current = card.dataset.favorite === 'true';
+			        const next = data.favorite !== undefined ? data.favorite : !current;
+			
+			        btn.textContent = next ? '♥' : '♡';
+			        card.dataset.favorite = next;
                 } else {
-                    alert("찜 기능을 사용할 수 없습니다.");
+                    alert("찜 기능을 사용할 수 없습니다. (로그인 필요)");
                 }
             })
             .catch(err => console.error(err));

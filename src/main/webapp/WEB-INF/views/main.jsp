@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
 <c:choose>
     <c:when test="${sessionScope.role eq 'admin'}">
         <%@ include file="/WEB-INF/views/admin/admin_navbar.jsp" %> 
@@ -10,6 +9,7 @@
         <%@ include file="/WEB-INF/views/common/navbar.jsp" %>
     </c:otherwise>
 </c:choose>
+
 
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
@@ -37,6 +37,7 @@
 	    <option value="latest">최신순</option>
 	    <option value="popularity">인기순</option>
 	</select>
+	
 </div>
 
 
