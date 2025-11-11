@@ -38,8 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
                             <img src="https://image.tmdb.org/t/p/w200${movie.poster_path}" alt="${movie.title}">
                             <p>${movie.title} (${movie.release_date})</p>
                         `;
-                        div.addEventListener("click", () => {
-                            window.location.href = `${ctx}/movies/detailPage?tmdbId=${movie.id}`;
+                        div.addEventListener("click", (e) => {
+                        	e.preventDefault();
+                            window.location.href = `${ctx}/movies/search/detail/${movie.id}`;
                         });
                         movieListDiv.appendChild(div);
                     });

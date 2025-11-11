@@ -58,7 +58,7 @@ public class MovieService {
 	}
 	
 	
-	// -------- tmdb api로부터 movie 값들 받아오기 ------------
+	// -------- tmdb api로부터 popular movie list 값들 받아오기 ------------
 	public void getPopularMovies() throws Exception {
 		String url = "https://api.themoviedb.org/3/movie/popular?api_key=" + tmdbApiKey
 				+ "&language=ko-KR";
@@ -192,6 +192,15 @@ public class MovieService {
 			result = "{\"error\":\"검색 중 문제가 발생했습니다.\"}";
 		}
 		 return result;
+	}
+	
+	// tmdb api로 상세 정보값 가져오기 (검색용)
+	public Map<String, Object> getSearchMovieDetail(int tmdbId){
+		String url = "https://api.themoviedb.org/3/movie/" + tmdbId
+	            + "?api_key=" + tmdbApiKey
+	            + "&language=ko-KR";
+		RestTemplate rest = new RestTemplate();
+		return rest.getForObject(url, Map.class);
 	}
 	
 }
