@@ -22,13 +22,13 @@ from users
 </select>
   
 <!--   대쉬보드 전체 리뷰 -->
-  <select id="getReviewCount" resultType="int">
+  <select id="getReviewsCount" resultType="int">
   select count(*)
   from reviews
   </select>
   
   <!--   대쉬보드 전체 예매 -->
-<select id="getReservationCount" resultType="int">
+<select id="getReservationsCount" resultType="int">
   select count(*)
   from reservations
 </select>
@@ -40,9 +40,91 @@ from users
 </select>
 
 <!--   대쉬보드 대기 요청 -->
-<select id="getMovie_requestsCount" resultType="int">
+<select id="getMovie_RequestsCount" resultType="int">
   select count(*)
-  from movie_requests
+  from movie_request
 </select>
+  
+<!-- 영화관리 db -->
+<select id="AdminMovieList" resultType="com.itwillbs.domain.MovieVO">
+    SELECT
+        m.tmdb_id AS tmdbId,           
+        m.title,                         
+        m.poster_path AS posterPath,
+        m.release_date AS releaseDate,   
+        m.overview,
+        m.runtime,                       
+        m.popularity,
+        r_stats.rating,
+        r_stats.positiveReviewCount,
+        r_stats.negativeReviewCount,
+
+        GROUP_CONCAT(g.genre_name SEPARATOR ', ') AS genres2
+        
+    FROM
+        movies m
+
+    LEFT JOIN (
+        SELECT
+            r.tmdb_id,
+            ROUND(AVG(r.rating), 1) AS rating,
+            SUM(CASE WHEN r.rating &gt;= 4 THEN 1 ELSE 0 END) AS positiveReviewCount,
+            SUM(CASE WHEN r.rating &lt;= 2 THEN 1 ELSE 0 END) AS negativeReviewCount
+        FROM reviews r
+        GROUP BY r.tmdb_id
+    ) r_stats ON m.tmdb_id = r_stats.tmdb_id 
+
+    LEFT JOIN movie_genres mg ON m.tmdb_id = mg.tmdb_id
+    LEFT JOIN genres g ON mg.genre_id = g.genre_id
+
+    GROUP BY
+        m.tmdb_id, m.title, m.release_date, m.runtime, m.poster_path, m.overview, m.popularity,
+        r_stats.rating, r_stats.positiveReviewCount, r_stats.negativeReviewCount
+
+    ORDER BY m.tmdb_id DESC
+</select>
+  
+<!--   영화 관리 삭제 -->
+  <delete id="deleteMovie">
+    DELETE FROM movies 
+    WHERE tmdb_id = #{tmdbId}
+</delete>
+  
+  
+<!--  사용자 관리 -->
+<select id="AdminUserList" resultType="com.itwillbs.domain.MemberVO">
+    SELECT
+        u.user_id,
+        u.role,
+        u.username,
+        u.email,
+        u.phone,
+<!--         created_at AS createdAt,    -->
+<!--         last_login AS lastLogin,   -->
+        COUNT(DISTINCT r.id) AS reviewCount,
+        COUNT(DISTINCT res.id) AS reservationCount,
+        COUNT(DISTINCT i.id) AS inquiryCount,
+        COUNT(DISTINCT mreq.id) AS movieRequestCount
+        
+    FROM users u
+
+    LEFT JOIN reviews r ON u.user_id = r.user_id
+    LEFT JOIN reservations res ON u.user_id = res.user_id
+    LEFT JOIN inquiries i ON u.user_id = i.user_id
+    LEFT JOIN movie_request mreq ON u.user_id = mreq.user_id
+        
+           
+    WHERE u.role != 'admin' 
+        
+    GROUP BY u.user_id, u.role, u.username, u.email, u.phone
+    
+	ORDER BY u.user_id DESC
+</select>
+
+<!--   사용자 관리 삭제 -->
+  <delete id="deleteUsers">
+    DELETE FROM users 
+    WHERE user_id = #{user_id}
+</delete>
   
 </mapper>

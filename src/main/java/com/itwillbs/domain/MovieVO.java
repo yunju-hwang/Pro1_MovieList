@@ -22,5 +22,8 @@ public class MovieVO {
 	 // 영화가 가진 장르명 리스트
 	 private List<String> genres;
 
-	
+	 private Double rating;             
+	 private Integer positiveReviewCount; 
+	 private Integer negativeReviewCount; 
+	 private String genres2;
 }

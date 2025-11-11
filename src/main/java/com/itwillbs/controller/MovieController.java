@@ -1,11 +1,14 @@
 package com.itwillbs.controller;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,8 +43,22 @@ public class MovieController {
 	// json으로 제공 (javaScript 파일)
     @GetMapping("/movies/list")
     @ResponseBody
-    public List<MovieVO> movieList() {
-    	return movieService.getMovieList();
+    public List<MovieVO> movieList(@RequestParam(value = "sort", defaultValue = "latest") String sort) {
+    	List<MovieVO> movies;
+    	System.out.println(sort);
+        switch (sort) {
+        	//인기순 
+            case "popularity":
+                movies = movieService.getMovieListOrderByPopularity();
+                break;
+            //최신순
+            case "latest":
+            default:
+                movies = movieService.getMovieListOrderByReleaseDate();
+                break;
+        }
+
+        return movies;
     }
     
     
@@ -52,7 +69,7 @@ public class MovieController {
         return "movies/detail";  // detail.jsp
     }
 
-	// 영화 상세 페이지 값 반환 (json)
+	// 영화 상세 페이지 값 반환 (json) -> DB 이용
 	@GetMapping("/movies/detail")
 	@ResponseBody
 	public ResponseEntity<MovieVO> getmovieDetail(@RequestParam("tmdbId") int tmdbId) {
@@ -66,6 +83,46 @@ public class MovieController {
 	public String searchMovies(@RequestParam String query) {
 		return movieService.searchMovies(query);
 	}
+	
+	// 영화 상세 페이지 -> tmdb api 이용 [검색 페이지]
+	@GetMapping("/movies/search/detail/{id}")
+	public String searchMovieDetail(@PathVariable("id") int tmdbId, Model model) {
+		Map<String, Object> movie = movieService.getSearchMovieDetail(tmdbId);
+		
+		// 안전하게 문자열 처리
+	    String title = (String) movie.get("title");
+	    String overview = (String) movie.get("overview");
+	    String releaseDate = movie.get("release_date") != null ? (String) movie.get("release_date") : "정보 없음";
+	    String posterPath = movie.get("poster_path") != null ? (String) movie.get("poster_path") : "/resources/images/default_poster.png";
+	    Double popularityValue = movie.get("popularity") != null ? (Double) movie.get("popularity") : null;
+	    int popularity = (popularityValue != null) ? (int) Math.round(popularityValue) : 0;
+	    
+	    // runtime 처리
+	    Object runtimeObj = movie.get("runtime");
+	    String runtimeText = (runtimeObj != null) ? runtimeObj.toString() + "분" : "정보 없음";
+
+	    // 장르 처리
+	    List<Map<String, Object>> genresList = (List<Map<String, Object>>) movie.get("genres");
+	    String genresText = "정보 없음";
+	    if (genresList != null && !genresList.isEmpty()) {
+	        genresText = genresList.stream()
+	                .map(g -> (String) g.get("name"))
+	                .collect(Collectors.joining(", "));
+	    }
+
+	    model.addAttribute("title", title);
+	    model.addAttribute("overview", overview);
+	    model.addAttribute("releaseDate", releaseDate);
+	    model.addAttribute("posterPath", posterPath);
+	    model.addAttribute("runtimeText", runtimeText);
+	    model.addAttribute("genresText", genresText);
+	    model.addAttribute("popularity", popularity);
+	    
+		return "movies/searchDetail";
+		
+	}
+	
+	
 	
 	// AI 리뷰 페이지
 	@GetMapping("/movies/ai_review")

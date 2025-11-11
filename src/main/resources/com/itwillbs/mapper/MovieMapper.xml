@@ -40,20 +40,6 @@
    		
 	</resultMap>
 	
-	<select id="getMoviesWithGenres" resultMap="movieWithGenresMap">
-    	SELECT 
-        	m.tmdb_id,
-        	m.title,
-        	m.poster_path,
-        	m.release_date,
-        	m.overview,
-        	m.runtime,
-        	g.genre_name AS genre_name
-    	FROM movies m
-    		LEFT JOIN movie_genres mg ON m.tmdb_id = mg.tmdb_id
-    		LEFT JOIN genres g ON mg.genre_id = g.genre_id
-    	ORDER BY m.release_date DESC, m.tmdb_id
-	</select>
 	
 	<!-- DB에 저장된 MOVIE값 가져오기 -->
 	<select id="getAllMovies" resultType = "com.itwillbs.domain.MovieVO">
@@ -105,5 +91,40 @@
 	        runtime = #{runtime}
 	    WHERE tmdb_id = #{tmdbId}
 	</update>
+	
+	<!-- 영화 인기순 정렬 -->
+	<select id="findAllByOrderByPopularityDesc" resultMap ="movieWithGenresMap" >
+		SELECT 
+        	m.tmdb_id,
+        	m.title,
+        	m.poster_path,
+        	m.release_date,
+        	m.overview,
+        	m.runtime,
+        	g.genre_name AS genre_name
+    	FROM movies m
+    		LEFT JOIN movie_genres mg ON m.tmdb_id = mg.tmdb_id
+    		LEFT JOIN genres g ON mg.genre_id = g.genre_id
+    	ORDER BY m.popularity DESC, m.tmdb_id
+		
+	</select>
+	
+	<!-- 영화 최신순 정렬 -->
+	<select id="findAllByOrderByReleaseDateDesc" resultMap ="movieWithGenresMap" >
+		SELECT 
+        	m.tmdb_id,
+        	m.title,
+        	m.poster_path,
+        	m.release_date,
+        	m.overview,
+        	m.runtime,
+        	g.genre_name AS genre_name
+    	FROM movies m
+    		LEFT JOIN movie_genres mg ON m.tmdb_id = mg.tmdb_id
+    		LEFT JOIN genres g ON mg.genre_id = g.genre_id
+    	ORDER BY m.release_date DESC, m.tmdb_id
+	</select>
+  
+  
   
 </mapper>

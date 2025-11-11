@@ -9,11 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
             <form id="movieSearchForm">
                 <input type="text" id="searchInput" placeholder="영화 제목을 입력하세요" />
                 <img src="${ctx}/resources/img/search.png" id="searchBtn" alt="검색" />
-                <select id="sort-section">
-                    <option value="인기순">인기순</option>
-                    <option value="최신순">최신순</option>
-                    <option value="추천순">추천순</option>
-                </select>
             </form>
         </div>
     `;
@@ -38,8 +33,9 @@ document.addEventListener("DOMContentLoaded", () => {
                             <img src="https://image.tmdb.org/t/p/w200${movie.poster_path}" alt="${movie.title}">
                             <p>${movie.title} (${movie.release_date})</p>
                         `;
-                        div.addEventListener("click", () => {
-                            window.location.href = `${ctx}/movies/detailPage?tmdbId=${movie.id}`;
+                        div.addEventListener("click", (e) => {
+                        	e.preventDefault();
+                            window.location.href = `${ctx}/movies/search/detail/${movie.id}`;
                         });
                         movieListDiv.appendChild(div);
                     });
