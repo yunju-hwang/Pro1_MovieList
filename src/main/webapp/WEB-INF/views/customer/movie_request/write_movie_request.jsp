@@ -13,7 +13,7 @@
     const select = document.getElementById("selectBox");
     const input = document.getElementById("textInput");
     const option = select.options[select.selectedIndex];
-    const placeholder = option.dataset.placeholder || "액션";
+    const placeholder = option.dataset.placeholder || "직접입력";
 
     input.value = placeholder;
     if (placeholder === "직접입력") {
@@ -122,20 +122,23 @@
 	
 	<div class="standard">
 		<p class="sta-title">영화 등록 기준</p>
-			<div class="standard-con">
-				<h1>등록 가능</h1>
-				<h1>등록 불가</h1>
-			</div>
-			<div class="standard-container">
-						<ul>
-					<li class="sta">정식 개봉한 극장 영화</li>
-					<li class="sta">OTT 오리지널 영화</li>
-				</ul>
-				<ul>
-					<li class="sta">비공식 루트 영화</li>
-					<li class="sta">청소년 관람불가 영화</li>
-				</ul>
-			</div>
+<div class="standard-con">
+  <div class="standard-group">
+    <h1>등록 가능</h1>
+    <ul>
+      <li class="sta">정식 개봉한 극장 영화</li>
+      <li class="sta">OTT 오리지널 영화</li>
+    </ul>
+  </div>
+
+  <div class="standard-group">
+    <h1>등록 불가</h1>
+    <ul>
+      <li class="sta">비공식 루트 영화</li>
+      <li class="sta">청소년 관람불가 영화</li>
+    </ul>
+  </div>
+</div>
 	</div>
 	
 	

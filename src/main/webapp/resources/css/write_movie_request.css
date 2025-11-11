@@ -170,18 +170,31 @@ display: flex;
 	border-radius: 8px;
 }
 
-.standard-con{
-	display: flex;
-	gap:30%;
-	padding-left: 30px;
-}
-.standard-container{
-	display: flex;
-	gap:20%;
-	padding-left: 30px;
+.standard-con {
+  display: flex;
+  justify-content: space-between; /* 양쪽으로 균등 배치 */
+  gap: 40px;                      /* 두 그룹 사이 여백 */
 }
 
+.standard-group {
+  flex: 1;                        /* 각각 같은 공간 차지 */
+  display: flex;
+  flex-direction: column;         /* h1 위, ul 아래 */
+  align-items: flex-start;        /* 왼쪽 정렬 */
+  margin-left: 30px;
+}
 
-.sta{
-	padding-left: 25px;
+.standard-group h1 {
+  margin-bottom: 10px;
+  font-size: 1.3rem;
+}
+
+.standard-group ul {
+  margin: 0;
+  padding-left: 20px;
+  list-style-type: disc;
+}
+
+.sta {
+  margin-bottom: 4px;
 }
