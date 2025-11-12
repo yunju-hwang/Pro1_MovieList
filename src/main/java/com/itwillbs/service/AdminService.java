@@ -8,8 +8,11 @@ import org.springframework.stereotype.Service;
 
 import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MemberVO;
+import com.itwillbs.domain.MovieRequestVO;
 import com.itwillbs.domain.MovieVO;
+import com.itwillbs.domain.ReviewsVO;
 import com.itwillbs.mapper.AdminMapper;
+
 
 @Service
 public class AdminService {
@@ -77,7 +80,25 @@ public class AdminService {
 		return adminMapper.getInquiryDetail(id);
     	
     }
+    
+// 영화 요청
+    public List<MovieRequestVO> AdminRequestList(){
+    	return adminMapper.AdminRequestList();
+    }
+    
+//    public int deleteMovieRequests(int userId) {
+//    	return adminMapper.deleteMovieRequests(userId);
+//    }
 
-  
+    
+ // 리뷰 관리
+    public List<ReviewsVO> AdminReviewsList(){
+    	return adminMapper.AdminReviewsList();
+    }
+    
+    public int deleteReviews(int id) {
+    	return adminMapper.deleteReviews(id);
+    }
+    
     
 }

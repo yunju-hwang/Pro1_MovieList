@@ -5,8 +5,10 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.itwillbs.domain.ReviewsVO;
 import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MemberVO;
+import com.itwillbs.domain.MovieRequestVO;
 import com.itwillbs.domain.MovieVO;
 
 //interface로 구현
@@ -46,8 +48,15 @@ public void answerInquiry(@Param("id") int id, @Param("answerContent") String an
 
 public InquiriesVO getInquiryDetail(int id);
 
+// 영화 요청
+public List<MovieRequestVO> AdminRequestList();
 
+//public int deleteMovieRequests(int userId);
 
+// 리뷰 관리
+public List<ReviewsVO> AdminReviewsList();
+
+public int deleteReviews(int id);
 
 
 

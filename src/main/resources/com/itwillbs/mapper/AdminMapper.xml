@@ -139,8 +139,7 @@
 
 		GROUP BY u.user_id, u.role, u.username, u.email, u.phone
 
-		ORDER BY
-		u.user_id DESC
+		ORDER BY u.user_id DESC
 	</select>
 
 	<!-- 사용자 관리 삭제 -->
@@ -187,12 +186,59 @@
 		i.created_at AS createdAt,
 		i.answered_at AS answeredAt,
 		u.email AS userEmail,
-		i.answer_content AS answerContent FROM inquiries i
+		i.answer_content AS answerContent
+		FROM inquiries i
 		LEFT JOIN
 		users u ON i.user_id = u.user_id
 		WHERE
 		i.id = #{id}
 	</select>
+
+<!-- 영화요청 문의 -->
+	<select id="AdminRequestList"
+		resultType="com.itwillbs.domain.MovieRequestVO">
+		SELECT
+		id,
+		user_id AS userId,
+		tmdb_id AS tmdbId,
+		title,
+		content,
+		status,
+		created_at AS createdAt,
+		processed_at AS processedAt
+		
+		FROM movie_request
+		ORDER BY created_at DESC, id DESC;
+	</select>
+
+<!-- 	<delete id="deleteMovieRequests"> -->
+<!-- 		DELETE FROM movie_request -->
+<!-- 		WHERE user_id = #{userId} -->
+<!-- 	</delete> -->
+
+
+<!-- 리뷰관리 문의 -->
+	<select id="AdminReviewsList"
+		resultType="com.itwillbs.domain.ReviewsVO">
+		SELECT
+		r.id,
+		r.tmdb_id AS tmdbId,
+		r.user_id AS userId,
+		r.content,
+		r.sentiment,
+		r.rating,
+		r.created_at AS createdAt,
+		m.title AS movieTitle 
+		
+		FROM reviews r
+		LEFT JOIN movies m ON r.tmdb_id = m.tmdb_id  
+		ORDER BY r.created_at DESC, r.id DESC;</select>
+
+
+	<delete id="deleteReviews">
+		DELETE FROM reviews
+		WHERE id = #{id}
+	</delete>
 
 
 </mapper>

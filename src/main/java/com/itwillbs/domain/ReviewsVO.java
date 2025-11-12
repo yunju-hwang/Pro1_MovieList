@@ -17,4 +17,10 @@ public class ReviewsVO {
     private String sentiment;
     private int rating;
     private LocalDateTime createdAt;
+    
+    
+    
+    private String movieTitle;
+    
+    
 }
