@@ -6,14 +6,14 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="<c:url value='/resources/css/write_movie_request.css?after'/>">
+<link rel="stylesheet" href="<c:url value='/resources/css/write_movie_request.css'/>">
 <script>
   // ===== 장르 선택 =====
   function changePlaceholder(value) {
     const select = document.getElementById("selectBox");
     const input = document.getElementById("textInput");
     const option = select.options[select.selectedIndex];
-    const placeholder = option.dataset.placeholder || "직접입력";
+    const placeholder = option.dataset.placeholder || "액션";
 
     input.value = placeholder;
     if (placeholder === "직접입력") {
@@ -74,14 +74,14 @@
 	<div class="container">
 		<p class="unity">영화 제목 *</p>
 		<div class="text-con">
-			<input type="text" placeholder="영화 제목을 입력하세요" class="text">
+			<input type="text" placeholder="영화 제목을 입력하세요" class="text" required>
 		</div>
 		<p class="unity">장르*</p>
 		
 <div class="input-row">
   <!-- 장르 선택 -->
   <div class="input-dropdown">
-    <input type="text" id="textInput" placeholder="액션" readonly>
+    <input type="text" id="textInput" placeholder="액션" readonly required>
     <select id="selectBox" onchange="changePlaceholder(this.value)">
       <option value="">액션</option>
       <option value="1" data-placeholder="코미디">코미디</option>
@@ -103,7 +103,7 @@
   <!-- 날짜 선택 -->
   <div class="date-picker">
     <label for="dateInput">날짜</label>
-    <input type="date" id="dateInput" max="">
+    <input type="date" id="dateInput" max="" required>
   </div>
 </div>
   <p class="unity">요청 사항 *</p>
@@ -141,6 +141,10 @@
 </div>
 	</div>
 	
+<form action="${pageContext.request.contextPath }/customer/movie_request" class="btn-form">
+  <input type="submit" value="취소하기" class="no-sub">
+  <input type="submit" value="요청하기" class="sub">
+</form>
 	
 	
 	

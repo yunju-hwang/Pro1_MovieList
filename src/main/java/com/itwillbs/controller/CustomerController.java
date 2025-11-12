@@ -1,6 +1,7 @@
 package com.itwillbs.controller;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,7 @@ public class CustomerController {
 		return "/customer/notices";
 	}
 	@GetMapping("/customer/notice_detail")
-	public String notice_detail() {
+	public String notice_detail() {	
 		return "/customer/notice_detail";
 	}
 	
@@ -37,20 +38,25 @@ public class CustomerController {
 		return "/customer/inquiries/inquiries";
 	}
 	@GetMapping("customer/write_inquiry")
-	public String write_inquiry() {
+	public String write_inquiry(HttpSession session) {
+		
 		return "/customer/inquiries/write_inquiry";
 	}
 	
 	// 고객센터 영화 요청
 	@GetMapping("/customer/movie_request")
 	public String movieRequest() {
+		
+		
+		
+		
 		return "/customer/movie_request/movie_request";
 	}
 	
 	// 영화 요청 작성
 	@GetMapping("/customer/write_movie_request")
 	public String writeMovieRequest() {
-		return "/customer/movie_request/write_movie_request";
+		return "/customer/movie_request/write_movie_request";	
 	}
 
 	// 약관 및 정책 (이용약관)

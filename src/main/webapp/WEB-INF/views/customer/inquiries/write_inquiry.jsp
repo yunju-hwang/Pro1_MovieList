@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>고객센터/문의 작성하기</title>
-<link rel="stylesheet" href="<c:url value='/resources/css/write_inquiry.css'/>">
+<link rel="stylesheet" href="<c:url value='/resources/css/write_inquiry.css?after'/>">
 <script>
 function changePlaceholder(value) {
   const select = document.getElementById('selectBox');
@@ -72,6 +72,11 @@ function changePlaceholder(value) {
 		<li class="list">긴급한 사항은 고객센터(1588-0000)로 연락바랍니다</li>
 	</ul>
 </div>
+
+<form action="${pageContext.request.contextPath }/customer/inquiries" class="btn-form">
+  <input type="submit" value="취소하기" class="no-sub">
+  <input type="submit" value="요청하기" class="sub">
+</form>
 	</div>
 	
 	<div class="faq-con">
