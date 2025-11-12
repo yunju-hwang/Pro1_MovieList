@@ -10,8 +10,6 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <style>
-/* ... (CSS 스타일은 이전과 동일하게 유지) ... */
-
 /* ========================================================== */
 /* 1. 전역 스타일 및 NAV BAR 스타일 */
 /* ========================================================== */
@@ -154,11 +152,38 @@ body {
 /* 폼 그룹 및 인풋 스타일 */
 .form-group { margin-bottom: 20px; }
 .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
-.form-input { width: 100%; height: 44px; padding: 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+.form-input { 
+    width: 100%; 
+    height: 44px; 
+    padding: 12px; 
+    border: 1px solid #ddd; 
+    border-radius: 4px; 
+    box-sizing: border-box; /* 🚨 이 속성이 중요합니다. (이미 설정되어 있음) */
+}
 .help-text { font-size: 13px; color: #888; margin-top: 5px; }
 
 .form-row { display: flex; gap: 20px; align-items: flex-start; }
 .form-row .form-group { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; gap: 5px; }
+
+
+/* 🚨 카드 번호 분리 입력 스타일 추가 */
+.card-number-group {
+    display: flex;
+    gap: 8px; /* 🚨 간격을 10px에서 8px로 미세 조정하여 여유 공간 확보 */
+    width: 100%; /* 부모의 100% 너비를 사용하도록 명시 */
+}
+
+.card-number-group .card-input-part {
+    flex: 1; 
+    height: 44px;
+    padding: 12px 5px; /* 🚨 좌우 패딩을 줄여 너비 확보 */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box; /* 🚨 box-sizing 명시 (패딩과 보더가 너비에 포함되도록) */
+    text-align: center;
+    font-size: 16px;
+    min-width: 0; /* flex 아이템이 넘치는 것을 방지 */
+}
 
 /* 폼 설명 */
 #payment-form-area .form-description {
@@ -238,41 +263,33 @@ body {
 
 							<div class="form-group">
 								<label for="cardCompany">카드사 선택 *</label> 
-								<select id="cardCompany" class="form-input select-input">
+								<select id="cardCompany" name="card_company" class="form-input select-input" required>
 									<option value="">카드사를 선택하세요</option>
-									<option value="shinhan">신한카드</option>
-									<option value="kb">KB국민카드</option>
-									<option value="samsung">삼성카드</option>
-									<option value="hyundai">현대카드</option>
-									<option value="lotte">롯데카드</option>
-									<option value="hana">하나카드</option>
-									<option value="woori">우리카드</option>
-								</select>
+									</select>
 							</div>
 
 							<div class="form-group">
-								<label for="cardNumber">카드 번호 *</label> 
-								<input type="text" id="cardNumber" class="form-input" placeholder="0000-0000-0000-0000">
-								<p class="help-text">하이픈(-) 없이 숫자만 입력해주세요.</p>
+								<label for="cardNumber1">카드 번호 *</label> 
+								<div class="card-number-group">
+									<input type="text" id="cardNumber1" name="card_number_part1" class="card-input-part" placeholder="0000" maxlength="4" required>
+									<input type="text" id="cardNumber2" name="card_number_part2" class="card-input-part" placeholder="0000" maxlength="4" required>
+									<input type="text" id="cardNumber3" name="card_number_part3" class="card-input-part" placeholder="0000" maxlength="4" required>
+									<input type="text" id="cardNumber4" name="card_number_part4" class="card-input-part" placeholder="0000" maxlength="4" required>
+								</div>
 							</div>
 
 							<div class="form-row">
 								<div class="form-group"> 
-                                    <label for="expiryDate">유효 기간 (MM/YY) *</label> 
-									<input type="text" id="expiryDate" class="form-input" placeholder="MM/YY" maxlength="4">
+                                     <label for="expiryDate">유효 기간 (MM/YY) *</label> 
+									<input type="text" id="expiryDate" name="expiry_date" class="form-input" placeholder="MM/YY" maxlength="4" required>
 								</div>
 								<div class="form-group"> 
-                                    <label for="password">비밀번호 앞 2자리 *</label> 
-									<input type="password" id="password" class="form-input" placeholder="**" maxlength="2">
+                                     <label for="password">비밀번호 앞 2자리 *</label> 
+									<input type="password" id="password" name="pin_first_two" class="form-input" placeholder="**" maxlength="2" required>
 								</div>
 							</div>
 							
-							<div class="form-group">
-								<label for="cvc">CVC *</label> 
-								<input type="password" id="cvc" class="form-input" placeholder="CVC" maxlength="3">
 							</div>
-							
-						</div>
 
 						<div id="account-form-content" style="display: none;">
 							<div class="form-group">
@@ -310,92 +327,120 @@ body {
 
 	<script>
 document.addEventListener('DOMContentLoaded', function() {
-    // 폼 전환에 필요한 요소
-    const listArea = document.getElementById('payment-list-area');
-    const formArea = document.getElementById('payment-form-area');
-    const showFormButton = document.getElementById('show-form-button'); // 목록의 '카드/계좌 등록하기' 버튼
-    const cancelFormButton = document.getElementById('cancel-form-button'); // 폼 내부의 '취소' 버튼
-    const pageTitle = document.getElementById('page-title');
-    
-    // 유형 선택 버튼 및 폼 요소
-    const showCardButton = document.getElementById('show-card-form');
-    const showAccountButton = document.getElementById('show-account-form');
-    const typeButtons = document.querySelectorAll('.form-type-selection-buttons .type-button');
-    
-    const registerContentContainer = document.getElementById('register-content-container');
-    const cardFormContent = document.getElementById('card-form-content');
-    const accountFormContent = document.getElementById('account-form-content');
-    const formDescription = document.getElementById('form-title-description');
-    const registerForm = document.getElementById('payment-register-form');
+    // 폼 전환에 필요한 요소
+    const listArea = document.getElementById('payment-list-area');
+    const formArea = document.getElementById('payment-form-area');
+    const showFormButton = document.getElementById('show-form-button'); // 목록의 '카드/계좌 등록하기' 버튼
+    const cancelFormButton = document.getElementById('cancel-form-button'); // 폼 내부의 '취소' 버튼
+    const pageTitle = document.getElementById('page-title');
+    
+    // 유형 선택 버튼 및 폼 요소
+    const showCardButton = document.getElementById('show-card-form');
+    const showAccountButton = document.getElementById('show-account-form');
+    const typeButtons = document.querySelectorAll('.form-type-selection-buttons .type-button');
+    
+    const registerContentContainer = document.getElementById('register-content-container');
+    const cardFormContent = document.getElementById('card-form-content');
+    const accountFormContent = document.getElementById('account-form-content');
+    const formDescription = document.getElementById('form-title-description');
+    const registerForm = document.getElementById('payment-register-form');
 
 
-    // ---------------------------------------------------------------------
-    // ✅ 폼 내용 토글 및 버튼 활성화 함수
-    // ---------------------------------------------------------------------
-    function setActiveForm(formType) {
-        // 모든 폼 내용 및 폼을 숨김
-        cardFormContent.style.display = 'none';
-        accountFormContent.style.display = 'none';
-        registerContentContainer.style.display = 'block';
+    // ---------------------------------------------------------------------
+    // ✅ 폼 내용 토글 및 버튼 활성화 함수
+    // ---------------------------------------------------------------------
+    function setActiveForm(formType) {
+        // 모든 폼 내용 및 폼을 숨김
+        cardFormContent.style.display = 'none';
+        accountFormContent.style.display = 'none';
+        registerContentContainer.style.display = 'block';
 
-        // 버튼 상태 초기화
-        typeButtons.forEach(btn => btn.classList.remove('active'));
+        // 버튼 상태 초기화
+        typeButtons.forEach(btn => btn.classList.remove('active'));
 
-        // 선택된 폼만 표시하고 버튼 활성화
-        if (formType === 'card') {
-            cardFormContent.style.display = 'block';
-            showCardButton.classList.add('active');
-            formDescription.textContent = '새로운 신용/체크카드 정보를 입력해주세요.';
-            document.getElementById('cardCompany').focus();
-        } else if (formType === 'account') {
-            accountFormContent.style.display = 'block';
-            showAccountButton.classList.add('active');
-            formDescription.textContent = '새로운 계좌이체 정보를 입력해주세요.';
-            document.getElementById('bankName').focus();
-        }
-        
-        // 폼 초기화
-        registerForm.reset();
-    }
-    
-    // ---------------------------------------------------------------------
-    // ✅ 이벤트 핸들러
-    // ---------------------------------------------------------------------
+        // 선택된 폼만 표시하고 버튼 활성화
+        if (formType === 'card') {
+            cardFormContent.style.display = 'block';
+            showCardButton.classList.add('active');
+            formDescription.textContent = '새로운 신용/체크카드 정보를 입력해주세요.';
+            document.getElementById('cardCompany').focus();
+        } else if (formType === 'account') {
+            accountFormContent.style.display = 'block';
+            showAccountButton.classList.add('active');
+            formDescription.textContent = '새로운 계좌이체 정보를 입력해주세요.';
+            document.getElementById('bankName').focus();
+        }
+        
+        // 폼 초기화
+        registerForm.reset();
+    }
+    
+    // ---------------------------------------------------------------------
+    // ✅ 카드 번호 입력 시 자동 포커스 이동 기능 (UX 개선)
+    // ---------------------------------------------------------------------
+    const cardNumberInputs = [
+        document.getElementById('cardNumber1'),
+        document.getElementById('cardNumber2'),
+        document.getElementById('cardNumber3'),
+        document.getElementById('cardNumber4')
+    ];
 
-    // '카드/계좌 등록하기' 버튼 클릭 이벤트 (목록 -> 폼)
-    showFormButton.addEventListener('click', function() {
-        listArea.style.display = 'none';
-        formArea.style.display = 'block';
-        pageTitle.textContent = '결제 수단 등록';
-        
-        // 폼 영역을 표시하지만, 처음에는 카드/계좌 버튼만 보이고 실제 폼 내용은 숨겨둡니다.
-        registerContentContainer.style.display = 'none'; 
-        
-        // 모든 버튼의 active 상태를 제거하고 폼 내용을 숨김
-        typeButtons.forEach(btn => btn.classList.remove('active'));
-        cardFormContent.style.display = 'none';
-        accountFormContent.style.display = 'none';
-    });
+    cardNumberInputs.forEach((input, index) => {
+        input.addEventListener('input', function(e) {
+            // 4자리를 모두 입력했을 때
+            if (this.value.length === this.maxLength) {
+                // 다음 칸이 있다면 다음 칸으로 포커스 이동
+                if (index < cardNumberInputs.length - 1) {
+                    cardNumberInputs[index + 1].focus();
+                }
+            }
+        });
+        // 숫자만 입력되도록 강제 (선택 사항)
+        input.addEventListener('keypress', function(e) {
+            if (e.charCode < 48 || e.charCode > 57) {
+                e.preventDefault();
+            }
+        });
+    });
 
-    // '신용/체크카드 등록' 버튼 클릭 이벤트
-    showCardButton.addEventListener('click', function() {
-        setActiveForm('card');
-    });
+    // ---------------------------------------------------------------------
+    // ✅ 이벤트 핸들러
+    // ---------------------------------------------------------------------
 
-    // '계좌이체/무통장 등록' 버튼 클릭 이벤트
-    showAccountButton.addEventListener('click', function() {
-        setActiveForm('account');
-    });
+    // '카드/계좌 등록하기' 버튼 클릭 이벤트 (목록 -> 폼)
+    showFormButton.addEventListener('click', function() {
+        listArea.style.display = 'none';
+        formArea.style.display = 'block';
+        pageTitle.textContent = '결제 수단 등록';
+        
+        // 폼 영역을 표시하지만, 처음에는 카드/계좌 버튼만 보이고 실제 폼 내용은 숨겨둡니다.
+        registerContentContainer.style.display = 'none';	
+        
+        // 모든 버튼의 active 상태를 제거하고 폼 내용을 숨김
+        typeButtons.forEach(btn => btn.classList.remove('active'));
+        cardFormContent.style.display = 'none';
+        accountFormContent.style.display = 'none';
+    });
 
-    // '취소' 버튼 클릭 이벤트 (폼 -> 목록)
-    cancelFormButton.addEventListener('click', function() {
-        registerForm.reset();
-        
-        formArea.style.display = 'none';
-        listArea.style.display = 'block';
-        pageTitle.textContent = '결제 수단 관리';
-    });
-    
+    // '신용/체크카드 등록' 버튼 클릭 이벤트
+    showCardButton.addEventListener('click', function() {
+        setActiveForm('card');
+    });
+
+    // '계좌이체/무통장 등록' 버튼 클릭 이벤트
+    showAccountButton.addEventListener('click', function() {
+        setActiveForm('account');
+    });
+
+    // '취소' 버튼 클릭 이벤트 (폼 -> 목록)
+    cancelFormButton.addEventListener('click', function() {
+        registerForm.reset();
+        
+        formArea.style.display = 'none';
+        listArea.style.display = 'block';
+        pageTitle.textContent = '결제 수단 관리';
+    });
+    
 });
 </script>
 
