@@ -28,4 +28,25 @@
             user_id = #{user_id}
     </select>
     
+    <select id="selectFavoriteListByUserId" parameterType="string" resultType="com.itwillbs.domain.UserFavoritesVO">
+    SELECT 
+        f.id,
+        f.user_id AS userId,  
+        f.tmdb_id AS tmdbId,  
+        
+        m.title AS movie_title,          m.poster_path AS poster_path,
+        m.release_date AS release_date,
+        m.overview AS overview,          m.runtime AS runtime,            m.popularity AS popularity       
+    FROM 
+        user_favorites f
+    JOIN 
+        movies m ON f.tmdb_id = m.tmdb_id
+    WHERE 
+        f.user_id = #{userId}
+    ORDER BY
+        f.id DESC
+</select>
+
+
+    
 </mapper>
