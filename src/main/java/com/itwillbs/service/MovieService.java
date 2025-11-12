@@ -22,6 +22,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itwillbs.domain.GenresVO;
 import com.itwillbs.domain.MovieVO;
+import com.itwillbs.domain.TheatersVO;
 import com.itwillbs.mapper.MovieMapper;
 
 @Service
@@ -260,5 +261,10 @@ public class MovieService {
 	    Double currentPopularity = movie.getPopularity() != null ? movie.getPopularity() : 0.0;
 	    movie.setPopularity(currentPopularity + change);
 	    movieMapper.updateMoviePopularity(movie);
+	}
+	
+	// DB에서 모든 영화관 조회
+	public List<TheatersVO> getAllTheaters(){
+		return movieMapper.getAllTheaters();
 	}
 }

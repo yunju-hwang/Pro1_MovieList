@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.itwillbs.domain.GenresVO;
 import com.itwillbs.domain.MovieVO;
+import com.itwillbs.domain.TheatersVO;
 
 //interface로 구현
 @Mapper
@@ -54,4 +55,6 @@ public interface MovieMapper {
     
     // 찜 반영 movies popularity에
     void updateMoviePopularity(MovieVO movie);
+    
+    List<TheatersVO> getAllTheaters();
 }

@@ -166,4 +166,10 @@
     WHERE tmdb_id = #{tmdbId}
   </update>
   
+  <select id="getAllTheaters" resultType="com.itwillbs.domain.TheatersVO">
+    SELECT theater_id, name, location
+    FROM theaters
+    ORDER BY name ASC
+</select>
+  
 </mapper>

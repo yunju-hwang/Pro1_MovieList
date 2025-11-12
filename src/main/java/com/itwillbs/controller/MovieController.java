@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.domain.MovieVO;
+import com.itwillbs.domain.TheatersVO;
 import com.itwillbs.service.MovieService;
 
 @Controller
@@ -183,7 +184,48 @@ public class MovieController {
     	return result;
     }
     
+
     
+	// 영화 예약하기 창 이동
+	@GetMapping("/reservation/info")
+	public String resInfo(Model model) {
+		List<TheatersVO> theaters = movieService.getAllTheaters();
+		System.out.println(theaters);
+		
+		// 지역 중복 제거
+		List<String> locationsList = theaters.stream()
+				.map(TheatersVO::getLocation)
+				.distinct()
+				.collect(Collectors.toList());
+		
+		
+		model.addAttribute("theaters", theaters);
+		model.addAttribute("locationsList", locationsList);
+		
+		return "/reservation/info";
+	}
+	
+	
+
+	
+	// 영화 예약하기 (좌석 선택)
+	@GetMapping("/reservation/seat")
+	public String resSeat() {
+		return "/reservation/seat";
+	}
+	
+	// 영화 예약하기 (결제)
+	@GetMapping("/reservation/payment")
+	public String resPayment() {
+		return "/reservation/payment";
+	}
+	
+	// 영화 예약 완료창
+	@GetMapping("/reservation/complete")
+	public String resComplete() {
+		return "/reservation/complete";
+	}
+	
 	
 	// AI 리뷰 페이지
 	@GetMapping("/movies/ai_review")
@@ -206,30 +248,6 @@ public class MovieController {
 	}
 	
 	
-	
-	// 영화 예약하기
-	@GetMapping("/reservation/info")
-	public String resInfo() {
-		return "/reservation/info";
-	}
-	
-	// 영화 예약하기 (좌석 선택)
-	@GetMapping("/reservation/seat")
-	public String resSeat() {
-		return "/reservation/seat";
-	}
-	
-	// 영화 예약하기 (결제)
-	@GetMapping("/reservation/payment")
-	public String resPayment() {
-		return "/reservation/payment";
-	}
-	
-	// 영화 예약 완료창
-	@GetMapping("/reservation/complete")
-	public String resComplete() {
-		return "/reservation/complete";
-	}
 	
 
 }
