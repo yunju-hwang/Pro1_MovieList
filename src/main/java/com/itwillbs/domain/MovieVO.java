@@ -21,6 +21,9 @@ public class MovieVO {
 	 
 	 // 영화가 가진 장르명 리스트
 	 private List<String> genres;
+	 
+	 // 영화 찜 여부
+	 private boolean isFavorite;
 
 	 private Double rating;             
 	 private Integer positiveReviewCount; 

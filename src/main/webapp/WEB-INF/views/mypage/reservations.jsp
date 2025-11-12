@@ -12,60 +12,77 @@
     <style>
         /* 💡 기존 CSS 스타일 유지 및 필요한 부분만 수정 */
         
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f7f7f7;
-            min-height: 100vh;
-        }
+/* ========================================================== */
+/* 1. NAV BAR 스타일 */
+/* ========================================================== */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f7f7;
+    min-height: 100vh;
+}
 
-        /* 1. NAV BAR 스타일 */
-        .header-nav {
-            width: 100%;
-            background-color: #ffffff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
+.header-nav {
+    width: 100%;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    /* 🚨 NAVBAR 전체 높이 유지를 위해 상하 패딩 추가 */
+    padding: 3px 0; 
+}
 
-        .header-nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-        }
-        
-        /* 🚨 예매 내역 메뉴를 활성화합니다. (CSS 수정 필요) */
-        .header-nav li {
-            padding: 15px 25px;
-            font-size: 14px;
-            color: #555;
-            cursor: pointer;
-            transition: color 0.3s;
-            border-bottom: 3px solid transparent; 
-        }
+.header-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
 
-        .header-nav li:hover {
-            color: #ff4d4d;
-        }
-        
-        /* 🚨 A 태그 스타일 (링크 스타일 초기화 및 영역 확장) */
-        .header-nav li a {
-            text-decoration: none; /* 링크 밑줄 제거 */
-            color: inherit; /* 부모 li의 색상을 상속받음 */
-            display: flex; /* 아이콘과 텍스트 중앙 정렬 */
-            align-items: center; 
-        }
+.header-nav li {
+    /* 🚨 버튼 크기 수정: 위아래 15px -> 12px, 양옆 25px -> 20px */
+    padding: 12px 20px; 
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+    /* 🚨 배경색 전환 효과 및 버튼 형태 스타일 추가/수정 */
+    transition: color 0.3s, background-color 0.3s; 
+    border-bottom: none; /* 기존 밑줄 제거 */
+    border-radius: 4px; /* 버튼 모서리 둥글게 */
+    margin: 0 7px; /* 버튼 간 간격 조정 */
+}
 
-        .header-nav li.active {
-            color: #ff4d4d; 
-            border-bottom: 3px solid #ff4d4d; 
-            font-weight: bold;
-        }
+/* 🚨 Hover 효과: 배경색 진한 빨간색 (#cd0000), 글자색 흰색 */
+.header-nav li:hover {
+    color: white; 
+    background-color: #cd0000; 
+}
+ 
+/* 🚨 A 태그 스타일 (링크 스타일 초기화 및 영역 확장) */
+.header-nav li a {
+    text-decoration: none; 
+    color: inherit; 
+    display: flex; 
+    align-items: center;  
+}
 
-        .header-nav li i {
-            margin-right: 5px;
-        }
+/* 🚨 활성화된 메뉴 스타일: 진한 빨간색 버튼 */
+.header-nav li.active {
+    color: white; 
+    background-color: #cd0000; /* 진한 빨간색 적용 */
+    border-bottom: none; /* 기존 밑줄 제거 */
+    font-weight: bold;
+}
+
+/* 🚨 활성화된 메뉴 Hover 효과: 더 진한 빨간색 */
+.header-nav li.active:hover {
+    background-color: #a00000; /* #cd0000보다 더 진한 색상으로 설정 */
+    color: white;
+}
+
+.header-nav li i {
+    margin-right: 5px;
+}
         
         /* 2. 메인 컨텐츠 스타일 */
         .container {

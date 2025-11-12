@@ -23,7 +23,7 @@
 		)
 	</insert>
 	
-	
+	<!-- genres 테이블이랑 movies 테이블 조인하기 위한 resultMap -->
 	<resultMap id="movieWithGenresMap" type="com.itwillbs.domain.MovieVO">
 		<id property="tmdbId" column="tmdb_id"/>
 		
@@ -32,6 +32,9 @@
 		<result property="releaseDate" column="release_date" />
     	<result property="overview" column="overview" />
    		<result property="runtime" column="runtime" />
+   		<result property="popularity" column="popularity"/>
+		<result property="isFavorite" column="is_favorite"/>
+   		
    		
    		<!-- 장르 리스트 매핑 -->
    		<collection property="genres" ofType="string">
@@ -40,20 +43,6 @@
    		
 	</resultMap>
 	
-	<select id="getMoviesWithGenres" resultMap="movieWithGenresMap">
-    	SELECT 
-        	m.tmdb_id,
-        	m.title,
-        	m.poster_path,
-        	m.release_date,
-        	m.overview,
-        	m.runtime,
-        	g.genre_name AS genre_name
-    	FROM movies m
-    		LEFT JOIN movie_genres mg ON m.tmdb_id = mg.tmdb_id
-    		LEFT JOIN genres g ON mg.genre_id = g.genre_id
-    	ORDER BY m.release_date DESC, m.tmdb_id
-	</select>
 	
 	<!-- DB에 저장된 MOVIE값 가져오기 -->
 	<select id="getAllMovies" resultType = "com.itwillbs.domain.MovieVO">
@@ -90,7 +79,9 @@
 			m.release_date,
 			m.overview,
 			m.runtime,
+			m.popularity,
 			g.genre_name AS genre_name
+			
 		FROM movies m
 		LEFT JOIN movie_genres mg ON m.tmdb_id = mg.tmdb_id
 		LEFT JOIN genres g ON mg.genre_id = g.genre_id
@@ -107,19 +98,72 @@
 	</update>
 	
 	<!-- 영화 인기순 정렬 -->
-	<select id="findAllByOrderByPopularityDesc" resultType ="com.itwillbs.domain.MovieVO" >
-		SELECT * 
-        FROM movie
-        ORDER BY popularity DESC
+	<select id="findAllByOrderByPopularityDesc" resultMap ="movieWithGenresMap" >
+		  SELECT 
+        m.tmdb_id,
+        m.title,
+        m.poster_path,
+        m.release_date,
+        m.overview,
+        m.runtime,
+        g.genre_name AS genre_name,
+        CASE 
+            WHEN uf.tmdb_id IS NOT NULL THEN 1 
+            ELSE 0 
+        END AS is_favorite
+	    FROM movies m
+	    LEFT JOIN movie_genres mg ON m.tmdb_id = mg.tmdb_id
+	    LEFT JOIN genres g ON mg.genre_id = g.genre_id
+	    LEFT JOIN user_favorites uf ON uf.tmdb_id = m.tmdb_id AND uf.user_id = #{userId}
+	    ORDER BY m.popularity DESC, m.tmdb_id
 	</select>
 	
 	<!-- 영화 최신순 정렬 -->
-	<select id="findAllByOrderByReleaseDateDesc" resultType ="com.itwillbs.domain.MovieVO" >
-		SELECT * 
-        FROM movie
-        ORDER BY release_date DESC
+	<select id="findAllByOrderByReleaseDateDesc" resultMap ="movieWithGenresMap" >
+		SELECT 
+        m.tmdb_id,
+        m.title,
+        m.poster_path,
+        m.release_date,
+        m.overview,
+        m.runtime,
+        g.genre_name AS genre_name,
+        CASE 
+            WHEN uf.tmdb_id IS NOT NULL THEN 1 
+            ELSE 0 
+        	END AS is_favorite
+	    FROM movies m
+	    LEFT JOIN movie_genres mg ON m.tmdb_id = mg.tmdb_id
+	    LEFT JOIN genres g ON mg.genre_id = g.genre_id
+	    LEFT JOIN user_favorites uf ON uf.tmdb_id = m.tmdb_id AND uf.user_id = #{userId}
+	    ORDER BY m.release_date DESC, m.tmdb_id
 	</select>
   
   
+  <!-- 찜 여부 확인 -->
+  <select id="isFavorite" resultType="int">
+  	SELECT COUNT(*)
+  	FROM user_favorites
+  	WHERE user_id = #{userId} AND tmdb_id = #{tmdbId}
+  </select>
+  
+  <!-- 찜 추가 -->
+  <insert id="addFavorite">
+  	INSERT INTO user_favorites (user_id, tmdb_id)
+  	VALUES (#{userId}, #{tmdbId})
+  </insert>
+  
+  <!-- 찜 삭제 -->
+  <delete id="removeFavorite">
+  	DELETE FROM user_favorites
+  	WHERE user_id = #{userId} AND tmdb_id = #{tmdbId}
+  </delete>
+  
+  <!-- 찜 반영 (movies popularity) -->
+  <update id="updateMoviePopularity">
+  	UPDATE movies
+    SET popularity = #{popularity}
+    WHERE tmdb_id = #{tmdbId}
+  </update>
   
 </mapper>

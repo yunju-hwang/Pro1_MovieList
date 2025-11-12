@@ -204,11 +204,61 @@ public class MovieService {
 	}
 	
 	// 영화 정렬
-	public List<MovieVO> getMovieListOrderByPopularity() {
-	    return movieMapper.findAllByOrderByPopularityDesc();
+	public List<MovieVO> getMovieListOrderByPopularity(String userId) {
+		List<MovieVO> movies = movieMapper.findAllByOrderByPopularityDesc(userId);
+        addFavoriteStatus(movies, userId);
+        return movies;
 	}
 	
-	public List<MovieVO> getMovieListOrderByReleaseDate() {
-	    return movieMapper.findAllByOrderByReleaseDateDesc();
+	public List<MovieVO> getMovieListOrderByReleaseDate(String userId) {
+		List<MovieVO> movies = movieMapper.findAllByOrderByReleaseDateDesc(userId);
+        addFavoriteStatus(movies, userId);
+        return movies;
+	}
+	
+	
+	// 찜 여부 확인
+	public boolean checkFavorite(String userId, int tmdbId) {
+		Integer count = movieMapper.isFavorite(userId, tmdbId);
+		return count != null && count>0;
+	}
+	
+	
+	// 찜 여부 반영 (isFavorite 세팅)
+    private void addFavoriteStatus(List<MovieVO> movies, String userId) {
+        if (userId != null) {
+            for (MovieVO m : movies) {
+                int count = movieMapper.isFavorite(userId, m.getTmdbId());
+                m.setFavorite(count > 0);
+            }
+        }
+    }
+
+	
+	// 영화 찜하기 
+	public boolean toggleFavorite(String userId, int tmdbId) {
+		int count = movieMapper.isFavorite(userId, tmdbId);
+		
+		if(count > 0) {
+	        movieMapper.removeFavorite(userId, tmdbId);
+	        return false; // 찜 해제됨
+	    } else {
+	        movieMapper.addFavorite(userId, tmdbId);
+	        return true; // 찜 추가됨
+	    }
+		
+	}
+	
+	// movies에서 popularity 업데이트
+	public void updatePopularity(int tmdbId, double change) {
+		MovieVO movie = movieMapper.getMovieById(tmdbId);
+	    if (movie == null) {
+	        // 로그 남기고 종료 또는 예외 처리
+	        System.out.println("해당 tmdbId 영화가 존재하지 않습니다: " + tmdbId);
+	        return;
+	    }
+	    Double currentPopularity = movie.getPopularity() != null ? movie.getPopularity() : 0.0;
+	    movie.setPopularity(currentPopularity + change);
+	    movieMapper.updateMoviePopularity(movie);
 	}
 }
