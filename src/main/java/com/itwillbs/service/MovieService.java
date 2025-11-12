@@ -216,6 +216,14 @@ public class MovieService {
         return movies;
 	}
 	
+	
+	// 찜 여부 확인
+	public boolean checkFavorite(String userId, int tmdbId) {
+		Integer count = movieMapper.isFavorite(userId, tmdbId);
+		return count != null && count>0;
+	}
+	
+	
 	// 찜 여부 반영 (isFavorite 세팅)
     private void addFavoriteStatus(List<MovieVO> movies, String userId) {
         if (userId != null) {
@@ -239,5 +247,18 @@ public class MovieService {
 	        return true; // 찜 추가됨
 	    }
 		
+	}
+	
+	// movies에서 popularity 업데이트
+	public void updatePopularity(int tmdbId, double change) {
+		MovieVO movie = movieMapper.getMovieById(tmdbId);
+	    if (movie == null) {
+	        // 로그 남기고 종료 또는 예외 처리
+	        System.out.println("해당 tmdbId 영화가 존재하지 않습니다: " + tmdbId);
+	        return;
+	    }
+	    Double currentPopularity = movie.getPopularity() != null ? movie.getPopularity() : 0.0;
+	    movie.setPopularity(currentPopularity + change);
+	    movieMapper.updateMoviePopularity(movie);
 	}
 }

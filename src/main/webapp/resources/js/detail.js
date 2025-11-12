@@ -20,8 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 ? movie.genres.join(', ')
                 : '정보 없음';
 
-            const popularity = movie.popularity ? `❤️ ${Math.round(movie.popularity)}` : "❤️ 0";
             const runtime = movie.runtime !== null ? `${movie.runtime}분` : "정보 없음";
+            const popularity = movie.popularity ? `❤️ ${Math.round(movie.popularity)}` : "❤️ 0";
 
             // HTML 구성
             detailDiv.innerHTML = `
@@ -30,11 +30,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         <div class="poster-wrapper">
                             <img class="poster" src="${posterUrl}" alt="${movie.title}">
                             <button class="wish-btn" id="wishBtn">
-                                <span class="heart-icon" id="heartIcon">♡</span>
+                                <span class="heart-icon" id="heartIcon">${movie.favorite ? '❤️' : '♡'}</span>
                             </button>
                         </div>
                         <div class="popularity-box">
-                            <strong>${popularity}</strong>
+                            
                         </div>
                     </div>
                     <div class="right-box">
@@ -65,17 +65,55 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
             `;
 
-            // ✅ 찜 버튼
+            // ✅ 찜 버튼 서버 연동
             const heartIcon = document.getElementById("heartIcon");
-            document.getElementById("wishBtn").addEventListener("click", () => {
-                heartIcon.classList.toggle("active");
-                heartIcon.textContent = heartIcon.classList.contains("active") ? '❤️' : '♡';
+            const wishBtn = document.getElementById("wishBtn");
+            const detailContainer = detailDiv.querySelector(".detail-container");
+           
+
+            wishBtn.addEventListener("click", (e) => {
+            	e.stopPropagation();
+              
+                
+
+                if (!isLogin) {
+                    alert("로그인이 필요한 서비스입니다.");
+                    return;
+                }
+                
+               
+
+                fetch(`${ctx}/movies/favorite/${tmdbId}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" }
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error("찜 업데이트 실패");
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // 서버에서 받은 favorite 상태 사용
+                        const current = detailContainer.dataset.favorite === 'true';
+                        const next = data.isFavorite !== undefined ? data.isFavorite : !current;
+            
+                        console.log(next);
+                        heartIcon.textContent = next  ? '❤️' : '♡';
+                        detailContainer.dataset.favorite = next;
+                        
+                        const popularityBox = detailContainer.querySelector(".left-box .popularity-box strong");
+                        popularityBox.textContent = `❤️ ${Math.round(data.popularity)}`;
+                    } else {
+                        alert("찜 기능을 사용할 수 없습니다.");
+                    }
+                })
+                .catch(err => console.error(err));
             });
 
             // ✅ 예매하기 버튼
             const reserveBtn = document.getElementById("reserveBtn");
             reserveBtn.addEventListener("click", () => {
-                if (!isLogin) { // sessionUser는 JSP나 서버에서 세션 정보로 넣어주기
+                if (!isLogin) {
                     alert("로그인이 필요한 서비스입니다");
                     return;
                 }
@@ -91,23 +129,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 const star = document.createElement("span");
                 star.classList.add("star");
                 star.dataset.value = i;
-                star.textContent = '☆'; // 빈 별
+                star.textContent = '☆';
                 star.style.fontSize = "24px";
                 star.style.cursor = "pointer";
                 star.style.marginRight = "5px";
                 starContainer.appendChild(star);
                 stars.push(star);
 
-                // 마우스 hover
-                star.addEventListener("mouseover", () => {
-                    fillStars(i);
-                });
-
-                star.addEventListener("mouseout", () => {
-                    fillStars(selectedRating);
-                });
-
-                // 클릭 시 별점 선택
+                star.addEventListener("mouseover", () => fillStars(i));
+                star.addEventListener("mouseout", () => fillStars(selectedRating));
                 star.addEventListener("click", () => {
                     selectedRating = i;
                     fillStars(selectedRating);

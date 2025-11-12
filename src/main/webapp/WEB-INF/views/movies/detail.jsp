@@ -20,7 +20,7 @@
     const urlParams = new URLSearchParams(window.location.search);
     const tmdbId = urlParams.get("tmdbId");
 	 // 세션이 없으면 false, 있으면 true
-    const isLogin = <%= (session.getAttribute("loginUser") != null) %>;
+    const isLogin = <%= (session.getAttribute("loginUser") != null ? "true" : "false") %>;
 
 </script>
 <script src="${ctx}/resources/js/detail.js"></script>

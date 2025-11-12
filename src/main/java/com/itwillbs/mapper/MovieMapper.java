@@ -51,4 +51,7 @@ public interface MovieMapper {
     // 찜 삭제
     void removeFavorite(@Param("userId") String userId,
             @Param("tmdbId") int tmdbId);
+    
+    // 찜 반영 movies popularity에
+    void updateMoviePopularity(MovieVO movie);
 }
