@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.domain.MovieVO;
 import com.itwillbs.mapper.AdminMapper;
@@ -201,6 +202,41 @@ public class AdminController {
 		}
 		
 		
+		// 1:1 문의 관리
+		@GetMapping("/inquiries")
+		public String locationTerms(Model model) {
+			dashboardStats(model);
+					
+		List<InquiriesVO> adminInquiriesList = adminService.AdminInquiriesList();
+		model.addAttribute("adminInquiriesList", adminInquiriesList);
+				
+		return "/admin/inquiries";
+		}
+		@PostMapping("/inquiries/answer")
+		public String answerInquiry(@RequestParam("id") int id, 
+		                            @RequestParam("answerContent") String answerContent) {
+		    
+		    // 💡 답변 내용을 DB에 저장하는 로직이 추가되어야 함
+		    // (지금은 DB에 답변 내용 저장 컬럼이 없으니, 일단 상태만 업데이트한다고 가정)
+		    adminService.answerInquiry(id, answerContent); 
+		    
+		    return "redirect:/admin/inquiries"; // 목록으로 리다이렉트
+		}
+		
+		@GetMapping("/inquiries/answerForm")
+		public String answerForm(@RequestParam("id") int id, Model model) {
+		    InquiriesVO inquiry = adminService.getInquiryDetail(id);
+		    
+		    model.addAttribute("inquiry", inquiry);
+		    
+		    return "/admin/inquiry_answer_form"; 
+		}
+
+		
+		
+		
+		
+		
 		// 리뷰 관리
 		@GetMapping("/reviews")
 		public String reviews(Model model) {
@@ -215,12 +251,7 @@ public class AdminController {
 			return "/admin/reservations";
 		}
 
-		// 1:1 문의 관리
-		@GetMapping("/inquiries")
-		public String locationTerms(Model model) {
-			dashboardStats(model);
-			return "/admin/inquiries";
-		}
+		
 		
 		// 관리자 대시보드
 		@GetMapping("/movie_requests")

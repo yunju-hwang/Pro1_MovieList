@@ -46,6 +46,8 @@
     text-align: center;
     display: table-cell; 
     vertical-align: middle; 
+    height: 50px;
+    
 }
 
 /* 💡 모든 테이블의 헤더(thead th) 공통 스타일 - 셀렉터 오류 수정 */
@@ -90,12 +92,12 @@
 .user-table th:nth-child(9), .user-table td:nth-child(9) { width: 10%; } /* 9. 관리 (탈퇴) */
 
 /* -------------------- 1:1 문의 테이블 (8개 항목) -------------------- */
-.inquiry-table th:nth-child(1), .inquiry-table td:nth-child(1) { width: 10%; } /* 1. 번호 */
-.inquiry-table th:nth-child(2), .inquiry-table td:nth-child(2) { width: 10%; } /* 2. 카테고리 */
-.inquiry-table th:nth-child(3), .inquiry-table td:nth-child(3) { width: 25%; } /* 3. 제목 (가장 넓게) */
-.inquiry-table th:nth-child(4), .inquiry-table td:nth-child(4) { width: 10%; } /* 4. 작성자 */
-.inquiry-table th:nth-child(5), .inquiry-table td:nth-child(5) { width: 15%; } /* 5. 이메일 */
-.inquiry-table th:nth-child(6), .inquiry-table td:nth-child(6) { width: 10%; } /* 6. 날짜 */
+.inquiry-table th:nth-child(1), .inquiry-table td:nth-child(1) { width: 9%; } /* 1. 번호 */
+.inquiry-table th:nth-child(2), .inquiry-table td:nth-child(2) { width: 25%; } /* 2. 제목 */
+.inquiry-table th:nth-child(3), .inquiry-table td:nth-child(3) { width: 10%; } /* 3. 작성자 (가장 넓게) */
+.inquiry-table th:nth-child(4), .inquiry-table td:nth-child(4) { width: 10%; } /* 4. 이메일 */
+.inquiry-table th:nth-child(5), .inquiry-table td:nth-child(5) { width: 13%; } /* 5. 작성일 */
+.inquiry-table th:nth-child(6), .inquiry-table td:nth-child(6) { width: 13%; } /* 6. 답변일 */
 .inquiry-table th:nth-child(7), .inquiry-table td:nth-child(7) { width: 10%; } /* 7. 상태 */
 .inquiry-table th:nth-child(8), .inquiry-table td:nth-child(8) { width: 10%; } /* 8. 관리 */
 
@@ -157,13 +159,13 @@
     background-color: #ffc107;
     color: #333;
 }
-.status-badge.completed { /* 답변 완료 (초록색 계열) */
+.status-badge.answered { /* 답변 완료 (초록색 계열) */
     background-color: #28a745;
     color: white;
 }
 
-.status-badge.checking {
-    background-color: #ff8c00; /* 다크 오렌지 */
+.status-badge.error {
+    background-color: #808080; /* 회색 */
     color: white;
 }
 
