@@ -32,6 +32,7 @@
 		<result property="releaseDate" column="release_date" />
     	<result property="overview" column="overview" />
    		<result property="runtime" column="runtime" />
+   		<result property="popularity" column="popularity"/>
 		<result property="isFavorite" column="is_favorite"/>
    		
    		
@@ -78,6 +79,7 @@
 			m.release_date,
 			m.overview,
 			m.runtime,
+			m.popularity,
 			g.genre_name AS genre_name
 			
 		FROM movies m
@@ -156,5 +158,12 @@
   	DELETE FROM user_favorites
   	WHERE user_id = #{userId} AND tmdb_id = #{tmdbId}
   </delete>
+  
+  <!-- 찜 반영 (movies popularity) -->
+  <update id="updateMoviePopularity">
+  	UPDATE movies
+    SET popularity = #{popularity}
+    WHERE tmdb_id = #{tmdbId}
+  </update>
   
 </mapper>

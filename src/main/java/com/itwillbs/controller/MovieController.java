@@ -85,8 +85,21 @@ public class MovieController {
 	// 영화 상세 페이지 값 반환 (json) -> DB 이용
 	@GetMapping("/movies/detail")
 	@ResponseBody
-	public ResponseEntity<MovieVO> getmovieDetail(@RequestParam("tmdbId") int tmdbId) {
+	public ResponseEntity<MovieVO> getmovieDetail(@RequestParam("tmdbId") int tmdbId, HttpSession session) {
+		
+		MemberVO memberVO = (MemberVO)session.getAttribute("loginUser");
+		String userId = (memberVO != null) ? memberVO.getUser_id():null;
+		
 		MovieVO movieVO = movieService.getMovieById(tmdbId);
+		
+		// login한 상태면 좋아요 여부 검사
+		if (userId != null) {
+			boolean isFavorite = movieService.checkFavorite(userId, tmdbId);
+			movieVO.setFavorite(isFavorite);
+		}else {
+			movieVO.setFavorite(false);
+		}
+		
 		return ResponseEntity.ok(movieVO);
 	}
 	
@@ -97,7 +110,7 @@ public class MovieController {
 		return movieService.searchMovies(query);
 	}
 	
-	// 영화 상세 페이지 -> tmdb api 이용 [검색 페이지]
+	// 영화 상세 페이지 -> tmdb api 이용 +  [검색 페이지]
 	@GetMapping("/movies/search/detail/{id}")
 	public String searchMovieDetail(@PathVariable("id") int tmdbId, Model model) {
 		Map<String, Object> movie = movieService.getSearchMovieDetail(tmdbId);
@@ -152,9 +165,21 @@ public class MovieController {
     	
     	boolean isFavorite = movieService.toggleFavorite(userId, tmdbId);
     	
+    	// popularity 업데이트
+        if (isFavorite) {
+            movieService.updatePopularity(tmdbId, 1.0); // 찜 추가 -> +1
+        } else {
+            movieService.updatePopularity(tmdbId, -1.0); // 찜 해제 -> -1
+        }
+    	
+        // 최신 영화 정보 가져오기 (popularity 포함)
+        MovieVO movie = movieService.getMovieById(tmdbId);
+        double popularity = movieService.getMovieById(tmdbId).getPopularity();
+        
+    	// front로 보내기
     	result.put("success", true);
     	result.put("isFavorite", isFavorite);
-    	
+    	result.put("popularity", movie.getPopularity()); 
     	return result;
     }
     
