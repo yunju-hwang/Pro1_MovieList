@@ -18,4 +18,11 @@ public class ReservationsVO {
     private LocalDateTime reservationDate;
     private String seat;
     private int people;
+    
+    
+    private String movieTitle;
+    private int finalAmount;
+    private String paymentDate;
+    private String theaterName;
+    private String status;
 }

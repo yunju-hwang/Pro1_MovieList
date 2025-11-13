@@ -16,6 +16,7 @@ import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.domain.MovieRequestVO;
 import com.itwillbs.domain.MovieVO;
+import com.itwillbs.domain.ReservationsVO;
 import com.itwillbs.domain.ReviewsVO;
 import com.itwillbs.mapper.AdminMapper;
 import com.itwillbs.service.AdminService;
@@ -277,15 +278,22 @@ public class AdminController {
 		
 		
 		
-		
 		// 예매 관리
 		@GetMapping("/reservations")
 		public String reservations(Model model) {
 			dashboardStats(model);
+			List<ReservationsVO> adminReservationsList = adminService.AdminReservationsList();
+			model.addAttribute("adminReservationsList", adminReservationsList);
+			
 			return "/admin/reservations";
 		}
 
-		
+		@PostMapping("/reservations/refund")
+		public String reservationsRefund(@RequestParam("id") int id){
+		    adminService.AdminReservationsRefund(id); 
+		    
+		    return "redirect:/admin/reservations";
+		}
 		
 		
 		// 공지사항 관리

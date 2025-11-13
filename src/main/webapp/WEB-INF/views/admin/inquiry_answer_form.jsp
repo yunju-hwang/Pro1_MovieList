@@ -1,9 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ include file="dashboard.jsp"%>
-
+<%-- <%@ include file="dashboard.jsp"%> --%>
+<%@ include file="/WEB-INF/views/admin/admin_navbar.jsp" %>
 <style>
+body {
+    margin: 0; /* 기본 여백 제거 */
+    padding: 0; /* 기본 패딩 제거 */
+    width: 100%; /* 너비를 100%로 확실히 지정 */
+    /* 아래는 선택적이지만, 모든 요소를 제어하기 쉽게 함 */
+    box-sizing: border-box; 
+}
+
 /* 답변 폼 전용 스타일 (필요하다면 CSS 파일에 통합) */
 .answer-container {
 	padding: 20px;
@@ -71,7 +79,6 @@
 
 <div class="answer-container">
 	<h3>${inquiry.id}번 문의 답변 작성</h3>
-
 	<div class="original-inquiry">
 		<h4>[${inquiry.status eq 'pending' ? '답변 대기' : '답변 완료'}] ${inquiry.title}</h4>
 		<p>

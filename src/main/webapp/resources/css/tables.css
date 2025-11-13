@@ -122,17 +122,18 @@
 .review-table th:nth-child(7), .review-table td:nth-child(7) { width: 10%; } /* 7. 날짜 */
 .review-table th:nth-child(8), .review-table td:nth-child(8) { width: 10%; } /* 8. 관리 */  
 
-/* -------------------- 예매 관리 테이블 (9개 항목) -------------------- */
-.booking-table th:nth-child(1), .booking-table td:nth-child(1) { width: 10%; } /* 1. 예매 번호 */  
-.booking-table th:nth-child(2), .booking-table td:nth-child(2) { width: 15%; } /* 2. 영화 제목 */  
-.booking-table th:nth-child(3), .booking-table td:nth-child(3) { width: 15%; } /* 3. 예매자 */
+/* -------------------- 예매 관리 테이블 (11개 항목) -------------------- */
+.booking-table th:nth-child(1), .booking-table td:nth-child(1) { width: 8%; } /* 1. 예매 번호 */  
+.booking-table th:nth-child(2), .booking-table td:nth-child(2) { width: 10%; } /* 2. 영화 제목 */  
+.booking-table th:nth-child(3), .booking-table td:nth-child(3) { width: 9%; } /* 3. 예매자 */
 .booking-table th:nth-child(4), .booking-table td:nth-child(4) { width: 10%; } /* 4. 상영관 */
-.booking-table th:nth-child(5), .booking-table td:nth-child(5) { width: 10%; } /* 5. 날짜 */
-.booking-table th:nth-child(6), .booking-table td:nth-child(6) { width: 10%; } /* 6. 시간 */
-.booking-table th:nth-child(7), .booking-table td:nth-child(7) { width: 10%; } /* 7. 좌석 */
-.booking-table th:nth-child(8), .booking-table td:nth-child(8) { width: 10%; } /* 8. 금액 */
-.booking-table th:nth-child(9), .booking-table td:nth-child(9) { width: 10%; } /* 9. 환불 */
-
+.booking-table th:nth-child(5), .booking-table td:nth-child(5) { width: 10%; } /* 5. 상영시간 */
+.booking-table th:nth-child(6), .booking-table td:nth-child(6) { width: 10%; } /* 6. 결제일시 */
+.booking-table th:nth-child(7), .booking-table td:nth-child(7) { width: 8%; } /* 7. 관람 인원 */
+.booking-table th:nth-child(8), .booking-table td:nth-child(8) { width: 8%; } /* 8. 좌석 */
+.booking-table th:nth-child(9), .booking-table td:nth-child(9) { width: 10%; } /* 9. 금액 */
+.booking-table th:nth-child(10), .booking-table td:nth-child(10) { width: 8%; } /* 10. 상태 */
+.booking-table th:nth-child(11), .booking-table td:nth-child(11) { width: 8%; } /* 11. 환불 */
 
 /* -------------------- 공지사항 테이블 (5개 항목) -------------------- */
 .notice-table th:nth-child(1), .notice-table td:nth-child(1) { width: 5%; }    /* 1. 번호 */
@@ -167,6 +168,38 @@
 .status-badge.error {
     background-color: #808080; /* 회색 */
     color: white;
+}
+
+.status-reserved {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #155724; /* 짙은 초록 글씨 */
+    background-color: #d4edda; /* 밝은 초록 배경 */
+}
+
+/* 환불 완료 (거래 취소 - 빨간색/주황색 경고 계열) */
+.status-refunded {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #856404; /* 짙은 노랑 글씨 */
+    background-color: #fff3cd; /* 밝은 노랑 배경 */
+}
+
+/* 사용자 취소 (중립/처리 완료 - 회색 계열) */
+.status-cancelled {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #383d41; /* 짙은 회색 글씨 */
+    background-color: #e2e3e5; /* 밝은 회색 배경 */
 }
 
 /* -------------------- 답변 작성 폼 스타일 -------------------- */

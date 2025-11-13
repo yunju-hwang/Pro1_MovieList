@@ -194,7 +194,7 @@
 		i.id = #{id}
 	</select>
 
-<!-- 영화요청 문의 -->
+<!-- 영화요청 -->
 	<select id="AdminRequestList"
 		resultType="com.itwillbs.domain.MovieRequestVO">
 		SELECT
@@ -217,7 +217,7 @@
 <!-- 	</delete> -->
 
 
-<!-- 리뷰관리 문의 -->
+<!-- 리뷰관리 -->
 	<select id="AdminReviewsList"
 		resultType="com.itwillbs.domain.ReviewsVO">
 		SELECT
@@ -232,7 +232,8 @@
 		
 		FROM reviews r
 		LEFT JOIN movies m ON r.tmdb_id = m.tmdb_id  
-		ORDER BY r.created_at DESC, r.id DESC;</select>
+		ORDER BY r.created_at DESC, r.id DESC;
+		</select>
 
 
 	<delete id="deleteReviews">
@@ -240,5 +241,37 @@
 		WHERE id = #{id}
 	</delete>
 
+<!-- 예매관리 -->
+	<select id="AdminReservationsList"
+		resultType="com.itwillbs.domain.ReservationsVO">
+		SELECT
+		    r.id,
+		    r.user_id AS userId,
+		    r.tmdb_id AS tmdbId,
+		    r.theater_id AS theaterId,
+		    r.screening_time AS screeningTime,    
+		    r.reservation_date AS reservationDate,
+		    r.seat,
+		    r.people,
+		    r.status,
+		    m.title AS movieTitle,
+		    p.amount AS finalAmount,
+		    CONCAT(t.name, ' (', t.location, ')') AS theaterName
+		    
+		    FROM reservations r
+		    
+		LEFT JOIN movies m ON r.tmdb_id = m.tmdb_id
+		LEFT JOIN payments p ON r.id = p.reservation_id
+		LEFT JOIN theaters t ON r.theater_id = t.theater_id
+		
+		ORDER BY r.id DESC;
+	</select>
+
+	<update id="AdminReservationsRefund">
+		UPDATE reservations
+		SET
+		status = 'refunded'
+		WHERE id = #{id}
+	</update>
 
 </mapper>

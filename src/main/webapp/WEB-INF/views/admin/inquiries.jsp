@@ -11,7 +11,9 @@
 				<th>제목</th>
 				<th>작성자</th>
 				<th>이메일</th>
-				<th>작성일</th>      <th>답변일</th>      <th>상태</th>
+				<th>작성일</th> 
+				<th>답변일</th>
+				<th>상태</th>
 				<th>관리</th>
 			</tr>
 		</thead>
@@ -66,15 +68,6 @@
 			</c:forEach>
 		</tbody>
 	</table>
-</div>
-
-<div class="reply-section" id="replyForm" style="display: none;">
-	<h3>답변 작성</h3>
-	<textarea placeholder="답변 내용을 입력하세요" rows="8"></textarea>
-	<div class="reply-actions">
-		<button class="reply-submit-btn">답변 등록</button>
-		<button class="reply-cancel-btn">취소</button>
-	</div>
 </div>
 
 <%@ include file="end.jsp"%>

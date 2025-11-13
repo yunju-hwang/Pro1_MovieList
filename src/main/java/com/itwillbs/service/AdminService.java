@@ -5,11 +5,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.domain.MovieRequestVO;
 import com.itwillbs.domain.MovieVO;
+import com.itwillbs.domain.ReservationsVO;
 import com.itwillbs.domain.ReviewsVO;
 import com.itwillbs.mapper.AdminMapper;
 
@@ -100,5 +102,12 @@ public class AdminService {
     	return adminMapper.deleteReviews(id);
     }
     
+// 예매 관리
+    public List<ReservationsVO> AdminReservationsList(){
+    	return adminMapper.AdminReservationsList();
+    }
     
+    public void AdminReservationsRefund(int id) {
+    	adminMapper.AdminReservationsRefund(id);
+    }
 }
