@@ -15,8 +15,8 @@
     <div class="container">
         <h1>MovieList</h1>
         <p>영화 리뷰와 예매 서비스</p>
-        
-        <form action="login_process.jsp" method="post">
+        <form action="${pageContext.request.contextPath }/member/loginPro" name="fr" method="post">
+
             <div class="form-group">
                 <label for="userId">아이디:</label>
                 <input type="text" id="userId" name="userId" placeholder="아이디를 입력하세요" required>
@@ -33,7 +33,7 @@
                 <a href="find_id.jsp">아이디 찾기</a> | <a href="find_pw.jsp">비밀번호 찾기</a>
             </div>
             <button type="submit" class="btn btn-primary">로그인</button>
-            <button type="button" class="btn btn-secondary" onclick="location.href='signup.jsp'">회원가입</button> <!-- 회원가입 버튼 추가 -->
+            <button type="button" class="btn btn-secondary" onclick="${pageContext.request.contextPath }/user/register_step1">회원가입</button> <!-- 회원가입 버튼 추가 -->
         </form>
         
         <div class="or-divider">

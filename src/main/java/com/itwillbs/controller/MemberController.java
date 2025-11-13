@@ -1,5 +1,8 @@
 package com.itwillbs.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.itwillbs.domain.GenresVO;
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.service.AdminService;
 import com.itwillbs.service.MemberService;
@@ -39,12 +43,31 @@ public class MemberController {
 		return "/user/register_step2";
 	}
 	
+	//
+	@PostMapping("/register/step2Pro")
+	public String step2Pro(MemberVO memberVO,HttpSession session) {
+		memberService.insertMember(memberVO);
+		session.setAttribute("user_id", memberVO.getUser_id());
+        session.setAttribute("role", memberVO.getRole());
+		return "redirect:/register/step3";
+	}
+	
+	
+	
 	// 회원가입 -> 선호 장르 선택
 	@GetMapping("/register/step3")
-	public String register3() {
+	public String register3(Model model) {
+		List<GenresVO> genresVOList = memberService.getGenres();
+		model.addAttribute("genresVOList", genresVOList);
+		System.out.println(genresVOList);
 		return "/user/register_step3";
 	}
 
+	@PostMapping("/register/step3Pro")
+	public String step3Pro(List<Map<String, String>> genreList) {
+		System.out.println(genreList);
+		return "redirect:/login";
+	}
 	
 	 // STEP1: 약관 제출 처리
     @PostMapping("/step1")

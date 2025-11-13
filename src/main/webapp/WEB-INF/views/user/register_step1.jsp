@@ -13,7 +13,7 @@
 <body>
     <div class="terms-container">
         <h3>약관 동의</h3>
-        <form action="register_step2.jsp" method="post" id="termsForm">
+        <form action="${pageContext.request.contextPath}/register/step2" method="get" id="termsForm">
             <div class="checkbox-group">
                 <label>
                     <input type="checkbox" id="allAgree" />
@@ -72,7 +72,7 @@
             // 필수 항목 2개 모두 체크되어야 다음 버튼 활성화
             const requiredChecked = [...checkboxes].filter(chk => chk.required && chk.checked).length === 2;
             nextBtn.disabled = !requiredChecked;
-        }
+        }dddd
     </script>
 </body>
 </html>

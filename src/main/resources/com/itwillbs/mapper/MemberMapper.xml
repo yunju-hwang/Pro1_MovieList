@@ -5,6 +5,16 @@
   
 <mapper namespace="com.itwillbs.mapper.MemberMapper">
 
+<insert id="insertMember">
+insert into users (user_id, role, password, username, email, gender, birth_date, phone, profile_image)
+values(#{user_id}, #{role},#{password},#{username},#{email},#{gender},#{birth_date},#{phone},#{profile_image})
 
+
+</insert>
+
+<select id="getGenres" resultType="com.itwillbs.domain.GenresVO">
+SELECT * FROM genres
+
+</select>
   
 </mapper>
