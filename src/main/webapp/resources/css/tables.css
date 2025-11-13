@@ -69,8 +69,8 @@
 }
 
 /* -------------------- 영화 관리 테이블 (11개 항목) -------------------- */
-.movie-table th:nth-child(1), .movie-table td:nth-child(1) { width: 10%; }    /* 1. 번호 */
-.movie-table th:nth-child(2), .movie-table td:nth-child(2) { width: 15%; }    /* 2. 영화 제목 */
+.movie-table th:nth-child(1), .movie-table td:nth-child(1) { width: 8%; }    /* 1. 번호 */
+.movie-table th:nth-child(2), .movie-table td:nth-child(2) { width: 17%; }    /* 2. 영화 제목 */
 .movie-table th:nth-child(3), .movie-table td:nth-child(3) { width: 15%; }    /* 3. 장르 */
 .movie-table th:nth-child(4), .movie-table td:nth-child(4) { width: 10%; }    /* 4. 평점 */
 .movie-table th:nth-child(5), .movie-table td:nth-child(5) { width: 10%; }    /* 5. 상영시간 */
@@ -92,35 +92,35 @@
 .user-table th:nth-child(9), .user-table td:nth-child(9) { width: 10%; } /* 9. 관리 (탈퇴) */
 
 /* -------------------- 1:1 문의 테이블 (8개 항목) -------------------- */
-.inquiry-table th:nth-child(1), .inquiry-table td:nth-child(1) { width: 9%; } /* 1. 번호 */
-.inquiry-table th:nth-child(2), .inquiry-table td:nth-child(2) { width: 25%; } /* 2. 제목 */
+.inquiry-table th:nth-child(1), .inquiry-table td:nth-child(1) { width: 10%; } /* 1. 번호 */
+.inquiry-table th:nth-child(2), .inquiry-table td:nth-child(2) { width: 30%; text-align: left; } /* 2. 제목 */
 .inquiry-table th:nth-child(3), .inquiry-table td:nth-child(3) { width: 10%; } /* 3. 작성자 (가장 넓게) */
 .inquiry-table th:nth-child(4), .inquiry-table td:nth-child(4) { width: 10%; } /* 4. 이메일 */
-.inquiry-table th:nth-child(5), .inquiry-table td:nth-child(5) { width: 13%; } /* 5. 작성일 */
-.inquiry-table th:nth-child(6), .inquiry-table td:nth-child(6) { width: 13%; } /* 6. 답변일 */
+.inquiry-table th:nth-child(5), .inquiry-table td:nth-child(5) { width: 10%; } /* 5. 작성일 */
+.inquiry-table th:nth-child(6), .inquiry-table td:nth-child(6) { width: 10%; } /* 6. 답변일 */
 .inquiry-table th:nth-child(7), .inquiry-table td:nth-child(7) { width: 10%; } /* 7. 상태 */
 .inquiry-table th:nth-child(8), .inquiry-table td:nth-child(8) { width: 10%; } /* 8. 관리 */
 
 
 /* -------------------- 영화 요청 테이블 (8개 항목) - 시안에 맞춰 수정 -------------------- */
-.request-table th:nth-child(1), .request-table td:nth-child(1) { width: 10%; } /* 1. 번호 (긴 ID) */
-.request-table th:nth-child(2), .request-table td:nth-child(2) { width: 15%; } /* 2. 영화 제목 */
-.request-table th:nth-child(3), .request-table td:nth-child(3) { width: 10%; } /* 3. 장르 */
-.request-table th:nth-child(4), .request-table td:nth-child(4) { width: 10%; } /* 4. 개봉년도 */
-.request-table th:nth-child(5), .request-table td:nth-child(5) { width: 15%; } /* 5. 요청자 */
-.request-table th:nth-child(6), .request-table td:nth-child(6) { width: 15%; } /* 6. 요청일 */
+.request-table th:nth-child(1), .request-table td:nth-child(1) { width: 8%; } /* 1. 번호 (긴 ID) */
+.request-table th:nth-child(2), .request-table td:nth-child(2) { width: 12%; } /* 2. 영화 제목 */
+.request-table th:nth-child(3), .request-table td:nth-child(3) { width: 30%; } /* 3. 내용 */
+.request-table th:nth-child(4), .request-table td:nth-child(4) { width: 10%; } /* 4. 작성자 */
+.request-table th:nth-child(5), .request-table td:nth-child(5) { width: 10%; } /* 5. 작성일 */
+.request-table th:nth-child(6), .request-table td:nth-child(6) { width: 10%; } /* 6. 처리일 */
 .request-table th:nth-child(7), .request-table td:nth-child(7) { width: 10%; } /* 7. 상태 */
-.request-table th:nth-child(8), .request-table td:nth-child(8) { width: 15%; } /* 8. 관리 (아이콘 2개) */
+.request-table th:nth-child(8), .request-table td:nth-child(8) { width: 10%; } /* 8. 관리 (아이콘 2개) */
 
 /* -------------------- 리뷰 테이블 항목 너비 지정 (8개 항목) - 시안에 맞춰 수정 -------------------- */
-.review-table th:nth-child(1), .review-table td:nth-child(1) { width: 9%; }  /* 1. 번호 */
+.review-table th:nth-child(1), .review-table td:nth-child(1) { width: 8%; }  /* 1. 번호 */
 .review-table th:nth-child(2), .review-table td:nth-child(2) { width: 12%; } /* 2. 영화 제목 */  
 .review-table th:nth-child(3), .review-table td:nth-child(3) { width: 12%; } /* 3. 작성자 */
 .review-table th:nth-child(4), .review-table td:nth-child(4) { width: 30%; text-align: left; /* 4. 리뷰 내용 (가장 넓게) */}
 .review-table th:nth-child(5), .review-table td:nth-child(5) { width: 10%; } /* 5. 평점 */
-.review-table th:nth-child(6), .review-table td:nth-child(6) { width: 8%; } /* 6. 감정 */
-.review-table th:nth-child(7), .review-table td:nth-child(7) { width: 9%; } /* 7. 날짜 */
-.review-table th:nth-child(8), .review-table td:nth-child(8) { width: 11%; } /* 8. 관리 */  
+.review-table th:nth-child(6), .review-table td:nth-child(6) { width: 9%; } /* 6. 감정 */
+.review-table th:nth-child(7), .review-table td:nth-child(7) { width: 10%; } /* 7. 날짜 */
+.review-table th:nth-child(8), .review-table td:nth-child(8) { width: 10%; } /* 8. 관리 */  
 
 /* -------------------- 예매 관리 테이블 (9개 항목) -------------------- */
 .booking-table th:nth-child(1), .booking-table td:nth-child(1) { width: 10%; } /* 1. 예매 번호 */  

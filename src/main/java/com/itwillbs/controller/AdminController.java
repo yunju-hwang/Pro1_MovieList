@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MemberVO;
+import com.itwillbs.domain.MovieRequestVO;
 import com.itwillbs.domain.MovieVO;
+import com.itwillbs.domain.ReviewsVO;
 import com.itwillbs.mapper.AdminMapper;
 import com.itwillbs.service.AdminService;
 import com.mysql.cj.Session;
@@ -212,15 +214,14 @@ public class AdminController {
 				
 		return "/admin/inquiries";
 		}
+		
 		@PostMapping("/inquiries/answer")
 		public String answerInquiry(@RequestParam("id") int id, 
 		                            @RequestParam("answerContent") String answerContent) {
 		    
-		    // 💡 답변 내용을 DB에 저장하는 로직이 추가되어야 함
-		    // (지금은 DB에 답변 내용 저장 컬럼이 없으니, 일단 상태만 업데이트한다고 가정)
 		    adminService.answerInquiry(id, answerContent); 
 		    
-		    return "redirect:/admin/inquiries"; // 목록으로 리다이렉트
+		    return "redirect:/admin/inquiries";
 		}
 		
 		@GetMapping("/inquiries/answerForm")
@@ -233,6 +234,25 @@ public class AdminController {
 		}
 
 		
+		// 영화 요청
+		@GetMapping("/movie_requests")
+		public String movieRequests(Model model) {
+			dashboardStats(model);
+			
+			List<MovieRequestVO> adminRequestList = adminService.AdminRequestList();
+			model.addAttribute("adminRequestList", adminRequestList);
+					
+			return "/admin/movie_requests";
+				}
+				
+//		@PostMapping("/movie_requests/delete") 
+//		public String deleteMovieRequests(@RequestParam("userId") int userId) {
+//		    
+//
+//		    adminService.deleteMovieRequests(userId); 
+//
+//		    return "/admin/movie_requests";
+//		}
 		
 		
 		
@@ -241,8 +261,22 @@ public class AdminController {
 		@GetMapping("/reviews")
 		public String reviews(Model model) {
 			dashboardStats(model);
+			
+			List<ReviewsVO> adminReviewsList = adminService.AdminReviewsList();
+			model.addAttribute("adminReviewsList", adminReviewsList);
+			
 			return "/admin/reviews";
 		}
+		
+		@PostMapping("/reviews/delete") 
+		public String deletereviews(@RequestParam("id") int id) {
+		    adminService.deleteReviews(id); 
+
+		    return "redirect:/admin/reviews"; 
+		}
+		
+		
+		
 		
 		// 예매 관리
 		@GetMapping("/reservations")
@@ -253,12 +287,6 @@ public class AdminController {
 
 		
 		
-		// 관리자 대시보드
-		@GetMapping("/movie_requests")
-		public String movieRequests(Model model) {
-			dashboardStats(model);
-			return "/admin/movie_requests";
-		}
 		
 		// 공지사항 관리
 		@GetMapping("/notices")
