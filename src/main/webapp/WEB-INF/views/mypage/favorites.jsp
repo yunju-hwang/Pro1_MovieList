@@ -88,7 +88,7 @@ body {
 .container {
 	padding: 40px 20px;
 	width: 100%;
-	max-width: 1200px; /* 영화 카드 4개 배치를 위해 너비 확장 */
+	max-width: 1690px; /* 영화 카드 4개 배치를 위해 너비 확장 */
 	margin: 40px auto;
 	 
 }
@@ -117,53 +117,104 @@ body {
 	font-size: 16px;
 }
 
+#movie-list {
+	display: flex;
+	flex-wrap: wrap; /* ✅ 줄바꿈 발생 */
+	gap: 20px; /* 카드 사이 간격 */
+	justify-content: center;
+	padding: 20px;
+}
+
 /* 🚨 영화 목록 컨테이너 (Flexbox를 사용하여 4열 배치) */
 .movie-list-container {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 20px;
-	justify-content: flex-start;
+	/* 	justify-content: flex-start; */
+	/* 	padding-top: 20px; */
 }
 
 /* 🚨 영화 카드 스타일 */
 .movie-card {
-	width: calc(25% - 15px); /* 4열 배치 */
-	min-width: 250px;
-	border: 1px solid #eee;
-	border-radius: 6px;
-	overflow: hidden;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-	box-sizing: border-box;
-	background-color: #fff;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	width: 230px;
+	background: white;
+	padding: 10px;
+	border-radius: 10px;
+	box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+	cursor: pointer;
 }
 
 /* 임시 이미지 플레이스홀더 */
 .poster {
-	height: 350px; /* 포스터 높이 지정 */
-	background-color: #f0f0f0;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 16px;
-	color: #aaa;
-	position: relative;
+	width: 100%; /* 카드 너비에 맞춤 */
+	border-radius: 8px;
+	/* 	overflow: hidden; */
+	/* 	position: relative; */
 }
 
-/* 19세 관람가 임시 마크 */
-.rate-badge {
-	position: absolute;
-	top: 10px;
-	right: 10px;
-	background-color: #ff4d4d;
-	color: white;
+.favorite-btn {
+	background: none;
+	border: none;
+	font-size: 18px; /* 🚨 이전에 20px였는데 18px로 변경됨 */
+	cursor: pointer;
+	color: #cd0000;
+	margin-left: 5px;
+	transition: transform 0.2s;
+}
+
+.favorite-btn:hover {
+	transform: scale(1.2);
+}
+
+.title {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 5px;
+}
+
+.date {
+	font-size: 14px;
+	color: #555;
+}
+
+.overview {
+	font-size: 13px;
+	margin-top: 8px;
+	color: #333;
+}
+
+.genres {
+	display: flex; /* 태그를 가로로 나열 */
+	flex-wrap: wrap; /* 여러 줄 가능 */
+	justify-content: flex-start; /* 왼쪽 정렬 */
+	margin-top: 5px;
+}
+
+.genre-tag {
+	display: inline-block;
+	background: #ffdddd;
+	color: #333;
 	padding: 4px 8px;
-	border-radius: 4px;
+	margin: 2px;
+	border-radius: 8px;
 	font-size: 12px;
-	font-weight: bold;
+}
+
+/* 🚨 포스터 이미지 스타일 */
+.movie-poster {
+	width: 100%;
+	height: auto; /* 부모 div.poster의 높이에 꽉 차도록 설정 */
+	display: block;
+	object-fit: cover; /* 이미지가 잘리지 않게 채우도록 설정 (중요) */
+	border-radius: 8px;
 }
 
 .card-content {
-	padding: 15px;
+	padding: 10px 0 0 0;
 }
 
 .card-content h3 {
@@ -185,73 +236,47 @@ body {
 	color: #555;
 	margin-bottom: 15px;
 	line-height: 1.4;
-	height: 40px; /* 2줄 정도의 높이 */
+	height: 90px; /* 2줄 정도의 높이 */
 	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-/* 버튼 영역 */
-.card-actions {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding-top: 10px;
-	border-top: 1px solid #eee;
+	display: -webkit-box;
+	-webkit-line-clamp: 5; /* 5줄까지만 표시 */
+	-webkit-box-orient: vertical;
 }
 
 .action-button {
-	padding: 8px 12px;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	background-color: #fff;
-	color: #555;
+	/* 새로운 디자인 스타일 적용 */
+	flex: 1; /* 버튼 동일 너비 */
+	text-align: center;
+	background-color: #cd0000;
+	color: #fff;
+	text-decoration: none;
+	padding: 8px 0;
+	border-radius: 12px; /* 둥근 모양 */
+	font-weight: bold;
+	font-size: 14px;
+	border: none; /* button의 기본 테두리 제거 */
 	cursor: pointer;
-	transition: background-color 0.2s;
-	font-size: 13px;
+	transition: background 0.3s, transform 0.2s;
 }
 
 .action-button:hover {
-	background-color: #f0f0f0;
+	background-color: #a80000; /* hover 시 진한 빨강 */
+	transform: translateY(-2px); /* 살짝 뜨는 느낌 */
 }
 
-.reservation-button {
-	background-color: #ff4d4d;
-	border: 1px solid #ff4d4d;
-	color: white;
-	font-weight: bold;
-}
-
-.reservation-button:hover {
-	background-color: #e63939;
-}
-
-/* 리브작성/예매하기 버튼 스타일링 (이미지와 유사하게) */
 .action-button-group {
 	display: flex;
-	gap: 10px;
-}
-
-/* 리뷰바 스타일 */
-.review-bar-container {
-	margin-bottom: 15px;
-}
-
-.review-bar {
-	height: 10px;
-	background-color: #ff4d4d;
-	width: 95%; /* 95% 긍정리뷰 예시 */
-	border-radius: 5px;
-	margin-top: 5px;
-}
-
-.review-label {
-	font-size: 12px;
-	color: #ff4d4d;
-	font-weight: bold;
+	gap: 10px; /* 버튼 간격 */
+	margin-top: 10px; /* 카드 콘텐츠와의 간격 확보 */
+	padding-top: 10px;
+	border-top: 1px solid #eee;
 }
 </style>
 </head>
 <body>
+
+	<div id="movie-list" data-ctx="${ctx}"
+		data-islogin="<c:out value='${not empty sessionScope.loginUser}' default='false'/>"></div>
 
 	<div class="header-nav">
 		<ul>
@@ -271,7 +296,6 @@ body {
 					class="fa-solid fa-film"></i> 영화 요청</a></li>
 		</ul>
 	</div>
-
 	<div class="container">
 		<div class="content-box">
 			<h1>관심 영화</h1>
@@ -284,24 +308,31 @@ body {
 						<c:forEach var="movie" items="${favoriteList}">
 							<div class="movie-card">
 								<div class="poster">
-									<c:if test="${movie.ageRating eq '19'}">
-										<div class="rate-badge">19금</div>
-									</c:if>
+									<img class="movie-poster"
+										src="https://image.tmdb.org/t/p/w300${movie.poster_path}"
+										alt="${movie.movie_title} 포스터" />
+
 								</div>
 								<div class="card-content">
-									<h3>${movie.title}</h3>
-									<div class="movie-info">⭐ ${movie.rating} |
-										${movie.runningTime}분</div>
-									<div class="movie-description">${movie.description}</div>
-									<div class="review-bar-container">
-										<div class="review-label">긍정리뷰
-											${movie.positiveReviewRate}%</div>
-										<div class="review-bar"
-											style="width: ${movie.positiveReviewRate}%;"></div>
+									<div class="title">
+										<h3>${movie.movie_title}</h3>
+										<button class="favorite-btn btn-unfavorite"
+											data-tmdb-id="${movie.tmdbId}">
+											<i class="fa-solid fa-heart"></i>
+										</button>
 									</div>
+
+									<div class="movie-info">${movie.runtime}분</div>
+
+									<div class="movie-description">${movie.overview}</div>
+<!-- 									<div class="genres"> -->
+<%-- 										<c:forEach var="genre" items="${movie.genres}"> --%>
+<%-- 											<span class="genre-tag">${genre.name}</span> --%>
+<%-- 										</c:forEach> --%>
+<!-- 									</div> -->
 									<div class="action-button-group">
+										<button class="action-button">예매하기</button>
 										<button class="action-button">리뷰 작성</button>
-										<button class="action-button reservation-button">예매하기</button>
 									</div>
 								</div>
 							</div>
@@ -319,5 +350,8 @@ body {
 			</div>
 		</div>
 	</div>
+
+
+
 </body>
 </html>

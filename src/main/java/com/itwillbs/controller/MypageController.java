@@ -1,5 +1,7 @@
 package com.itwillbs.controller;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
@@ -8,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.itwillbs.domain.MemberVO;
+import com.itwillbs.domain.UserFavoritesVO;
 import com.itwillbs.service.MypageService;
 
 @Controller
@@ -18,7 +21,25 @@ public class MypageController {
 
 	// 마이페이지 -> 관심 영화 목록
 	@GetMapping("/mypage/favorites")
-	public String favorites() {
+	public String getFavoriteMovies(HttpSession session, Model model) {
+		// 1. 로그인된 사용자 정보 확인
+        MemberVO user = (MemberVO) session.getAttribute("loginUser");
+
+        if (user == null) {
+            // 로그인되어 있지 않으면 로그인 페이지 등으로 리다이렉트
+            return "redirect:/login"; 
+        }
+
+        String userId = user.getUser_id();
+        
+        // 2. Service를 호출하여 찜한 영화 목록 가져오기
+        // UserFavoritesVO에는 tmdbId 외에 movie_title, poster_path가 함께 담겨 있습니다.
+        List<UserFavoritesVO> favoriteList = mypageService.getFavoriteList(userId); 
+        
+        // 3. 목록을 JSP로 전달 (JSP에서 ${favoriteList}로 사용 가능)
+        model.addAttribute("favoriteList", favoriteList);
+        
+        // 4. JSP 파일 경로 반환 (예: WEB-INF/views/mypage/favorites.jsp)	
 		return "/mypage/favorites";
 	}
 	
