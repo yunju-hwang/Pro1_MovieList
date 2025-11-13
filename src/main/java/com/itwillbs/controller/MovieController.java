@@ -188,7 +188,7 @@ public class MovieController {
     
 	// 영화 예약하기 창 이동
 	@GetMapping("/reservation/info")
-	public String resInfo(Model model) {
+	public String resInfo(@RequestParam("tmdbId")String tmdbId,@RequestParam("title")String title, Model model, HttpSession session) {
 		List<TheatersVO> theaters = movieService.getAllTheaters();
 		System.out.println(theaters);
 		
@@ -197,10 +197,14 @@ public class MovieController {
 				.map(TheatersVO::getLocation)
 				.distinct()
 				.collect(Collectors.toList());
+		System.out.println(theaters);
+		
 		
 		
 		model.addAttribute("theaters", theaters);
 		model.addAttribute("locationsList", locationsList);
+		model.addAttribute("tmdbId", tmdbId);
+		model.addAttribute("title", title);
 		
 		return "/reservation/info";
 	}
@@ -210,7 +214,8 @@ public class MovieController {
 	
 	// 영화 예약하기 (좌석 선택)
 	@GetMapping("/reservation/seat")
-	public String resSeat() {
+	public String resSeat(Model model) {
+		
 		return "/reservation/seat";
 	}
 	
