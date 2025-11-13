@@ -173,3 +173,11 @@ h1 {
     color: #ff4081;
 }
 
+#title{
+	text-align: left !important;
+    margin: 20px 0 0 40px;
+    font-size: 28px;
+    font-weight: bold;
+	
+}
+

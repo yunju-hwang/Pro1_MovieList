@@ -8,6 +8,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-
+	<h1>결제 페이지</h1>
 </body>
 </html>

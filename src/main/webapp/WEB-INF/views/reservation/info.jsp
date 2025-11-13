@@ -13,7 +13,10 @@
 </head>
 <body>
 
-<h1>영화관 선택</h1>
+<h1 id="title">${title}</h1>
+<input type="hidden" id="tmdbId" value="${tmdbId}">
+
+
 <div class="page-layout">
 	<div class="theater-wrapper">
 	    <!-- 왼쪽: 지역 -->
@@ -32,6 +35,7 @@
 	        </c:forEach>
 	    </div>
 	</div>
+
 
 
 	<!-- 날짜 버튼 영역 -->
