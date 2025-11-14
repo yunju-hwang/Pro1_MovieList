@@ -1,0 +1,152 @@
+@charset "UTF-8";
+
+/* =========================================================
+ * 3. FORMS & FORM BUTTONS STYLES
+ * - FAQ 등록/수정 폼 및 1:1 문의 답변 폼
+ * ========================================================= */
+
+/* -------------------- 3-1. 공통 폼 컨테이너 및 제목 -------------------- */
+.answer-container,
+.faq-form-container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.faq-form h3 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+/* -------------------- 3-2. 폼 요소 스타일 및 간격 조정 (⭐️핵심 수정 부분⭐️) -------------------- */
+
+.faq-form label {
+    display: block;
+    margin-top: 10px; /* 15px -> 10px로 줄여서 윗 간격 감소 */
+    margin-bottom: 3px; /* 5px -> 3px로 줄여서 라벨 아래 간격 감소 */
+    font-weight: bold;
+    color: #555;
+}
+
+.faq-form input[type="text"],
+.faq-form select,
+.faq-form textarea,
+.answer-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 5px; /* 10px -> 5px로 줄여서 아래 요소와의 간격 감소 */
+}
+
+.faq-form textarea,
+.answer-form textarea {
+    resize: vertical;
+    min-height: 200px;
+}
+
+/* -------------------- 3-3. 1:1 문의 원본 섹션 -------------------- */
+
+.original-inquiry {
+    margin-bottom: 30px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.original-inquiry h4 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.original-inquiry p {
+    margin-bottom: 5px;
+    line-height: 1.6;
+}
+
+/* -------------------- 3-4. 폼 제출 버튼 스타일 (tabsbuttons.css에서 분리 및 통합) -------------------- */
+
+/* FAQ 등록/수정 폼의 버튼 그룹 */
+.action-buttons {
+    margin-top: 25px; 
+    text-align: right; /* 우측 정렬 */
+    /* 💡 폼 안에 딱 맞게 정렬되도록 추가적인 스타일링 불필요 */
+}
+
+.action-buttons button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.submit-btn { /* 등록 완료/답변 등록 */
+    background-color: #007bff;
+    color: white;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.cancel-btn { /* 취소 */
+    background-color: #6c757d;
+    color: white;
+}
+
+.cancel-btn:hover {
+    background-color: #5a6268;
+    transform: scale(1.05);
+}
+
+/* -------------------- 3-5. 1:1 답변 폼 전용 버튼 (reply-actions 대체) -------------------- */
+
+/* 이전에 tabsbuttons.css에 있던 .reply-submit-btn, .reply-cancel-btn 스타일을 통합 */
+/* 💡 만약 HTML에서 .reply-actions와 .reply-submit-btn 등을 사용하고 있다면, 
+   .action-buttons와 .submit-btn으로 클래스명을 통일하는 것을 권장해. 
+   지금은 기존 클래스명을 사용해서 정리했어. */
+
+.reply-actions {
+    text-align: right; /* 버튼을 오른쪽으로 */
+    margin-top: 10px;
+}
+.reply-actions button {
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-left: 10px;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.reply-submit-btn { /* 답변 등록 버튼 (빨간색) */
+    border: none;
+    background-color: #dc3545;
+    color: white;
+}
+.reply-submit-btn:hover {
+    background-color: #a80000;
+    transform: scale(1.05);
+}
+
+.reply-cancel-btn { /* 답변 취소 버튼 (회색) */
+    border: 1px solid #6c757d;
+    background-color: #fff;
+    color: #6c757d;
+}
+.reply-cancel-btn:hover {
+    background-color: #e2e6ea;
+    transform: scale(1.05);
+}

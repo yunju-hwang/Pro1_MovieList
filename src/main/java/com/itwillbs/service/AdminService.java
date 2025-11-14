@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.itwillbs.domain.FaqsVO;
 import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.domain.MovieRequestVO;
@@ -110,4 +111,27 @@ public class AdminService {
     public void AdminReservationsRefund(int id) {
     	adminMapper.AdminReservationsRefund(id);
     }
+    
+    // FAQS
+    public List<FaqsVO> AdminFaqsList(){
+    	return adminMapper.AdminFaqsList();
+    }
+    
+    public int AdminFaqsWrite(FaqsVO faqs) {
+    	return adminMapper.AdminFaqsWrite(faqs);
+    }
+    
+    public FaqsVO getFaqsDetail(int id) {
+    	return adminMapper.getFaqsDetail(id);
+    }
+    
+    public int AdminFaqsUpdate(FaqsVO faqs) {
+    	return adminMapper.AdminFaqsUpdate(faqs);
+    }
+    
+    public int AdminFaqsDelete(int id) {
+    	return adminMapper.AdminFaqsDelete(id);
+    }
+    
+    
 }

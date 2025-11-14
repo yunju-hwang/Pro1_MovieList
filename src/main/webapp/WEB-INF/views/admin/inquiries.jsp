@@ -2,7 +2,6 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="dashboard.jsp"%>
-
 <div class="table-section">
 	<table class="inquiry-table">
 		<thead>

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.itwillbs.domain.ReviewsVO;
 import com.itwillbs.domain.ReservationsVO;
+import com.itwillbs.domain.FaqsVO;
 import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.domain.MovieRequestVO;
@@ -65,6 +66,22 @@ public List<ReservationsVO> AdminReservationsList();
 
 
 public void AdminReservationsRefund(int id);
+
+// FAQS
+public List<FaqsVO> AdminFaqsList();
+
+public int AdminFaqsWrite(FaqsVO faqs);
+
+public FaqsVO getFaqsDetail(int id);
+
+public int AdminFaqsUpdate(FaqsVO faqs);
+
+public int AdminFaqsDelete(int id);
+
+
+
+
+
 
 
 

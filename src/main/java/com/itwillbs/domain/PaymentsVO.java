@@ -19,4 +19,8 @@ public class PaymentsVO {
     private String method;
     private String status;
     private LocalDateTime paymentDate;
+    
+    
+    
+    
 }
