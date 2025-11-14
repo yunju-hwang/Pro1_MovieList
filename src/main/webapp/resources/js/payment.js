@@ -38,10 +38,13 @@ document.addEventListener("DOMContentLoaded", () => {
 	    const IMP = window.IMP;
 	    IMP.init("imp35667677"); // 본인 아임포트 가맹점 식별코드로 변경
 	    
+	    // 사용자가 선택한 pg 가져오기
+	    const pg = document.querySelector('input[name="paymentMethod"]:checked').value;
+	    
 	    // 2. 결제 요청(데이터)
         IMP.request_pay({
-            pg: "kakaopay", // 또는 html5_inicis, toss 등
-            pay_method: "card",
+            pg: pg, // html5_inicis, toss 등
+            pay_method: "card", // 실제 결제 수단은 카드로 고정
             merchant_uid: "order_" + new Date().getTime(), // 고유 주문번호
             name: movieTitle,
             amount: totalPrice,  //금액 

@@ -23,6 +23,33 @@
 	    <p>어른: <span id="adultCount">0</span>명 / 어린이: <span id="childCount">0</span>명</p>
 	    <p>총 금액: <span id="amount">0</span>원</p>
 	    
+	    <!-- 결제 수단 선택 UI 추가 -->
+	    <!-- 결제 수단 선택 UI (라디오 버튼) -->
+		<div class="payment-method">
+		    <p>결제 수단 선택:</p>
+		    <label class="radio-container">
+		        <input type="radio" name="paymentMethod" value="inicis" checked>
+		        <span class="checkmark"></span>
+		        신용/체크카드
+		    </label>
+		    <label class="radio-container">
+		        <input type="radio" name="paymentMethod" value="kakaopay">
+		        <span class="checkmark"></span>
+		        카카오페이
+		    </label>
+		    <label class="radio-container">
+		        <input type="radio" name="paymentMethod" value="tosspay">
+		        <span class="checkmark"></span>
+		        토스페이
+		    </label>
+		    <label class="radio-container">
+		        <input type="radio" name="paymentMethod" value="payco">
+		        <span class="checkmark"></span>
+		        페이코/기타 PG
+		    </label>
+		</div>
+
+	    
 	    <button id="payBtn">결제하기</button>
 	</div>
     
