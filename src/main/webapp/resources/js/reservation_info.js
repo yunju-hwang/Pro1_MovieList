@@ -1,14 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
     const regions = document.querySelectorAll(".region-list li");
     const theaters = document.querySelectorAll(".theater-card");
-    const selectedInput = document.getElementById("selectedTheater");
     const selectedDate = document.getElementById("selectedDate");
     const selectedTime = document.getElementById("selectedTime");
-
+    
     // 선택 요약 영역
     const summaryTheater = document.getElementById("summaryTheater");
     const summaryDate = document.getElementById("summaryDate");
     const summaryTime = document.getElementById("summaryTime");
+    
+    // 다음 버튼
+    const nextButton = document.querySelector(".btn-submit");
 
     // 초기: 모든 영화관 숨김
     theaters.forEach(t => t.style.display = "none");
@@ -29,8 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // 영화관 클릭 시 선택
     theaters.forEach(t => {
         t.addEventListener("click", () => {
-            selectedInput.value = t.dataset.id;
-            summaryTheater.textContent = t.textContent; // 선택 요약 업데이트
+            const theaterName = t.textContent;
+            summaryTheater.textContent = theaterName;
             theaters.forEach(tc => tc.classList.remove("active"));
             t.classList.add("active");
 
@@ -40,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
             wrapper.style.display = "block";
             dateButtons.innerHTML = "";
 
-            // 오늘부터 7일 버튼 생성
             const today = new Date();
             const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -56,27 +57,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 btn.type = "button";
                 btn.classList.add("date-btn");
                 btn.textContent = `${month}/${date} (${day})`;
-
-                const yyyymmdd = d.toISOString().split("T")[0];
-                btn.setAttribute("data-value", yyyymmdd);
+                btn.setAttribute("data-value", d.toISOString().split("T")[0]);
 
                 btn.addEventListener("click", function() {
-                    // 날짜 버튼 active 처리
                     document.querySelectorAll(".date-btn").forEach(b => b.classList.remove("active"));
                     this.classList.add("active");
-
-                    // hidden input 설정
                     selectedDate.value = this.getAttribute("data-value");
-                    summaryDate.textContent = this.textContent; // 선택 요약 업데이트
-                    console.log("선택된 날짜:", selectedDate.value);
+                    summaryDate.textContent = this.textContent;
 
-                    // 시간 버튼 영역 표시
                     const timeWrapper = document.getElementById("timePickerWrapper");
                     const timeButtons = document.getElementById("timeButtons");
                     timeWrapper.style.display = "block";
                     timeButtons.innerHTML = "";
 
-                    // 임의 시간 배열
                     const times = ["10:30", "12:00", "13:30", "15:00", "16:30", "18:00", "20:30"];
                     times.forEach(time => {
                         const timeBtn = document.createElement("button");
@@ -89,8 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             document.querySelectorAll(".time-btn").forEach(b => b.classList.remove("active"));
                             this.classList.add("active");
                             selectedTime.value = this.getAttribute("data-value");
-                            summaryTime.textContent = this.textContent; // 선택 요약 업데이트
-                            console.log("선택된 시간:", selectedTime.value);
+                            summaryTime.textContent = this.textContent;
                         });
 
                         timeButtons.appendChild(timeBtn);
@@ -99,10 +91,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 dateButtons.appendChild(btn);
             }
+
+            // 선택 정보를 LocalStorage에 저장 (영화관 이름)
+            localStorage.setItem("selectedTheater", theaterName);
         });
     });
 
-    // 선택된 첫 번째 지역 자동 클릭
-    const defaultRegion = Array.from(regions).find(r => r.dataset.location === "서울");
-    if(defaultRegion) defaultRegion.click();
+    // 날짜 선택 시 LocalStorage에 저장
+    selectedDate.addEventListener("change", () => {
+        localStorage.setItem("selectedDate", selectedDate.value);
+    });
+
+    // 시간 선택 시 LocalStorage에 저장
+    selectedTime.addEventListener("change", () => {
+        localStorage.setItem("selectedTime", selectedTime.value);
+    });
+
+    // '다음' 버튼 클릭
+    nextButton.addEventListener("click", () => {
+        const date = selectedDate.value;
+        const time = selectedTime.value;
+        const tmdbId = document.getElementById("tmdbId").value;
+        const title = document.getElementById("title").textContent;
+
+        if (!localStorage.getItem("selectedTheater") || !date || !time) {
+            alert("상영관, 날짜, 시간을 모두 선택해주세요!");
+            return;
+        }
+
+        // LocalStorage에 영화 정보 저장
+        localStorage.setItem("selectedDate", date);
+        localStorage.setItem("selectedTime", time);
+        localStorage.setItem("tmdbId", tmdbId);
+        localStorage.setItem("title", title);
+
+        // seat.jsp로 이동 (URL에 파라미터 없이)
+        window.location.href = `${ctx}/reservation/seat`;
+    });
 });

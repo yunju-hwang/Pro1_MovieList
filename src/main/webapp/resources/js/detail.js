@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return res.json();
         })
         .then(movie => {
+        	console.log("🎬 movie 객체:", movie);
             const posterUrl = movie.posterPath
                 ? `https://image.tmdb.org/t/p/w400${movie.posterPath}`
                 : `${ctx}/resources/images/default_poster.png`;
@@ -117,7 +118,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     alert("로그인이 필요한 서비스입니다");
                     return;
                 }
-                window.location.href = `${ctx}/reservation/info`;
+                const tmdbId = movie.tmdbId;
+                const title = movie.title;
+                const url = `${ctx}/reservation/info?tmdbId=${tmdbId}&title=${encodeURIComponent(title)}`;
+                console.log("➡ 이동 URL:", url); // ✅ 실제 URL 출력
+    			window.location.href = url;
             });
 
             // ⭐ 별점 기능
