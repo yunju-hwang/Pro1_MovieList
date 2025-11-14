@@ -139,7 +139,8 @@
 
 		GROUP BY u.user_id, u.role, u.username, u.email, u.phone
 
-		ORDER BY u.user_id DESC
+		ORDER BY
+		u.user_id DESC
 	</select>
 
 	<!-- 사용자 관리 삭제 -->
@@ -159,7 +160,8 @@
 		i.status,
 		i.created_at AS createdAt,
 		i.answered_at AS answeredAt,
-		u.email AS userEmail
+		u.email AS
+		userEmail
 		FROM inquiries i
 		LEFT JOIN
 		users u ON i.user_id = u.user_id
@@ -169,7 +171,7 @@
 	<update id="answerInquiry">
 		UPDATE inquiries
 		SET
-		status = 'answered', 
+		status = 'answered',
 		answered_at = NOW(),
 		answer_content = #{answerContent}
 		WHERE id = #{id}
@@ -185,7 +187,8 @@
 		i.status,
 		i.created_at AS createdAt,
 		i.answered_at AS answeredAt,
-		u.email AS userEmail,
+		u.email AS
+		userEmail,
 		i.answer_content AS answerContent
 		FROM inquiries i
 		LEFT JOIN
@@ -194,7 +197,7 @@
 		i.id = #{id}
 	</select>
 
-<!-- 영화요청 문의 -->
+	<!-- 영화요청 -->
 	<select id="AdminRequestList"
 		resultType="com.itwillbs.domain.MovieRequestVO">
 		SELECT
@@ -206,18 +209,18 @@
 		status,
 		created_at AS createdAt,
 		processed_at AS processedAt
-		
+
 		FROM movie_request
 		ORDER BY created_at DESC, id DESC;
 	</select>
 
-<!-- 	<delete id="deleteMovieRequests"> -->
-<!-- 		DELETE FROM movie_request -->
-<!-- 		WHERE user_id = #{userId} -->
-<!-- 	</delete> -->
+	<!-- <delete id="deleteMovieRequests"> -->
+	<!-- DELETE FROM movie_request -->
+	<!-- WHERE user_id = #{userId} -->
+	<!-- </delete> -->
 
 
-<!-- 리뷰관리 문의 -->
+	<!-- 리뷰관리 -->
 	<select id="AdminReviewsList"
 		resultType="com.itwillbs.domain.ReviewsVO">
 		SELECT
@@ -228,11 +231,13 @@
 		r.sentiment,
 		r.rating,
 		r.created_at AS createdAt,
-		m.title AS movieTitle 
-		
+		m.title AS
+		movieTitle
+
 		FROM reviews r
-		LEFT JOIN movies m ON r.tmdb_id = m.tmdb_id  
-		ORDER BY r.created_at DESC, r.id DESC;</select>
+		LEFT JOIN movies m ON r.tmdb_id = m.tmdb_id
+		ORDER BY r.created_at DESC, r.id DESC;
+	</select>
 
 
 	<delete id="deleteReviews">
@@ -240,5 +245,94 @@
 		WHERE id = #{id}
 	</delete>
 
+	<!-- 예매관리 -->
+	<select id="AdminReservationsList"
+		resultType="com.itwillbs.domain.ReservationsVO">
+		SELECT
+		r.id,
+		r.user_id AS userId,
+		r.tmdb_id AS tmdbId,
+		r.theater_id AS theaterId,
+		r.screening_time AS screeningTime,
+		r.reservation_date AS reservationDate,
+		r.seat,
+		r.adult_people AS adultPeople,
+		r.child_people AS childPeople,
+		r.status,
+		m.title AS movieTitle,
+		p.amount AS finalAmount,
+		CONCAT(t.name, ' (', t.location, ')') AS theaterName
+
+		FROM reservations r
+
+		LEFT JOIN movies m ON r.tmdb_id = m.tmdb_id
+		LEFT JOIN payments p ON r.id =
+		p.reservation_id
+		LEFT JOIN theaters t ON r.theater_id = t.theater_id
+
+		ORDER BY r.id DESC;
+	</select>
+
+	<update id="AdminReservationsRefund">
+		UPDATE reservations
+		SET
+		status = 'cancelled'
+		WHERE id =
+		#{id}
+	</update>
+
+	<!-- FAQS -->
+	<select id="AdminFaqsList"
+		resultType="com.itwillbs.domain.FaqsVO">
+		SELECT
+		id,
+		question,
+		answer,
+		created_at as createdAT,
+		category
+		from faqs
+		order by id desc;
+	</select>
+
+	<select id="getFaqsDetail"
+		resultType="com.itwillbs.domain.FaqsVO">
+		SELECT
+		id,
+		question,
+		answer,
+		category,
+		created_at as createdAt
+		FROM faqs
+		WHERE id = #{id}
+	</select>
+
+
+	<update id="AdminFaqsUpdate">
+		UPDATE faqs
+		SET
+		category = #{category},
+		question = #{question},
+		answer = #{answer}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="AdminFaqsDelete">
+		DELETE FROM faqs
+		WHERE id = #{id}
+	</delete>
+
+	<insert id="AdminFaqsWrite">
+		INSERT INTO faqs (
+		question,
+		answer,
+		category,
+		created_at
+		) VALUES (
+		#{question},
+		#{answer},
+		#{category},
+		NOW()
+		)
+	</insert>
 
 </mapper>
