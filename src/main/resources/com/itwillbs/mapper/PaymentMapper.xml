@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.itwillbs.mapper.PaymentMapper">
+	<!-- 1) 결제 정보 insert -->
+	<insert id="insertPayment" useGeneratedKeys = "true" keyProperty = "id">
+		INSERT INTO payments
+            (reservation_id, payment_method_id, amount, imp_uid, merchant_uid, status, payment_date)
+        VALUES
+            (#{reservationId}, #{paymentMethodId}, #{amount}, #{impUid}, #{merchantUid}, #{status}, NOW())
+		
+	</insert>
+	
+	<!-- 2) 예약 정보 insert -->
+	<insert id="insertReservation" useGeneratedKeys = "true" keyProperty = "id">
+		INSERT INTO reservations
+            (user_id, tmdb_id, theater_id, screening_time, reservation_date, seat, adult_people, child_people, status)
+        VALUES
+            (#{userId}, #{tmdbId}, #{theaterId}, #{screeningTime}, NOW(), #{seat}, #{adultPeople},#{childPeople}, #{status})
+	</insert>
+	
+</mapper>

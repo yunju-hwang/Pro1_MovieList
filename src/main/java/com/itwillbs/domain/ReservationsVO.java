@@ -17,5 +17,9 @@ public class ReservationsVO {
     private LocalDateTime screeningTime;
     private LocalDateTime reservationDate;
     private String seat;
-    private int people;
+    private int adultPeople;
+    private int childPeople;
+    private String status; // reserved, cancelled 
+   
+    
 }
