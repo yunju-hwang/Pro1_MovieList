@@ -17,7 +17,7 @@ public class ReservationsVO {
     private LocalDateTime screeningTime;
     private LocalDateTime reservationDate;
     private String seat;
-    private int people;
+//    private int people; 삭제
     
     
     private String movieTitle;
@@ -25,4 +25,7 @@ public class ReservationsVO {
     private String paymentDate;
     private String theaterName;
     private String status;
+    
+    private int adultPeople;
+    private int childPeople;
 }

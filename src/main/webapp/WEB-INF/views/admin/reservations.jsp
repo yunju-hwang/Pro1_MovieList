@@ -35,15 +35,22 @@
 							value="${reservations.reservationDate}" /> <c:out
 							value="${fn:substring(reservationDate, 0, 10)}" /><br> <c:out
 							value="${fn:substring(reservationDate, 11, 16)}" /></td>
-					<td>${reservations.people}명</td>
+					<td><c:if test="${reservations.adultPeople > 0}">
+        					성인: ${reservations.adultPeople}명
+    				</c:if> <c:if
+							test="${reservations.adultPeople > 0 and reservations.childPeople > 0}">
+       						 ,
+    				</c:if> <c:if test="${reservations.childPeople > 0}">
+        					아동: ${reservations.childPeople}명
+    				</c:if> <c:if
+							test="${reservations.adultPeople eq 0 and reservations.childPeople eq 0}">
+        					0명
+    				</c:if></td>
 					<td>${reservations.seat}</td>
 					<td>${reservations.finalAmount}원</td>
 					<td><c:choose>
 							<c:when test="${reservations.status eq 'reserved'}">
 								<span class="status-reserved">예매 완료</span>
-							</c:when>
-							<c:when test="${reservations.status eq 'refunded'}">
-								<span class="status-refunded">환불 완료</span>
 							</c:when>
 							<c:when test="${reservations.status eq 'cancelled'}">
 								<span class="status-cancelled">사용자 취소</span>
@@ -51,16 +58,17 @@
 							<c:otherwise>${reservations.status}
         					</c:otherwise>
 						</c:choose></td>
-						<td><c:if test="${reservations.status eq 'reserved'}">
+					<td><c:if test="${reservations.status eq 'reserved'}">
 							<form id="refundForm_${reservations.id}"
-								action="<c:url value='/admin/reservations/refund' />" method="post"> 
+								action="<c:url value='/admin/reservations/refund' />"
+								method="post">
 								<input type="hidden" name="id" value="${reservations.id}">
 								<button type="submit" class="action-btn refund-btn"
 									onclick="return confirm('${reservations.id}번 예매를 정말로 환불 처리하시겠습니까?');">
 									환불</button>
 							</form>
-						</c:if><c:if test="${reservations.status ne 'reserved'}">     -
-</c:if></td>
+						</c:if>
+						<c:if test="${reservations.status ne 'reserved'}">-</c:if></td>
 				</tr>
 			</c:forEach>
 		</tbody>

@@ -256,7 +256,8 @@
 		r.screening_time AS screeningTime,
 		r.reservation_date AS reservationDate,
 		r.seat,
-		r.people,
+		r.adult_people AS adultPeople,
+		r.child_people AS childPeople,
 		r.status,
 		m.title AS movieTitle,
 		p.amount AS finalAmount,
@@ -275,7 +276,7 @@
 	<update id="AdminReservationsRefund">
 		UPDATE reservations
 		SET
-		status = 'refunded'
+		status = 'cancelled'
 		WHERE id =
 		#{id}
 	</update>
