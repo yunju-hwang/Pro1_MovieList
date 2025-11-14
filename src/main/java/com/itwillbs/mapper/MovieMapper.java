@@ -56,5 +56,6 @@ public interface MovieMapper {
     // 찜 반영 movies popularity에
     void updateMoviePopularity(MovieVO movie);
     
+    // 영화관 값들 가져오기
     List<TheatersVO> getAllTheaters();
 }

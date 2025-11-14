@@ -32,6 +32,12 @@ document.addEventListener("DOMContentLoaded", () => {
     theaters.forEach(t => {
         t.addEventListener("click", () => {
             const theaterName = t.textContent;
+            const theaterId = parseInt(t.dataset.id, 10); // <-- theaterId 가져오기
+            // 선택 정보를 LocalStorage에 저장 (영화관 이름만)
+        	localStorage.setItem("selectedTheater", theaterName);
+        	localStorage.setItem("selectedTheaterId", theaterId);
+        	
+        	document.getElementById("selectedTheater").value = theaterId;
             summaryTheater.textContent = theaterName;
             theaters.forEach(tc => tc.classList.remove("active"));
             t.classList.add("active");

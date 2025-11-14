@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(movie => {
         	console.log("🎬 movie 객체:", movie);
+        	localStorage.setItem("screeningTime", movie.runtime);
+        
             const posterUrl = movie.posterPath
                 ? `https://image.tmdb.org/t/p/w400${movie.posterPath}`
                 : `${ctx}/resources/images/default_poster.png`;
