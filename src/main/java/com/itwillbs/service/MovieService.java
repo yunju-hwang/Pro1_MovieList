@@ -30,8 +30,11 @@ public class MovieService {
 	@Inject
 	private MovieMapper movieMapper;
 	
-	// api key 삽입
+	// api key 삽입 -> tmdb api key
 	@Value("${tmdb.api.key}")
+	
+
+	
 	private String tmdbApiKey;
 	private final String TMDB_BASE_URL = "https://api.themoviedb.org/3/movie";
 	

@@ -167,7 +167,7 @@
   </update>
   
   <select id="getAllTheaters" resultType="com.itwillbs.domain.TheatersVO">
-    SELECT theater_id, name, location
+    SELECT theater_id AS theaterId, name, location
     FROM theaters
     ORDER BY name ASC
 </select>
