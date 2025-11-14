@@ -24,3 +24,5 @@ public class MemberVO {
 	private String phone; // 전화번호
 	private String profile_image; // 프로필 사진 경로 저장
 }
+
+

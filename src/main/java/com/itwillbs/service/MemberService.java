@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.itwillbs.domain.GenresVO;
 import com.itwillbs.domain.MemberVO;
+import com.itwillbs.domain.UserGenresVO;
 import com.itwillbs.mapper.MemberMapper;
 
 @Service
@@ -26,4 +27,22 @@ public class MemberService {
 		return memberMapper.getGenres();
 	}
 	
+	
+	public MemberVO loginMember(MemberVO memberVO) {
+		System.out.println("MemberService loginMember()");
+		
+		return memberMapper.loginMember(memberVO);
+	}
+
+	public void insertGenres(UserGenresVO userGenresVO) {
+		System.out.println("MemberService insertGenres()");
+		
+		memberMapper.insertGenres(userGenresVO);
+	}
+	
+	
+	
+	
+	
 }
+

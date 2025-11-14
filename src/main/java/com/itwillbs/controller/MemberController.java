@@ -1,9 +1,10 @@
 package com.itwillbs.controller;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwillbs.domain.GenresVO;
 import com.itwillbs.domain.MemberVO;
+import com.itwillbs.domain.UserGenresVO;
 import com.itwillbs.service.AdminService;
 import com.itwillbs.service.MemberService;
 
@@ -30,6 +32,44 @@ public class MemberController {
 	public String login() {
 		return "/user/login";
 	}
+	
+// 아래 로그인 프로작성중 
+// ===========
+//	@PostMapping("/loginPro")
+//	public String loginPro(MemberVO memberVO, HttpSession session){
+//		System.out.println("MemberController loginPro()");
+//		System.out.println(memberVO);
+//		
+//		MemberVO memberVO2 = memberService.loginMember(memberVO);
+//		System.out.println(memberVO2);
+//		
+//		if(memberVO2 != null) {
+//			session.setAttribute("user_id", memberVO2.getUser_id());
+//			return "redirect:/main";
+//		}else {
+//			
+//			model.addAttribute("msg", "아이디 또는 비밀번호가 일치하지 않습니다."); // 실패 메시지 전달
+//            return "/user/login"; 
+//		}
+//		
+//	}
+	
+	// ====
+	@PostMapping("/loginPro")
+	public String loginPro(MemberVO memberVO, HttpSession session, Model model){
+		System.out.println("MemberController loginPro()");
+		
+		MemberVO memberVO2 = memberService.loginMember(memberVO);
+		if(memberVO2 != null) {
+			session.setAttribute("loginUser", memberVO.getUser_id());
+			return "redirect:/main";
+		}else {
+			model.addAttribute("msg", "아이디 또는 비밀번호가 일치하지 않습니다."); // 실패 메시지 전달
+            return "/user/login"; 
+			
+		}
+	}
+	// ====
 	
 	//회원가입 -> 약관동의
 	@GetMapping("/register/step1")
@@ -63,9 +103,20 @@ public class MemberController {
 		return "/user/register_step3";
 	}
 
+	
 	@PostMapping("/register/step3Pro")
-	public String step3Pro(List<Map<String, String>> genreList) {
-		System.out.println(genreList);
+	public String step3Pro(HttpServletRequest request, HttpSession session) {
+		String[] genreList = request.getParameterValues("genre");
+		//System.out.println(genreList[0]);
+		List<UserGenresVO> userGenresList = new ArrayList<UserGenresVO>();
+		
+		for (String genreId : genreList) {
+			UserGenresVO userGenresVO = new UserGenresVO();
+			userGenresVO.setUserId((String)session.getAttribute("user_id"));
+			userGenresVO.setGenreId(Integer.parseInt(genreId));
+			
+			memberService.insertGenres(userGenresVO);
+		}
 		return "redirect:/login";
 	}
 	

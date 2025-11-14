@@ -15,15 +15,15 @@
     <div class="container">
         <h1>MovieList</h1>
         <p>영화 리뷰와 예매 서비스</p>
-        <form action="${pageContext.request.contextPath }/member/loginPro" name="fr" method="post">
+        <form action="${pageContext.request.contextPath }/loginPro" name="fr" method="post">
 
             <div class="form-group">
                 <label for="userId">아이디:</label>
-                <input type="text" id="userId" name="userId" placeholder="아이디를 입력하세요" required>
+                <input type="text" id=user_id name="user_id" placeholder="아이디를 입력하세요" required>
             </div>
             <div class="form-group">
                 <label for="userPw">비밀번호:</label>
-                <input type="password" id="userPw" name="userPw" placeholder="비밀번호를 입력하세요" required>
+                <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
             </div>
             <div class="form-group">
                 <input type="checkbox" id="rememberUserId" name="rememberUserId">

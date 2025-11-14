@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.itwillbs.domain.GenresVO;
 import com.itwillbs.domain.MemberVO;
+import com.itwillbs.domain.UserGenresVO;
 
 // interface로 구현
 @Mapper
@@ -15,4 +16,12 @@ public interface MemberMapper {
 	
 
 	List<GenresVO> getGenres();
+
+
+	public MemberVO loginMember(MemberVO memberVO);
+
+
+	void insertGenres(UserGenresVO userGenresVO);
+	
+	
 }

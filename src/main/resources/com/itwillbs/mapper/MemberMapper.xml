@@ -8,13 +8,21 @@
 <insert id="insertMember">
 insert into users (user_id, role, password, username, email, gender, birth_date, phone, profile_image)
 values(#{user_id}, #{role},#{password},#{username},#{email},#{gender},#{birth_date},#{phone},#{profile_image})
-
-
 </insert>
 
 <select id="getGenres" resultType="com.itwillbs.domain.GenresVO">
 SELECT * FROM genres
-
 </select>
+
+<select id="loginMember" resultType="com.itwillbs.domain.MemberVO">
+	select * from users
+  	where user_id = #{user_id} and password = #{password}
+</select>
+
+<insert id="insertGenres">
+insert into user_genres (user_id, genre_id)
+values(#{userId},#{genreId})
+</insert>
+
   
 </mapper>

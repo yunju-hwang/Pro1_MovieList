@@ -47,8 +47,10 @@ public class MovieService {
 		
 		for(Map<String, Object>g: genres) {
 			GenresVO vo = new GenresVO();
-			vo.setGenreId((Integer)g.get("id"));
-			vo.setGenreName((String)g.get("name"));
+//			vo.setGenreId((Integer)g.get("id"));
+//			vo.setGenreName((String)g.get("name"));
+			vo.setGenre_id((Integer)g.get("id"));
+			vo.setGenre_name((String)g.get("name"));
 			
 			movieMapper.insertGenre(vo);
 		}

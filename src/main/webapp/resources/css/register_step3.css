@@ -59,10 +59,14 @@ body {
 }
 
 .genre-grid input:checked + span,
-.genre-grid input:checked ~ label {
+.genre-grid input:checked ~ label,
+{
+	
     background: #ffdddd;
     border-color: #e60000;
 }
+
+
 
 .btn-row {
     display: flex;
@@ -87,3 +91,4 @@ body {
     background: #e60000;
     color: white;
 }
+

@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/navbar.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -18,7 +19,11 @@
         <div class="genre-grid">
 			
 			<c:forEach var="genres" items="${genresVOList}"> 
-			<label><input type="checkbox" name="genre" value="${genres.genre_id }">${genres.genre_name}</label>
+				<label><input type="checkbox" name="genre" value="${genres.genre_id }" ><span>${genres.genre_name}</span></label>
+			
+			
+
+</label>
 			</c:forEach>
 
             
@@ -39,5 +44,25 @@
         </div>
     </form>
 </div>
+
+<script>
+document.querySelectorAll('.genre-grid input[type="checkbox"]').forEach(input => {
+    // 초기 선택 상태 반영
+    if(input.checked) input.parentElement.classList.add('checked-label');
+
+    input.addEventListener('click', function() {
+        if(this.checked) {
+            this.parentElement.classList.add('checked-label');
+//             alert("T" + this.checked);
+            this.setAttribute("checked","checked");
+        } else {
+            this.parentElement.classList.remove('checked-label');
+//             alert("F" + this.checked);
+            
+        }
+    });
+});
+</script>
+
 </body>
 </html>
