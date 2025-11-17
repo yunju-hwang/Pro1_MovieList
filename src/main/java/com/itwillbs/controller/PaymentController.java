@@ -1,5 +1,6 @@
 package com.itwillbs.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.itwillbs.domain.PaymentMethodsVO;
 import com.itwillbs.domain.ReservationPaymentVO;
 import com.itwillbs.service.PaymentService;
 
@@ -32,14 +32,17 @@ public class PaymentController {
 	
     // ------2) ️결제 완료 후 검증 & DB 저장
     @PostMapping("/verify")
-    public ResponseEntity<String> verifyPayment(@RequestBody ReservationPaymentVO vo ) {
+    public ResponseEntity<Map<String,Object>> verifyPayment(@RequestBody ReservationPaymentVO vo ) {
         System.out.println("verify");
+        Map<String,Object> response = new HashMap<>();
     	String result = paymentService.processPayment(vo);
         if (result.contains("성공")) {
-            return ResponseEntity.ok(result);
+        	response.put("success", true);
         } else {
-            return ResponseEntity.badRequest().body(result);
+        	response.put("success", false);
         }
+        
+        return ResponseEntity.ok(response);
     }
     
   

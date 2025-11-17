@@ -13,6 +13,7 @@
 </head>
 <body>
 
+	<div class="payment-content-container">
 	<h1>예매 정보 확인</h1>
 	<div class="payment-info">
 	    <p>영화: <span id="movieTitle">불러오는 중...</span></p>
@@ -27,32 +28,51 @@
 	    <!-- 결제 수단 선택 UI (라디오 버튼) -->
 		<div class="payment-method">
 		    <p>결제 수단 선택:</p>
-		    <label class="radio-container">
-		        <input type="radio" name="paymentMethod" value="inicis" checked>
-		        <span class="checkmark"></span>
-		        신용/체크카드
-		    </label>
-		    <label class="radio-container">
-		        <input type="radio" name="paymentMethod" value="kakaopay">
-		        <span class="checkmark"></span>
-		        카카오페이
-		    </label>
-		    <label class="radio-container">
-		        <input type="radio" name="paymentMethod" value="tosspay">
-		        <span class="checkmark"></span>
-		        토스페이
-		    </label>
-		    <label class="radio-container">
-		        <input type="radio" name="paymentMethod" value="payco">
-		        <span class="checkmark"></span>
-		        페이코/기타 PG
-		    </label>
-		</div>
+		       <!-- 신용/체크카드 -->
+		    <div class="payment-box">
+		        <label class="payment-option">
+		            <input type="radio" name="paymentMethod" value="uplus" checked>
+		            <span class="icon">💳</span>
+		            <span>신용/체크카드</span>
+		        </label>
+		    </div>
+		     <!-- 간편결제 -->
+		     <h3 class="category-title">⚡ 간편결제</h3>
+		    <div class="payment-box">
+		        <label class="payment-option">
+		            <input type="radio" name="paymentMethod" value="kakaopay">
+		            <img src="../resources/img/kakaopay.png" class="pay-icon"/>
+		            <span>카카오페이</span>
+		        </label>
+		    </div>
 
+		    <div class="payment-box">
+		        <label class="payment-option">
+		            <input type="radio" name="paymentMethod" value="tosspay">
+		            <img src="../resources/img/tosspay.png" class="pay-icon"/>
+		            <span>토스페이</span>
+		        </label>
+		    </div>
+
+		    <div class="payment-box">
+		        <label class="payment-option">
+		            <input type="radio" name="paymentMethod" value="payco">
+		            <img src="../resources/img/payco.png" class="pay-icon"/>
+		            <span>페이코/기타 PG</span>
+		        </label>
+		    </div>
+		</div>
+		
+		<div class="terms">
+	    <label>
+	        <input type="checkbox" id="agreeTerms">
+	        결제 및 개인정보 처리방침에 동의합니다.
+	    </label>
+		</div>
 	    
 	    <button id="payBtn">결제하기</button>
 	</div>
-    
+   </div> 
    
 <script>
     // JSP에서 context path를 JS 변수로 전달
