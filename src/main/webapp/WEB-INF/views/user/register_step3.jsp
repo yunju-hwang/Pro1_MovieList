@@ -19,7 +19,7 @@
         <div class="genre-grid">
 			
 			<c:forEach var="genres" items="${genresVOList}"> 
-				<label><input type="checkbox" name="genre" value="${genres.genre_id }" ><span>${genres.genre_name}</span></label>
+				<label><input type="checkbox" name="genre" value="${genres.genreId }" ><span>${genres.genreName}</span></label>
 			
 			
 

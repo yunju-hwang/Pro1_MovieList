@@ -8,7 +8,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class GenresVO {
-	private int genre_id;
-	private String genre_name;
+	private int genreId;
+	private String genreName;
 	
 }

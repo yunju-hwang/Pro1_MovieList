@@ -40,7 +40,7 @@
         </div>
 
         <label>생년월일 *</label>
-        <input type="date" name="birth_date" required>
+        <input type="date" name="birthDate" required>
 
         <label>전화번호 *</label>
         <input type="tel" name="phone" placeholder="010-0000-0000" required>

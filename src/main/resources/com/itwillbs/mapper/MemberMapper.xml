@@ -7,11 +7,12 @@
 
 <insert id="insertMember">
 insert into users (user_id, role, password, username, email, gender, birth_date, phone, profile_image)
-values(#{user_id}, #{role},#{password},#{username},#{email},#{gender},#{birth_date},#{phone},#{profile_image})
+values(#{user_id}, #{role},#{password},#{username},#{email},#{gender},#{birthDate},#{phone},#{profileImage})
 </insert>
 
 <select id="getGenres" resultType="com.itwillbs.domain.GenresVO">
-SELECT * FROM genres
+SELECT genre_id AS genreId, genre_name AS genreName
+ FROM genres
 </select>
 
 <select id="loginMember" resultType="com.itwillbs.domain.MemberVO">
