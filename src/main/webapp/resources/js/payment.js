@@ -41,6 +41,17 @@ document.addEventListener("DOMContentLoaded", () => {
 	    // 사용자가 선택한 pg 가져오기
 	    const pg = document.querySelector('input[name="paymentMethod"]:checked').value;
 	    
+	       // pg -> paymentMethodId 매핑
+	    let paymentMethodId;
+	    switch(pg) {
+	        case "uplus": paymentMethodId = 1; break;
+	        case "kakaopay": paymentMethodId = 2; break;
+	        case "tosspay": paymentMethodId = 3; break;
+	        case "payco": paymentMethodId = 4; break;
+	        default: paymentMethodId = 1;
+	    }
+	    
+	    
 	    // 2. 결제 요청(데이터)
         IMP.request_pay({
             pg: pg, // html5_inicis, toss 등
@@ -55,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
         	
         	// 3. 결제 성공 (백엔드 검증 요청)
             if (rsp.success) {
-                alert("결제 성공! 결제번호: " + rsp.imp_uid);
+               
                 
                 const payload = {
                 	reservation: {
@@ -71,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 		merchantUid: rsp.merchant_uid,
 			            impUid: rsp.imp_uid,
 			            amount: totalPrice,
-			            paymentMethodId: 1 // 결제 수단 ID
+			            paymentMethodId: paymentMethodId // 결제 수단 ID
                 	}
                 
                 
@@ -88,8 +99,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        alert("서버 검증 완료 및 예매 성공!");
-                        window.location.href = "/booking/success";
+                      
+                        setTimeout(() => {
+						        window.location.href = contextPath + "/reservation/complete";
+						    }, 100); // 0.1초 지연
                     } else {
                         alert("서버 검증 실패");
                     }

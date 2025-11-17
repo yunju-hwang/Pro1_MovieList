@@ -181,3 +181,64 @@ h1 {
 	
 }
 
+/* 기존 스타일 유지 */
+
+/* 반응형 조정 */
+@media (min-width: 1200px) {
+    /* 큰 화면에서 최대 폭 제한 */
+    .page-layout {
+        max-width: 1200px;
+        margin: 20px auto; /* 좌우 중앙 정렬 */
+    }
+}
+
+@media (max-width: 1024px) {
+    /* 중간 화면에서는 gap 줄이기 */
+    .page-layout {
+        gap: 15px;
+        margin: 20px 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* 모바일/태블릿: 레이아웃 세로로 */
+    .page-layout {
+        flex-direction: column;
+        margin: 20px 15px;
+        gap: 15px;
+    }
+
+    .theater-wrapper, .right-panel {
+        flex: 1 1 100%;
+        max-height: none;
+    }
+
+    .region-list, .theater-list {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    #title {
+        font-size: 22px;
+        margin-left: 15px;
+    }
+
+    .date-btn, .time-btn {
+        min-width: 60px;
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .btn-submit {
+        padding: 8px 20px;
+        font-size: 14px;
+    }
+
+    #selectionSummary {
+        font-size: 12px;
+        padding: 8px 15px;
+        gap: 10px;
+    }
+}
+
