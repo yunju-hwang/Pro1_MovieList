@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.itwillbs.domain.FaqsVO;
 import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.domain.MovieRequestVO;
 import com.itwillbs.domain.MovieVO;
+import com.itwillbs.domain.ReservationsVO;
 import com.itwillbs.domain.ReviewsVO;
 import com.itwillbs.mapper.AdminMapper;
 import com.itwillbs.service.AdminService;
@@ -277,14 +279,68 @@ public class AdminController {
 		
 		
 		
-		
 		// 예매 관리
 		@GetMapping("/reservations")
 		public String reservations(Model model) {
 			dashboardStats(model);
+			List<ReservationsVO> adminReservationsList = adminService.AdminReservationsList();
+			model.addAttribute("adminReservationsList", adminReservationsList);
+			
 			return "/admin/reservations";
 		}
 
+		@PostMapping("/reservations/refund")
+		public String reservationsRefund(@RequestParam("id") int id){
+		    adminService.AdminReservationsRefund(id); 
+		    
+		    return "redirect:/admin/reservations";
+		}
+		
+		
+		// FAQ 관리
+		@GetMapping("/faqs")
+		public String faqs(Model model) {
+			List<FaqsVO> adminFaqsList = adminService.AdminFaqsList();
+			model.addAttribute("adminFaqsList", adminFaqsList);
+			
+			return "/admin/faqs";
+		}
+		
+		@GetMapping("/faqs/write")
+		public String faqWrite() {
+		    return "/admin/faq_write_form"; 
+		    }
+		
+		@PostMapping("/faqs/write")
+		public String faqWriteForm(FaqsVO faqs) { 
+			adminService.AdminFaqsWrite(faqs);
+		    
+		    return "redirect:/admin/faqs";
+		}
+		
+		@GetMapping("/faqs/update")
+		public String FaqUpdate(@RequestParam("id") int id, Model model) {
+		    FaqsVO faqs = adminService.getFaqsDetail(id);
+		    
+		    model.addAttribute("faqs", faqs);
+		    
+		    return "/admin/faq_update_form"; 
+		}
+		
+		@PostMapping("/faqs/update")
+		public String AdminFaqsUpdate(FaqsVO faqs) { 
+			adminService.AdminFaqsUpdate(faqs);
+		    
+		    return "redirect:/admin/faqs";
+		}
+		
+		
+		@PostMapping("/faqs/delete") 
+		public String deleteFaqs(@RequestParam("id") int id) {
+		    adminService.AdminFaqsDelete(id); 
+
+		    return "redirect:/admin/faqs"; 
+		}
 		
 		
 		
@@ -295,12 +351,7 @@ public class AdminController {
 			return "/admin/notices";
 		}
 		
-		// FAQ 관리
-		@GetMapping("/faqs")
-		public String faqs(Model model) {
-			dashboardStats(model);
-			return "/admin/faqs";
-		}
+	
 	// ----------------------------------
 		
 

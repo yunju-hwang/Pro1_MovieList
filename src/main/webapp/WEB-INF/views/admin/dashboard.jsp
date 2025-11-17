@@ -8,15 +8,12 @@
 
 <html>
 <head>
-
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>영화 관리 대시보드</title>
-       <link rel="stylesheet" href="<c:url value='/resources/css/base.css' />">
-    <link rel="stylesheet" href="<c:url value='/resources/css/stats_card.css' />">
-    <link rel="stylesheet" href="<c:url value='/resources/css/tabs_buttons.css' />">
-    <link rel="stylesheet" href="<c:url value='/resources/css/tables.css' />">
+	<link rel="stylesheet" href="<c:url value='/resources/css/admin_base.css' />">
+	<link rel="stylesheet" href="<c:url value='/resources/css/admin_form.css' />">
+	<link rel="stylesheet" href="<c:url value='/resources/css/admin_table.css' />">
     <style>
         /* 1. 하이퍼링크 기본 스타일 무효화 */
         .menu-tabs a.tab {
