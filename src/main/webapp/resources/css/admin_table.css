@@ -69,14 +69,17 @@
 
 .faq-table th:nth-child(3), .faq-table td:nth-child(3) { width: 60%; text-align: left; } /* 3. 질문 (가장 넓게, 왼쪽 정렬) */
 .inquiry-table th:nth-child(2), .inquiry-table td:nth-child(2) { width: 30%; text-align: left; } /* 2. 문의 제목 */
+.notice-table th:nth-child(2), .notice-table td:nth-child(2) { width: 60%; text-align: left; }
 
 /* 💡 FAQ 질문 내용 마우스 오버 시 밑줄 제거 */
-.faq-table a {
+.faq-table a,
+.notice-table a {
     text-decoration: none; /* 밑줄 제거 */
     color: #333;
     font-weight: bold;
 }
-.faq-table a:hover {
+.faq-table a:hover,
+.notice-table a:hover {
     color: #555;
     text-decoration: none; /* 마우스 오버 시 밑줄 다시 생기지 않도록 확실히 제거! */
 }
