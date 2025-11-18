@@ -1,21 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%-- 네비게이션 바는 dashboard.jsp처럼 상단에 포함 --%>
 <%@ include file="/WEB-INF/views/admin/admin_navbar.jsp" %>
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>공지사항 관리</title>
-
-    <link rel="stylesheet" href="<c:url value='/resources/css/base.css' />">
-    <link rel="stylesheet" href="<c:url value='/resources/css/tabs_buttons.css' />">
-    <link rel="stylesheet" href="<c:url value='/resources/css/tables.css' />">
-    <link rel="stylesheet" href="<c:url value='/resources/css/buttons.css' />"> 
-    
+    <link rel="stylesheet" href="<c:url value='/resources/css/admin_base.css' />">
+	<link rel="stylesheet" href="<c:url value='/resources/css/admin_form.css' />">
+	<link rel="stylesheet" href="<c:url value='/resources/css/admin_table.css' />">
 
 </head>
 <body>

@@ -19,4 +19,8 @@ public class PaymentsVO {
     private String merchantUid; // 상점 주문번호 (결제 요청 시 샡성하는 주문번호)
     private String status; // // pending, paid, cancelled 
     private LocalDateTime paymentDate;
+    
+    
+    
+    
 }

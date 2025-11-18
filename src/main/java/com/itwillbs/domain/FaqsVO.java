@@ -14,4 +14,9 @@ public class FaqsVO {
     private String question;
     private String answer;
     private LocalDateTime createdAt;
+    
+   
+    private String category;
+    
+    
 }

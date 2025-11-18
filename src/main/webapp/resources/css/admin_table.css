@@ -1,0 +1,325 @@
+@charset "UTF-8";
+
+/* =========================================================
+ * 2. TABLES & BUTTONS STYLES
+ * - 모든 테이블, 상태 뱃지, 테이블 내 액션 버튼
+ * ========================================================= */
+
+/* -------------------- 2-1. 공통 테이블 설정 (tables.css) -------------------- */
+.table-section {
+    border: 1px solid #dc3545;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 1px;
+}
+
+.movie-table, .user-table, .inquiry-table, .request-table,
+.review-table, .booking-table, .notice-table, .faq-table
+{
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+/* 모든 테이블의 셀(th, td) 공통 스타일 */
+.movie-table th, .movie-table td,
+.user-table th, .user-table td,
+.inquiry-table th, .inquiry-table td,
+.request-table th, .request-table td,
+.review-table th, .review-table td,
+.booking-table th, .booking-table td,
+.notice-table th, .notice-table td,
+.faq-table th, .faq-table td
+{
+    padding: 12px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+    height: 50px;
+}
+
+/* 모든 테이블의 헤더(thead th) 공통 스타일 */
+.movie-table thead th,
+.user-table thead th,
+.inquiry-table thead th,
+.request-table thead th,
+.review-table thead th,
+.booking-table thead th,
+.notice-table thead th,
+.faq-table thead th
+{
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #333;
+}
+.movie-table tbody td {
+    height: 50px;
+}
+
+/* FAQ 관리 테이블 스타일 */
+.faq-table td:last-child {
+    white-space: nowrap;
+    text-align: center;
+    vertical-align: middle;
+    width: 150px;
+}
+
+/* -------------------- 2-2. FAQ/문의 질문 내용 밑줄 제거 및 정렬 (FAQ 목록 질문) -------------------- */
+
+.faq-table th:nth-child(3), .faq-table td:nth-child(3) { width: 60%; text-align: left; } /* 3. 질문 (가장 넓게, 왼쪽 정렬) */
+.inquiry-table th:nth-child(2), .inquiry-table td:nth-child(2) { width: 30%; text-align: left; } /* 2. 문의 제목 */
+
+/* 💡 FAQ 질문 내용 마우스 오버 시 밑줄 제거 */
+.faq-table a {
+    text-decoration: none; /* 밑줄 제거 */
+    color: #333;
+    font-weight: bold;
+}
+.faq-table a:hover {
+    color: #555;
+    text-decoration: none; /* 마우스 오버 시 밑줄 다시 생기지 않도록 확실히 제거! */
+}
+
+
+/* -------------------- 2-3. 테이블 상단 등록 버튼 영역 및 버튼 스타일 -------------------- */
+.table-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 0 15px 0;
+}
+.table-header .register-btn {
+    background-color: #007bff; /* 파란색으로 등록 버튼 색상 설정 */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    text-decoration: none;
+}
+.table-header .register-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+    text-decoration: none; /* FAQ 등록 버튼 밑줄 제거 완료 */
+}
+
+/* -------------------- 2-4. 테이블 내 액션 버튼 (tabsbuttons.css에서 분리) -------------------- */
+
+/* 테이블 관리 컬럼 버튼 (수정/삭제 최종 통일 스타일) */
+.action-btn.edit-btn,
+.action-btn.delete-btn,
+.action-btn.delete-user-btn,
+.action-btn.pending,
+.action-btn.answered-link,
+.action-btn.refund-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, transform 0.2s, border-color 0.2s;
+    text-decoration: none; /* 수정/삭제 버튼 밑줄 제거 완료 */
+    text-align: center;
+    display: inline-flex;
+    vertical-align: middle;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    margin-right: 8px; /* 버튼 간격 조정 */
+}
+.action-btn.delete-btn {
+    margin-right: 0; /* 마지막 버튼은 마진 제거 */
+}
+
+/* A. 수정 버튼 */
+.action-btn.edit-btn {
+    color: #212529;
+    background-color: #ffffff;
+    border: 1px solid #ffaa00;
+}
+.action-btn.edit-btn:hover {
+    color: #ffffff;
+    background-color: #e0a800;
+    border-color: #d39e00;
+    transform: scale(1.1);
+}
+
+/* B. 삭제 버튼 */
+.action-btn.delete-btn,
+.action-btn.delete-user-btn {
+    color: #dc3545;
+    background-color: #fff;
+    border: 1px solid #dc3545;
+}
+.action-btn.delete-btn:hover,
+.action-btn.delete-user-btn:hover {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+    transform: scale(1.1);
+}
+
+/* 1:1 문의 - 답변하기 버튼 */
+.action-btn.pending {
+    color: #007bff;
+    border: 1px solid #007bff;
+    background-color: #fff;
+}
+.action-btn.pending:hover {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    transform: scale(1.1);
+}
+
+/* 1:1 문의 - 내용 보기 버튼 */
+.action-btn.answered-link {
+    color: #6c757d;
+    border: 1px solid #ced4da;
+    background-color: #f8f9fa;
+}
+.action-btn.answered-link:hover {
+    color: #495057;
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+    transform: scale(1.1);
+}
+
+/* 환불 버튼 */
+.action-btn.refund-btn {
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    background-color: #fff;
+}
+
+.action-btn.refund-btn:hover {
+    background-color: #dc3545;
+    color: #fff;
+    border-color: #dc3545;
+    transform: scale(1.05);
+}
+
+/* -------------------- 2-5. 상태 뱃지 및 리뷰 스타일 (tables.css) -------------------- */
+
+.status-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-badge.pending { /* 답변 대기 (노란색 계열) */
+    background-color: #ffc107;
+    color: #333;
+}
+.status-badge.answered { /* 답변 완료 (초록색 계열) */
+    background-color: #28a745;
+    color: white;
+}
+
+.status-badge.error {
+    background-color: #808080; /* 회색 */
+    color: white;
+}
+
+.status-reserved {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #155724; /* 짙은 초록 글씨 */
+    background-color: #d4edda; /* 밝은 초록 배경 */
+}
+
+/* 환불 완료 (거래 취소 - 빨간색/주황색 경고 계열) */
+.status-refunded {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #856404; /* 짙은 노랑 글씨 */
+    background-color: #fff3cd; /* 밝은 노랑 배경 */
+}
+
+/* 사용자 취소 (중립/처리 완료 - 회색 계열) */
+.status-cancelled {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #383d41; /* 짙은 회색 글씨 */
+    background-color: #e2e3e5; /* 밝은 회색 배경 */
+}
+
+/* -------------------- 2-6. 리뷰 내용 셀 및 평점/감정 뱃지 스타일 -------------------- */
+
+/* 리뷰 내용 셀에 대한 추가 스타일 */
+.review-content-cell {
+    white-space: nowrap; /* 줄바꿈 방지 */
+    overflow: hidden; /* 영역을 벗어나는 내용 숨기기 */
+    text-overflow: ellipsis; /* 숨긴 내용을 ...으로 표시 */
+}
+
+/* ⭐️⭐️⭐️ 리뷰 관련 뱃지/평점 스타일 ⭐️⭐️⭐️ */
+.star-rating {
+    font-size: 18px; /* 별 아이콘을 조금 더 크게 */
+    color: #ffc107; /* 노란색 별 색상 */
+    white-space: nowrap; 
+}
+
+.sentiment-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    width: 55px; /* 너비를 고정해서 감정이 바뀌어도 칸이 안 움직이게 */
+    text-align: center;
+}
+
+.sentiment-badge.positive { /* 긍정 (초록색 계열) */
+    background-color: #28a745;
+    color: white;
+}
+
+.sentiment-badge.negative { /* 부정 (빨간색 계열) */
+    background-color: #dc3545;
+    color: white;
+}
+
+.sentiment-badge.neutral { /* 중립(Neutral) 추가 (회색 계열) */
+    background-color: #6c757d;
+    color: white;
+}
+
+/* -------------------- 2-7. 이미지 아이콘 버튼 스타일 -------------------- */
+
+/* .action-icon-btn 스타일 (리뷰 삭제 등 아이콘 형태가 필요한 경우) */
+.action-icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    transition: transform 0.1s; /* 아이콘은 전환 속도를 빠르게 */
+}
+.action-icon-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+.action-icon-btn:hover {
+    transform: scale(1.1);
+}
