@@ -17,6 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
 	const totalPrice = parseInt(sessionStorage.getItem("totalPrice")||0,10); 
 	    
 
+	// modal창 제어
+	const showBtn = document.getElementById("showTermsBtn");
+    const modal = document.getElementById("termsModal");
+    const closeBtn = modal.querySelector(".close");
+    
 	// 받아온 세션값 화면에 표시
     document.getElementById("movieTitle").textContent = movieTitle;
     document.getElementById("theater").textContent = theater;
@@ -29,11 +34,36 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // 결제 버튼
     const payBtn = document.getElementById("payBtn");
-
+	
+	
+	// 보기 버튼 클릭 → 모달 열기
+    showBtn.addEventListener("click", () => {
+        modal.style.display = "block";
+    });
+    
+    // X 버튼 클릭 → 모달 닫기
+    closeBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+    
+     // 모달 외부 클릭 → 닫기
+    window.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+	
 
 	// 결제 버튼 클릭 시
-    payBtn.addEventListener("click", () => {
-    
+    payBtn.addEventListener("click", (e) => {
+    	const agreeTerms = document.getElementById("agreeTerms");
+    	
+    	if (!agreeTerms || !agreeTerms.checked) {
+	        alert("결제 및 개인정보 처리방침에 동의하셔야 합니다.");
+	        e.preventDefault(); // 혹시 form 제출이 있으면 막음
+	        return; // 결제 진행 중지
+    	}
+	    
     	 // 1. 아임포트 객체 초기화
 	    const IMP = window.IMP;
 	    IMP.init("imp35667677"); // 본인 아임포트 가맹점 식별코드로 변경

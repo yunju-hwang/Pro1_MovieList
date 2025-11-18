@@ -24,6 +24,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const childInput = document.getElementById("childCount");
     const confirmAudienceBtn = document.getElementById("confirmAudience");
 
+	// 초기화 버튼
+    const resetSeatsBtn = document.getElementById("resetSeats");
+    
+    // 좌석 선택 가능 여부
+    let seatsEnabled = false;
+    let autoGroupsSelected = 0;   // 몇 개의 2좌석 그룹을 선택했는지
+    let manualSelected = false;   // 1명짜리 단독 선택 여부
+    
     // 관람 인원 확인 버튼
     confirmAudienceBtn.addEventListener("click", () => {
         adultCount = parseInt(adultInput.value) || 0;
@@ -36,34 +44,89 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         alert(`어른 ${adultCount}명, 어린이 ${childCount}명. 이제 좌석 선택 가능합니다.`);
+        // 좌석 선택 가능 상태로 변경
+        seatsEnabled = true;
+        
     });
 
-    // 좌석 클릭
+    // 좌석 클릭 
     seats.forEach(seat => {
-        const seatId = seat.dataset.seat;
-
         seat.addEventListener("click", () => {
-            if(selectedSeats.has(seatId)){
-                selectedSeats.delete(seatId);
-                seat.classList.remove("selected");
-            } else {
-                if(selectedSeats.size >= totalSeatsToSelect){
-                    alert(`좌석은 총 ${totalSeatsToSelect}개까지 선택 가능합니다.`);
+        	// ✅ 인원수 확인 안하면 클릭 막기
+            if(!seatsEnabled){
+                alert("먼저 인원을 확인해주세요!");
+                return;
+            }
+        
+        	const seatId = seat.dataset.seat;
+        	const row = seatId.charAt(0);
+            const num = parseInt(seatId.substring(1));
+            
+            const groupCount = Math.floor(totalSeatsToSelect / 2);
+            const remainder = totalSeatsToSelect % 2;
+            
+             // 1) 자동 그룹 선택 (2좌석)
+            if(autoGroupsSelected < groupCount){
+                
+                const pair1 = `${row}${num}`;
+                const pair2 = `${row}${num + 1}`;
+                const s1 = document.querySelector(`.seat[data-seat="${pair1}"]`);
+                const s2 = document.querySelector(`.seat[data-seat="${pair2}"]`);
+
+                if(!s1 || !s2){
+                    alert("연속된 2개 좌석이 없습니다.");
                     return;
                 }
+
+                // 기존 자동 선택 초기화
+                if(autoGroupsSelected === 0){
+                    selectedSeats.clear();
+                    seats.forEach(s => s.classList.remove("selected"));
+                }
+
+                // 자동 선택
+                s1.classList.add("selected");
+                s2.classList.add("selected");
+                selectedSeats.add(pair1);
+                selectedSeats.add(pair2);
+
+                autoGroupsSelected++;
+                updateSeatDisplay();
+                return;
+            }
+            
+            // 2) 나머지 1좌석 선택
+            if(remainder === 1 && !manualSelected){
                 selectedSeats.add(seatId);
                 seat.classList.add("selected");
+                manualSelected = true;
+                updateSeatDisplay();
+                return;
             }
-
-            selectedSeatsDisplay.textContent = selectedSeats.size > 0 
-                ? Array.from(selectedSeats).join(", ") 
-                : "없음";
-
-            // 가격 계산
-            let total = adultCount * 15000 + childCount * 10000;
-            totalPriceDisplay.textContent = total;
+           
+           alert("선택 가능한 좌석 수를 모두 선택했습니다.");
+            
+            
+            
         });
     });
+    
+    
+    // 초기화 버튼 클릭
+    resetSeatsBtn.addEventListener("click", () => {
+        selectedSeats.clear();
+        seats.forEach(s => s.classList.remove("selected"));
+        autoGroupsSelected = 0;
+        manualSelected = false;
+        updateSeatDisplay();
+    });
+    
+    // 화면 업데이트 함수
+    function updateSeatDisplay(){
+        selectedSeatsDisplay.textContent = Array.from(selectedSeats).join(", ");
+        let total = adultCount * 15000 + childCount * 10000;
+        totalPriceDisplay.textContent = total;
+    }
 
     // 확인 버튼 클릭
     const confirmBtn = document.getElementById("confirmSeats");
