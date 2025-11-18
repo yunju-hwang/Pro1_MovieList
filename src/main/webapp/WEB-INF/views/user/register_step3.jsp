@@ -21,21 +21,9 @@
 			<c:forEach var="genres" items="${genresVOList}"> 
 				<label><input type="checkbox" name="genre" value="${genres.genreId }" ><span>${genres.genreName}</span></label>
 			
-			
-
-</label>
 			</c:forEach>
 
-            
-<!--             <label><input type="checkbox" name="genre" value="SF"> SF</label> -->
-<!--             <label><input type="checkbox" name="genre" value="로맨스"> 로맨스</label> -->
-<!--             <label><input type="checkbox" name="genre" value="드라마"> 드라마</label> -->
-<!--             <label><input type="checkbox" name="genre" value="코미디"> 코미디</label> -->
-<!--             <label><input type="checkbox" name="genre" value="스릴러"> 스릴러</label> -->
-<!--             <label><input type="checkbox" name="genre" value="호러"> 호러</label> -->
-<!--             <label><input type="checkbox" name="genre" value="판타지"> 판타지</label> -->
-<!--             <label><input type="checkbox" name="genre" value="애니메이션"> 애니메이션</label> -->
-<!--             <label><input type="checkbox" name="genre" value="다큐멘터리"> 다큐멘터리</label> -->
+           
         </div>
 
         <div class="btn-row">
@@ -45,24 +33,8 @@
     </form>
 </div>
 
-<script>
-document.querySelectorAll('.genre-grid input[type="checkbox"]').forEach(input => {
-    // 초기 선택 상태 반영
-    if(input.checked) input.parentElement.classList.add('checked-label');
-
-    input.addEventListener('click', function() {
-        if(this.checked) {
-            this.parentElement.classList.add('checked-label');
-//             alert("T" + this.checked);
-            this.setAttribute("checked","checked");
-        } else {
-            this.parentElement.classList.remove('checked-label');
-//             alert("F" + this.checked);
-            
-        }
-    });
-});
-</script>
+<script src="${pageContext.request.contextPath}/resources/js/register_step3_genresChecked.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/register_step3_genresMinSelect.js"></script>
 
 </body>
 </html>

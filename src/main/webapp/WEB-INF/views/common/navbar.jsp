@@ -50,7 +50,7 @@
                         <li><a href="<c:url value='/mypage/movierequest' />">영화 요청</a></li>
                     </ul>
                 </li>
-                <li><a href="<c:url value='/member/logout' />">로그아웃</a></li>
+                <li><a href="<c:url value='/logout' />">로그아웃</a></li>
             </c:otherwise>
         </c:choose>
     </ul>

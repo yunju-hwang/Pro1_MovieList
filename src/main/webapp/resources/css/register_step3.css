@@ -58,14 +58,20 @@ body {
     border-color: #ffaaaa;
 }
 
-.genre-grid input:checked + span,
-.genre-grid input:checked ~ label,
+/* .genre-grid input:checked + span, */
+/* .genre-grid input:checked ~ label, */
+/* { */
+	
+/*     background: #ffdddd; */
+/*     border-color: #e60000; */
+/* } */
+
+.genre-grid .checked-label 
 {
 	
     background: #ffdddd;
     border-color: #e60000;
 }
-
 
 
 .btn-row {

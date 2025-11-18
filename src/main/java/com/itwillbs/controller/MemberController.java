@@ -1,6 +1,5 @@
 package com.itwillbs.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -18,9 +17,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwillbs.domain.GenresVO;
 import com.itwillbs.domain.MemberVO;
-import com.itwillbs.domain.UserGenresVO;
 import com.itwillbs.service.AdminService;
 import com.itwillbs.service.MemberService;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors; // Java 8에서 collect(Collectors.toList()) 사용할 때 필요
+//프로젝트 VO
+import com.itwillbs.domain.UserGenresVO;
+
 
 @Controller
 public class MemberController {
@@ -35,26 +41,7 @@ public class MemberController {
 		return "/user/login";
 	}
 	
-// 아래 로그인 프로작성중 
-// ===========
-//	@PostMapping("/loginPro")
-//	public String loginPro(MemberVO memberVO, HttpSession session){
-//		System.out.println("MemberController loginPro()");
-//		System.out.println(memberVO);
-//		
-//		MemberVO memberVO2 = memberService.loginMember(memberVO);
-//		System.out.println(memberVO2);
-//		
-//		if(memberVO2 != null) {
-//			session.setAttribute("user_id", memberVO2.getUser_id());
-//			return "redirect:/main";
-//		}else {
-//			
-//			model.addAttribute("msg", "아이디 또는 비밀번호가 일치하지 않습니다."); // 실패 메시지 전달
-//            return "/user/login"; 
-//		}
-//		
-//	}
+
 	
 	// ====
 	@PostMapping("/loginPro")
@@ -106,22 +93,70 @@ public class MemberController {
 		return "/user/register_step3";
 	}
 
+//	===
+//	@PostMapping("/register/step3Pro")
+//	public String step3Pro(HttpServletRequest request, HttpSession session) {
+//		String[] genreList = request.getParameterValues("genre");
+//		System.out.println(Arrays.toString(genreList));
+//		
+//		//System.out.println(genreList[0]);
+//		List<UserGenresVO> userGenresList = new ArrayList<UserGenresVO>();
+//		
+//		for (String genreId : genreList) {
+//			UserGenresVO userGenresVO = new UserGenresVO();
+//			userGenresVO.setUserId((String)session.getAttribute("user_id"));
+//			userGenresVO.setGenreId(Integer.parseInt(genreId));
+//			
+//			memberService.insertGenres(userGenresVO);
+//		}
+//		
+//		return "redirect:/login";
+//	}
+//	===
+
 	
 	@PostMapping("/register/step3Pro")
 	public String step3Pro(HttpServletRequest request, HttpSession session) {
-		String[] genreList = request.getParameterValues("genre");
-		//System.out.println(genreList[0]);
-		List<UserGenresVO> userGenresList = new ArrayList<UserGenresVO>();
-		
-		for (String genreId : genreList) {
-			UserGenresVO userGenresVO = new UserGenresVO();
-			userGenresVO.setUserId((String)session.getAttribute("user_id"));
-			userGenresVO.setGenreId(Integer.parseInt(genreId));
-			
-			memberService.insertGenres(userGenresVO);
-		}
-		return "redirect:/login";
+	    String userId = (String) session.getAttribute("user_id");
+	    String[] genreArray = request.getParameterValues("genre");
+
+	    if (genreArray != null && genreArray.length > 0) {
+//	        List<UserGenresVO> userGenresList = Arrays.stream(genreArray)
+//	                .map(Integer::parseInt)
+//	                .map(genreId -> {
+//	                    UserGenresVO vo = new UserGenresVO();
+//	                    vo.setUserId(userId);
+//	                    vo.setGenreId(genreId);
+//	                    return vo;
+//	                })
+//	                .collect(Collectors.toList());
+	    	 List<UserGenresVO> userGenresList = new ArrayList<UserGenresVO>()	;
+	    	 for(String genreId : genreArray) {
+	    		 UserGenresVO vo = new UserGenresVO();
+	    		 vo.setUserId(userId);
+	    		 vo.setGenreId(Integer.parseInt(genreId)); 
+	    	  	 userGenresList.add(vo);
+	    	 }
+	    	 
+	   	
+	        	System.out.println("userGenresList======"  + userGenresList);
+	        // Service 호출
+	        memberService.insertGenresList(userGenresList);
+	    }
+
+	    return "redirect:/login";
 	}
+
+	
+	// 로그아웃
+	@GetMapping("/logout")
+	public String logout (HttpSession session) {
+		System.out.println("MemberController logout()");
+	    session.invalidate();
+	    return "redirect:/login";
+	}
+	
+	
 	
 	 // STEP1: 약관 제출 처리
     @PostMapping("/step1")
@@ -145,18 +180,7 @@ public class MemberController {
         return "redirect:/register/step2";
     }
 
-    //로그아웃  작업 중
-    
-	// 가상요청주소 /member/logout  GET => session 초기화
-	// => 주소변경하면서 이동 redirect:/member/login
-	@RequestMapping(value = "/member/logout",method = RequestMethod.GET)
-	public String logout(HttpSession session) {
-		System.out.println("MemberController logout()");
-		// => session 초기화
-		session.invalidate();
-		// => 주소변경하면서 이동 redirect:/member/login
-		return "redirect:/member/login";
-	}
+  
 	
 // ------------------------------------------------
 		

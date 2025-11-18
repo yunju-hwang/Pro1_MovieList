@@ -21,7 +21,17 @@ public interface MemberMapper {
 	public MemberVO loginMember(MemberVO memberVO);
 
 
-	void insertGenres(UserGenresVO userGenresVO);
+	void insertGenresList(List<UserGenresVO> userGenresList);
+
+
+	void insertGenre(UserGenresVO vo);
+	
+
+
+
+
+
+
 	
 	
 }
