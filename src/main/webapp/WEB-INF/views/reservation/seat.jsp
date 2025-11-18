@@ -26,6 +26,12 @@
     <button id="confirmAudience">확인</button>
 </div>
 
+
+<button id="resetSeats">
+    <img src="${pageContext.request.contextPath}/resources/img/loading.png" alt="loading" class="btn-icon">
+    좌석 초기화
+</button>
+
 <div class="screen">스크린</div>
 
 <div class="seat-container">

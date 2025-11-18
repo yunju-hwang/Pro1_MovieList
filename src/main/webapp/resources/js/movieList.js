@@ -83,10 +83,7 @@ function renderMovies(movies, ctx) {
                 <div class="date">${movie.releaseDate || '정보 없음'}</div>
                 <div class="genres">${genreHtml}</div>
                 <div class="overview">${shortOverview}</div>
-                <div class="movie-card-buttons">
-                    <a href="${ctx}/reservation/info">예약하기</a>
-                    <a href="${ctx}/movies/detailPage?tmdbId=${movie.tmdbId}">리뷰 작성</a>
-                </div>
+                
             </div>
         `;
         container.insertAdjacentHTML("beforeend", html);
