@@ -8,6 +8,9 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h1>교객센터/문의 상세보기</h1>
+	<h1 class="big_title">문의 내용 상세보기</h1>
+	
+	
+	
 </body>
 </html>

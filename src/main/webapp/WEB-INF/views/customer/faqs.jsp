@@ -5,9 +5,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
-
 <title>FAQ</title>
-<link rel="stylesheet" href="<c:url value='/resources/css/faqs.css?after'/>">
+<link rel="stylesheet" href="<c:url value='/resources/css/faqs.css'/>">
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const faqItems = document.querySelectorAll('.faq-item');
@@ -35,10 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <body>
 	<h1 class="faq">자주 묻는 질문</h1>
 	<h4 class="led">MovieList 이용 중 궁금한 점을 빠르게 해결하세요</h4>
-	<div class="container">
-	<input type="text" placeholder="궁금한 내용을 검색해보세요" class="search">
-	<input type="button" value="검색" class="btn">
-	</div>
+
  <div class="reserve">
 
     <div class="faq-item">
@@ -75,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   </div>
 
-  <script src="script.js"></script>
+
 	
 	<div class="inquirey">
 	<p class="want"> 원하는 답변을 찾지 못하셨나요?</p>

@@ -33,33 +33,34 @@ function changePlaceholder(value) {
 <body>
 	<h1 class="title">1:1 문의</h1>
 	<h4 class="title1">궁금한 사항을 남겨주시면 빠르게 답변 드리겠습니다</h4>
+	<form action="${pageContext.request.contextPath }/customer/write_inquiry_pro" method="post">
 	<div class="container">
-		<p class="unity">문의 유형 *</p>
-<div class="input-dropdown">
-  <input type="text" id="textInput" placeholder="예매/결제" readonly>
-  <select id="selectBox" onchange="changePlaceholder(this.value)">
-    <option value="">예매/결제</option>
-    <option value="1" data-placeholder="회원정보">회원정보</option>
-    <option value="2" data-placeholder="영화정보">영화정보</option>
-    <option value="3" data-placeholder="기술지원">기술지원</option>
-    <option value="4" data-placeholder="직접입력">직접입력</option>
-  </select>
-</div>
+<!-- 		<p class="unity">문의 유형 *</p> -->
+<!-- <div class="input-dropdown"> -->
+<!--   <input type="text" id="textInput" placeholder="예매/결제" readonly> -->
+<!--   <select id="selectBox" onchange="changePlaceholder(this.value)"> -->
+<!--     <option value="">예매/결제</option> -->
+<!--     <option value="1" data-placeholder="회원정보">회원정보</option> -->
+<!--     <option value="2" data-placeholder="영화정보">영화정보</option> -->
+<!--     <option value="3" data-placeholder="기술지원">기술지원</option> -->
+<!--     <option value="4" data-placeholder="직접입력">직접입력</option> -->
+<!--   </select> -->
+<!-- </div> -->
 	<p class="unity">문의 제목 *</p>
 	<div class="text-con">
-	<input type="text" placeholder="문의 제목을 입력하세요" class="text">
+	<input type="text" placeholder="문의 제목을 입력하세요" class="text" required name="title">
 </div>
 
-<p class="unity">이메일 주소 *</p>
-<div class="text-con">
-<input type="email" placeholder="답변 받으실 이메일 주소를 입력하세요" class="text">
-</div>
-<p class="under">답변은 입력하신 이메일및 마이페이지에서 확인 가능합니다</p>
+<!-- <p class="unity">이메일 주소 *</p> -->
+<!-- <div class="text-con"> -->
+<!-- <input type="email" placeholder="답변 받으실 이메일 주소를 입력하세요" class="text" required> -->
+<!-- </div> -->
+<!-- <p class="under">답변은 입력하신 이메일및 마이페이지에서 확인 가능합니다</p> -->
 
 <p class="unity">문의 내용 *</p>
 
 <div class="text-con">
-	<input type="text" placeholder="문의 내용을 입력하세요" class="text">
+	<textarea cols="40" rows="10" placeholder="문의 내용을 입력하세요" class="text" required name="content"></textarea>
 </div>
 
 <p class="under">최소 10자 이상 작성해주세요</p>
@@ -73,11 +74,13 @@ function changePlaceholder(value) {
 	</ul>
 </div>
 
-<form action="${pageContext.request.contextPath }/customer/inquiries" class="btn-form">
+<div class="btn-form">
   <input type="submit" value="취소하기" class="no-sub">
   <input type="submit" value="요청하기" class="sub">
-</form>
+</div>
 	</div>
+</form>
+
 	
 	<div class="faq-con">
 		<p>자주 묻는 질문을 확인해보셨나요?</p>
