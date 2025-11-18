@@ -149,3 +149,32 @@ h2 {
 #confirmSeats:hover {
     background-color: #ff4081;
 }
+
+
+/* 좌석 초기화 버튼 스타일 */
+#resetSeats {
+    margin-left: 100px;
+    margin-bottom: 10px;
+    padding: 8px 16px;
+    background-color: #ffffff;
+    color: black;
+    border: 1px solid gray;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;   /* 수직 가운데 정렬 */
+    gap: 6px;              /* 아이콘과 글자 사이 간격 */
+    transition: background-color 0.3s ease;
+}
+
+#resetSeats:hover {
+    background-color: #f7f7f7;
+}
+
+/* 버튼 아이콘 크기 조절 */
+#resetSeats .btn-icon {
+    width: 16px;   /* 아이콘 너비 */
+    height: 16px;  /* 아이콘 높이 */
+}
+

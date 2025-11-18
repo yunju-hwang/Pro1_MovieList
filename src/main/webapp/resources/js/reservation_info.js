@@ -77,14 +77,39 @@ document.addEventListener("DOMContentLoaded", () => {
                     timeButtons.innerHTML = "";
 
                     const times = ["10:30", "12:00", "13:30", "15:00", "16:30", "18:00", "20:30"];
+                    
+                    const today = new Date();
+    				const selectedDay = new Date(selectedDate.value);
+                    
                     times.forEach(time => {
                         const timeBtn = document.createElement("button");
                         timeBtn.type = "button";
                         timeBtn.classList.add("time-btn");
                         timeBtn.textContent = time;
                         timeBtn.setAttribute("data-value", time);
-
+                        
+                        // 시간 문자열을 Date 객체로 변환
+				        const [hour, minute] = time.split(":").map(Number);
+				        const timeDate = new Date(selectedDay);
+				        timeDate.setHours(hour, minute, 0, 0);
+				        
+				        
+				        const now = new Date(); // ← 지금 시점 선언
+				        
+				        // 오늘 날짜이면, 현재 시간보다 이전이면 비활성화
+						if (
+						    selectedDay.toDateString() === now.toDateString() &&
+						    (timeDate.getHours() < now.getHours() ||
+						     (timeDate.getHours() === now.getHours() && timeDate.getMinutes() <= now.getMinutes()))
+						) {
+						    timeBtn.disabled = true;
+						    timeBtn.style.opacity = 0.5;
+						    timeBtn.style.cursor = "not-allowed";
+						}
+						
+						
                         timeBtn.addEventListener("click", function() {
+                        	if (this.disabled) return;  // disabled 버튼 클릭 무시
                             document.querySelectorAll(".time-btn").forEach(b => b.classList.remove("active"));
                             this.classList.add("active");
                             selectedTime.value = this.getAttribute("data-value");
