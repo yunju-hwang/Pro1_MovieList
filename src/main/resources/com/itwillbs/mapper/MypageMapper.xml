@@ -47,6 +47,44 @@
         f.id DESC
 </select>
 
+<delete id="deleteFavoriteMovie">
+    DELETE FROM 
+        user_favorites
+    WHERE
+        user_id = #{userId}
+    AND
+        tmdb_id = #{tmdbId}
+</delete>
+
+<select id="selectGenreNamesByTmdbId" resultType="string" parameterType="int">
+    SELECT
+        g.genre_name  FROM
+        movie_genres mg  JOIN
+        genres g ON mg.genre_id = g.genre_id  WHERE
+        mg.tmdb_id = #{tmdbId} 
+</select>
+
+
+
+<select id="selectTheaterList" resultType="com.itwillbs.domain.TheatersVO">
+    SELECT
+    theater_id AS theaterId,
+    name, 
+    location
+    FROM
+    theaters
+    ORDER BY
+    theater_id ASC
+</select>
+
+
+    
+    
+
+
+
+
+
 
     
 </mapper>
