@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.itwillbs.domain.GenresVO;
@@ -13,8 +14,11 @@ import com.itwillbs.mapper.MemberMapper;
 
 @Service
 public class MemberService {
+	
+	
+	@Autowired
 	@Inject
-	private MemberMapper memberMapper;
+	private MemberMapper memberMapper; // MyBatis Mapper
 	
 	// 로그인 처리
     public MemberVO loginMember(MemberVO member) {
@@ -49,7 +53,10 @@ public class MemberService {
 	public void insertGenre(UserGenresVO vo) {
 		memberMapper.insertGenre(vo);
 	}
-	
 
+    public boolean checkUserIdExists(String user_id) {
+        return memberMapper.checkUserIdExists(user_id) > 0; // 아이디가 존재하는지 체크
+    }
+	
 	
 }

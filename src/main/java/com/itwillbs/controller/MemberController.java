@@ -2,18 +2,23 @@ package com.itwillbs.controller;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.itwillbs.domain.GenresVO;
 import com.itwillbs.domain.MemberVO;
@@ -25,6 +30,7 @@ import com.itwillbs.service.MemberService;
 public class MemberController {
 	
 	// MemberService 객체 생성
+	@Autowired
 	@Inject
 	private MemberService memberService;
 	
@@ -56,6 +62,19 @@ public class MemberController {
         session.setAttribute("role", memberVO.getRole());
         System.out.println(memberVO);
 		return "redirect:/register/step3";
+	}
+	
+	// 회원가입 -> ID 중복체크
+	@RestController
+	public class RegisterController {
+
+	    @GetMapping("/register/idCheck")
+	    public Map<String, Object> idCheck(@RequestParam String user_id) {
+	        Map<String, Object> response = new HashMap<>();
+	        boolean exists = memberService.checkUserIdExists(user_id); // 사용자 서비스에서 아이디 체크
+	        response.put("exists", exists);
+	        return response;
+	    }
 	}
 	
 	// 회원가입 -> 선호 장르 선택
@@ -114,8 +133,10 @@ public class MemberController {
         if (resultVO != null) {
             session.setAttribute("user_id", resultVO.getUser_id());
             session.setAttribute("role", resultVO.getRole());
-            
-     
+
+            session.setAttribute("nickname", resultVO.getNickname());
+          System.out.println(resultVO);
+
             // JSP에서 편하게 체크할 수 있도록 ${not empty sessionScope.loginUser} 체크
             session.setAttribute("loginUser", resultVO);
             if ("admin".equals(resultVO.getRole())) { // role이 'admin'이면

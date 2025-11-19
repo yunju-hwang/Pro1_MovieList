@@ -10,25 +10,36 @@
 		resultType="com.itwillbs.domain.MemberVO">
 		SELECT *
 		FROM users
-		WHERE user_id = #{user_id} AND password = #{password}
+		WHERE user_id = #{user_id} AND password =
+		#{password}
+	</select>
+
+	<!-- 회원가입 ID중복체크 -->
+	<select id="checkUserIdExists" parameterType="String"
+		resultType="int">
+		SELECT COUNT(*) FROM members WHERE user_id = #{user_id}
 	</select>
 
 	<insert id="insertMember">
-		insert into users (user_id, role, password, username, email, gender,
-		birth_date, phone, profile_image)
+		insert into users (user_id, role, password, username,
+		email, gender,
+		birth_date, phone, profile_image, nickname)
 		values(#{user_id},
-		#{role},#{password},#{username},#{email},#{gender},#{birthDate},#{phone},#{profileImage})
+		#{role},#{password},#{username},#{email},#{gender},#{birthDate},#{phone},#{profileImage},#{nickname}
+		)
 	</insert>
 
 	<select id="getGenres" resultType="com.itwillbs.domain.GenresVO">
-		SELECT genre_id AS genreId, genre_name AS genreName
+		SELECT genre_id AS genreId,
+		genre_name AS genreName
 		FROM genres
 	</select>
 
 	<insert id="insertGenre"
 		parameterType="com.itwillbs.domain.UserGenresVO">
 		INSERT INTO user_genres (user_id, genre_id)
-		VALUES (#{userId}, #{genreId})
+		VALUES
+		(#{userId}, #{genreId})
 	</insert>
 
 

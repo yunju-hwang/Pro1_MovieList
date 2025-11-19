@@ -21,5 +21,9 @@ public interface MemberMapper {
 	void insertGenresList(List<UserGenresVO> userGenresList);
 
 	void insertGenre(UserGenresVO vo);
+
+	MemberVO getMemberById(String user_id);
+
+	int checkUserIdExists(String user_id); // 아이디 존재 여부를 체크하는 메서드
 	
 }

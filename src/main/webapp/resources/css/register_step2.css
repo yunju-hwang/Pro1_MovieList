@@ -1,16 +1,29 @@
 @charset "UTF-8";
 
 body {
-    background: #ffeaea;
+    background: #F7F7F7 ;
     font-family: 'Noto Sans KR', sans-serif;
 }
+
+/* .join-container { */
+/*     display: flex; */
+/*     justify-content: center; */
+/*     align-items: center; */
+/*     height: 100vh; */
+/* } */
 
 .join-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    /* height: 100vh; 삭제 또는 아래처럼 변경 */
+    min-height: 100vh; /* 최소 화면 높이 */
+    padding-top: 60px; /* 네비 높이만큼 띄우기, 네비 높이 맞게 조정 */
+    box-sizing: border-box; /* 패딩 포함 높이 계산 */
+    overflow-y: auto; /* 세로 스크롤 허용 */
+    flex-direction: column; /* 세로 정렬 시도 (선택사항) */
 }
+
 
 .join-form {
     background: white;
