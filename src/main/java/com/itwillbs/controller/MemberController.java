@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.itwillbs.domain.GenresVO;
 import com.itwillbs.domain.MemberVO;
+
 import com.itwillbs.domain.UserGenresVO;
 import com.itwillbs.service.MemberService;
 
@@ -114,6 +115,7 @@ public class MemberController {
             session.setAttribute("user_id", resultVO.getUser_id());
             session.setAttribute("role", resultVO.getRole());
             
+     
             // JSP에서 편하게 체크할 수 있도록 ${not empty sessionScope.loginUser} 체크
             session.setAttribute("loginUser", resultVO);
             if ("admin".equals(resultVO.getRole())) { // role이 'admin'이면
