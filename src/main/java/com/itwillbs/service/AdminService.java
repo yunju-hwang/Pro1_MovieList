@@ -12,6 +12,7 @@ import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.domain.MovieRequestVO;
 import com.itwillbs.domain.MovieVO;
+import com.itwillbs.domain.NoticesVO;
 import com.itwillbs.domain.ReservationsVO;
 import com.itwillbs.domain.ReviewsVO;
 import com.itwillbs.mapper.AdminMapper;
@@ -89,9 +90,13 @@ public class AdminService {
     	return adminMapper.AdminRequestList();
     }
     
-//    public int deleteMovieRequests(int userId) {
-//    	return adminMapper.deleteMovieRequests(userId);
-//    }
+    public int updateMovieRequests(int id, String status) {
+    	return adminMapper.updateMovieRequests(id, status);
+    }
+    
+    public int deleteMovieRequests(int id) {
+    	return adminMapper.deleteMovieRequests(id);
+    }
 
     
  // 리뷰 관리
@@ -131,6 +136,27 @@ public class AdminService {
     
     public int AdminFaqsDelete(int id) {
     	return adminMapper.AdminFaqsDelete(id);
+    }
+    
+    // Notices
+    public List<NoticesVO> AdminNoticesList(){
+    	return adminMapper.AdminNoticesList();
+    }
+    
+    public int AdminNoticesWrite(NoticesVO notices) {
+    	return adminMapper.AdminNoticesWrite(notices);
+    }
+    
+    public NoticesVO getNoticesDetail(int id) {
+    	return adminMapper.getNoticesDetail(id);
+    }
+    
+    public int AdminNoticeUpdate(NoticesVO notices) {
+    	return adminMapper.AdminNoticesUpdate(notices);
+    }
+    
+    public int AdminNoticesDelete(int id) {
+    	return adminMapper.AdminNoticesDelete(id);
     }
     
     

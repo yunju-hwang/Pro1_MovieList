@@ -7,7 +7,8 @@
 
 /* -------------------- 3-1. 공통 폼 컨테이너 및 제목 -------------------- */
 .answer-container,
-.faq-form-container {
+.faq-form-container,
+.notice-form-container {
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
@@ -16,7 +17,8 @@
     margin: 20px auto;
 }
 
-.faq-form h3 {
+.faq-form h3,
+.notice-form h3 {
     text-align: center;
     margin-bottom: 25px;
     color: #333;
@@ -24,7 +26,8 @@
 
 /* -------------------- 3-2. 폼 요소 스타일 및 간격 조정 (⭐️핵심 수정 부분⭐️) -------------------- */
 
-.faq-form label {
+.faq-form label,
+.notice-form label {
     display: block;
     margin-top: 10px; /* 15px -> 10px로 줄여서 윗 간격 감소 */
     margin-bottom: 3px; /* 5px -> 3px로 줄여서 라벨 아래 간격 감소 */
@@ -35,7 +38,10 @@
 .faq-form input[type="text"],
 .faq-form select,
 .faq-form textarea,
-.answer-form textarea {
+.answer-form textarea,
+.notice-form input[type="text"],
+.notice-form textarea
+{
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -45,7 +51,8 @@
 }
 
 .faq-form textarea,
-.answer-form textarea {
+.answer-form textarea,
+.faq-form textarea {
     resize: vertical;
     min-height: 200px;
 }
@@ -78,7 +85,6 @@
 .action-buttons {
     margin-top: 25px; 
     text-align: right; /* 우측 정렬 */
-    /* 💡 폼 안에 딱 맞게 정렬되도록 추가적인 스타일링 불필요 */
 }
 
 .action-buttons button {
@@ -113,10 +119,6 @@
 
 /* -------------------- 3-5. 1:1 답변 폼 전용 버튼 (reply-actions 대체) -------------------- */
 
-/* 이전에 tabsbuttons.css에 있던 .reply-submit-btn, .reply-cancel-btn 스타일을 통합 */
-/* 💡 만약 HTML에서 .reply-actions와 .reply-submit-btn 등을 사용하고 있다면, 
-   .action-buttons와 .submit-btn으로 클래스명을 통일하는 것을 권장해. 
-   지금은 기존 클래스명을 사용해서 정리했어. */
 
 .reply-actions {
     text-align: right; /* 버튼을 오른쪽으로 */
