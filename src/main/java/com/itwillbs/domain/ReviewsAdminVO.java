@@ -11,7 +11,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class ReviewsVO {
+public class ReviewsAdminVO {
     private int id;
     private int tmdbId;
     private String userId;
@@ -19,7 +19,8 @@ public class ReviewsVO {
     private int rating;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
-
+    
+    private String movieTitle;
     
     
 }
