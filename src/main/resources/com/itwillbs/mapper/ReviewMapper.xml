@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.itwillbs.mapper.ReviewMapper">
+	<!-- 리뷰 등록 -->
+	<insert id="insertReview" parameterType="com.itwillbs.domain.ReviewsVO">
+		INSERT INTO reviews (tmdb_id, user_id, content, rating, created_at)
+    	VALUES (#{tmdbId}, #{userId}, #{content}, #{rating}, NOW() )
+	</insert>
+	
+	<!-- 영화 리뷰 목록 가져오기 -->
+	<select id="selectReviewListByTmdbId" parameterType="int" resultType="com.itwillbs.domain.ReviewsVO">
+		SELECT
+	        id,
+	        tmdb_id AS tmdbId,
+	        user_id AS userId,
+	        content,
+	        rating,
+	        created_at AS createdAt
+	    FROM reviews
+	    WHERE tmdb_id = #{tmdbId}
+	</select>
+</mapper>

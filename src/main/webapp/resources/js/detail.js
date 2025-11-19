@@ -1,20 +1,23 @@
 document.addEventListener("DOMContentLoaded", () => {
     const detailDiv = document.getElementById("movie-detail");
+    const urlParams = new URLSearchParams(window.location.search);
+    const tmdbId = urlParams.get("tmdbId");
 
     if (!tmdbId) {
         detailDiv.innerHTML = "<p>영화 정보를 불러올 수 없습니다.</p>";
         return;
     }
 
+    // 🎬 영화 상세 정보 가져오기
     fetch(`${ctx}/movies/detail?tmdbId=${tmdbId}`)
         .then(res => {
             if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
             return res.json();
         })
         .then(movie => {
-        	console.log("🎬 movie 객체:", movie);
-        	localStorage.setItem("screeningTime", movie.runtime);
-        
+            console.log("🎬 movie 객체:", movie);
+            localStorage.setItem("screeningTime", movie.runtime);
+
             const posterUrl = movie.posterPath
                 ? `https://image.tmdb.org/t/p/w400${movie.posterPath}`
                 : `${ctx}/resources/images/default_poster.png`;
@@ -24,7 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 : '정보 없음';
 
             const runtime = movie.runtime !== null ? `${movie.runtime}분` : "정보 없음";
-            const popularity = movie.popularity ? `❤️ ${Math.round(movie.popularity)}` : "❤️ 0";
 
             // HTML 구성
             detailDiv.innerHTML = `
@@ -36,9 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <span class="heart-icon" id="heartIcon">${movie.favorite ? '❤️' : '♡'}</span>
                             </button>
                         </div>
-                        <div class="popularity-box">
-                            
-                        </div>
+                        <div class="popularity-box"></div>
                     </div>
                     <div class="right-box">
                         <h1 class="movie-title">${movie.title}</h1>
@@ -54,84 +54,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 <div class="review-section">
                     <h2>리뷰</h2>
-                    <div class="review-list">
-                        <div class="review-item">
-                            <strong>테스트 사용자</strong>
-                            <p>영화 너무 좋았습니다!</p>
-                        </div>
-                    </div>
                     <div class="my-review">
                         <div class="star-rating" id="starRating"></div>
                         <textarea placeholder="리뷰를 작성해주세요"></textarea>
                         <button class="submit-review" id="submitReview">등록</button>
                     </div>
+                    <div class="review-list">
+                        <p>리뷰 불러오는 중...</p>
+                    </div>
                 </div>
             `;
 
-            // ✅ 찜 버튼 서버 연동
             const heartIcon = document.getElementById("heartIcon");
             const wishBtn = document.getElementById("wishBtn");
             const detailContainer = detailDiv.querySelector(".detail-container");
-           
 
-            wishBtn.addEventListener("click", (e) => {
-            	e.stopPropagation();
-              
-                
-
+            // 찜 버튼 이벤트
+            wishBtn.addEventListener("click", e => {
+                e.stopPropagation();
                 if (!isLogin) {
                     alert("로그인이 필요한 서비스입니다.");
                     return;
                 }
-                
-               
 
                 fetch(`${ctx}/movies/favorite/${tmdbId}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" }
                 })
-                .then(res => {
-                    if (!res.ok) throw new Error("찜 업데이트 실패");
-                    return res.json();
-                })
+                .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        // 서버에서 받은 favorite 상태 사용
                         const current = detailContainer.dataset.favorite === 'true';
                         const next = data.isFavorite !== undefined ? data.isFavorite : !current;
-            
-                        console.log(next);
-                        heartIcon.textContent = next  ? '❤️' : '♡';
+                        heartIcon.textContent = next ? '❤️' : '♡';
                         detailContainer.dataset.favorite = next;
-                        
-                        const popularityBox = detailContainer.querySelector(".left-box .popularity-box strong");
-                        popularityBox.textContent = `❤️ ${Math.round(data.popularity)}`;
-                    } else {
-                        alert("찜 기능을 사용할 수 없습니다.");
-                    }
+                    } else alert("찜 기능을 사용할 수 없습니다.");
                 })
                 .catch(err => console.error(err));
             });
 
-            // ✅ 예매하기 버튼
+            // 예매 버튼
             const reserveBtn = document.getElementById("reserveBtn");
             reserveBtn.addEventListener("click", () => {
-                if (!isLogin) {
-                    alert("로그인이 필요한 서비스입니다");
-                    return;
-                }
-                const tmdbId = movie.tmdbId;
-                const title = movie.title;
-                const url = `${ctx}/reservation/info?tmdbId=${tmdbId}&title=${encodeURIComponent(title)}`;
-                console.log("➡ 이동 URL:", url); // ✅ 실제 URL 출력
-    			window.location.href = url;
+                if (!isLogin) { alert("로그인이 필요한 서비스입니다"); return; }
+                const url = `${ctx}/reservation/info?tmdbId=${tmdbId}&title=${encodeURIComponent(movie.title)}`;
+                window.location.href = url;
             });
 
             // ⭐ 별점 기능
             const starContainer = document.getElementById("starRating");
             const stars = [];
             let selectedRating = 0;
-
             for (let i = 1; i <= 5; i++) {
                 const star = document.createElement("span");
                 star.classList.add("star");
@@ -158,20 +131,85 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             }
 
-            // ✅ 리뷰 등록 버튼
+            // ✅ 리뷰 리스트 불러오기
+            function loadReviewList() {
+                const reviewListDiv = document.querySelector(".review-list");
+                reviewListDiv.innerHTML = "리뷰 불러오는 중...";
+                fetch(`${ctx}/movies/review_list?tmdbId=${tmdbId}`)
+                    .then(res => res.json())
+                    .then(reviews => {
+                        reviewListDiv.innerHTML = "";
+                        if (reviews.length === 0) {
+                            reviewListDiv.innerHTML = "<p>등록된 리뷰가 없습니다.</p>";
+                            return;
+                        }
+                        reviews.forEach(review => {
+                            const reviewItem = document.createElement("div");
+                            reviewItem.classList.add("review-item");
+                            
+                            let createdAtStr = '';
+						    if (review.createdAt) {
+						        const dateObj = new Date(review.createdAt);
+						        if (!isNaN(dateObj.getTime())) { // 유효한 날짜인지 확인
+						            const year = dateObj.getFullYear();
+						            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+						            const day = String(dateObj.getDate()).padStart(2, '0');
+						            const hours = String(dateObj.getHours()).padStart(2, '0');
+						            const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+						            createdAtStr = `${year}-${month}-${day} ${hours}:${minutes}`;
+						        }
+						    }
+                            
+                            
+                            reviewItem.innerHTML = `
+                                <strong>${review.userId}</strong>
+                                <span>⭐ ${review.rating}</span>
+                                <p>${review.content}</p>
+                                <small>${createdAtStr}</small>
+                            `;
+                            reviewListDiv.appendChild(reviewItem);
+                        });
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        reviewListDiv.innerHTML = "<p>리뷰를 불러올 수 없습니다.</p>";
+                    });
+            }
+
+            loadReviewList(); // 페이지 로드 시 리뷰 불러오기
+
+            // 리뷰 등록 버튼
             const submitBtn = document.getElementById("submitReview");
             submitBtn.addEventListener("click", () => {
                 const reviewText = document.querySelector(".my-review textarea").value.trim();
-                if (!sessionUser) {
-                    alert("로그인이 필요한 서비스입니다");
-                    return;
-                }
-                if (!reviewText || selectedRating === 0) {
-                    alert("리뷰 내용과 별점을 모두 입력해주세요");
-                    return;
-                }
-                // TODO: AJAX로 서버에 리뷰 등록
-                alert(`별점: ${selectedRating}, 리뷰: ${reviewText}`);
+                const userId = localStorage.getItem("userId");
+
+                if (!isLogin) { alert("로그인이 필요한 서비스입니다"); return; }
+                if (!reviewText || selectedRating === 0) { alert("리뷰 내용과 별점을 모두 입력해주세요"); return; }
+
+                fetch(`${ctx}/movies/review_write`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams({
+                        tmdbId: tmdbId,
+                        userId: userId,
+                        content: reviewText,
+                        rating: selectedRating
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("리뷰가 등록되었습니다!");
+                        document.querySelector(".my-review textarea").value = "";
+                        selectedRating = 0;
+                        fillStars(selectedRating);
+                        loadReviewList(); // 등록 후 리뷰 갱신
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(err => console.error(err));
             });
 
         })
