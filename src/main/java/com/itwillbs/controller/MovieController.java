@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.domain.MovieVO;
 import com.itwillbs.domain.TheatersVO;
+import com.itwillbs.service.ChatGptService;
 import com.itwillbs.service.MovieService;
 
 @Controller
@@ -27,6 +28,7 @@ public class MovieController {
 
 	@Inject
 	private MovieService movieService;
+	private ChatGptService chatGptService;
 
 	
 	// 장르 저장하기 (처음 1번만 실행하는 용도)
@@ -232,25 +234,7 @@ public class MovieController {
 	}
 	
 	
-	// AI 리뷰 페이지
-	@GetMapping("/movies/ai_review")
-	public String aiReviews() {
-		return "/movies/ai_review";
-	}
-
-	// 영화 리뷰 목록 불러오기
-	@GetMapping("/movies/review_list")
-	public String reviewList() {
-		return "/movies/review_list";
-	}
 	
-	
-
-	// 리뷰 작성하기
-	@GetMapping("/movies/review_write")
-	public String reviewWrite() {
-		return "/movies/review_write";
-	}
 	
 	
 	
