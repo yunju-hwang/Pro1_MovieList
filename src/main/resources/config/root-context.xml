@@ -23,7 +23,9 @@
 	<!-- mybatis 설정 -->
 	<bean id="sqlSessionFactory" 
       class="org.mybatis.spring.SqlSessionFactoryBean">
-	  <property name="dataSource" ref="dataSource"></property>
+	  <property name="dataSource" ref="dataSource">
+	  
+	  </property>
 	</bean>
 	<!-- config 파일 스캔 -->
 	<context:property-placeholder location="classpath:/config/appdata.properties"/>
