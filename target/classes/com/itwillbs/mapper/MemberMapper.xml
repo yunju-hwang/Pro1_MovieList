@@ -17,7 +17,7 @@
 	<!-- 회원가입 ID중복체크 -->
 	<select id="checkUserIdExists" parameterType="String"
 		resultType="int">
-		SELECT COUNT(*) FROM members WHERE user_id = #{user_id}
+		SELECT COUNT(*) FROM users WHERE user_id = #{user_id}
 	</select>
 
 	<insert id="insertMember">
