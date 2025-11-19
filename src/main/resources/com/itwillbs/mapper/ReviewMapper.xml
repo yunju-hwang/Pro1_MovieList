@@ -22,4 +22,17 @@
 	    FROM reviews
 	    WHERE tmdb_id = #{tmdbId}
 	</select>
+	
+	<!-- userId값에 맞는 reveiw값 받아오기  -->
+	<select id="selectByUserId" parameterType="String" resultType="com.itwillbs.domain.ReviewsVO">
+		SELECT
+	        id,
+	        tmdb_id AS tmdbId,
+	        user_id AS userId,
+	        content,
+	        rating,
+	        created_at AS createdAt
+	    FROM reviews
+	    WHERE user_id = #{userId}
+	</select>
 </mapper>

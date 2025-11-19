@@ -6,13 +6,17 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.itwillbs.domain.AiReviewRequestVO;
 import com.itwillbs.domain.ReviewsVO;
+import com.itwillbs.domain.UserReviewVO;
 import com.itwillbs.service.ChatGptService;
 import com.itwillbs.service.ReviewService;
 
@@ -74,6 +78,28 @@ public class ReviewController {
 	@GetMapping("/movies/ai_review")
 	public String aiReviews() {
 		return "/movies/ai_review";
+	}
+	
+	// userId에 맞는 모든 리뷰 가져오기
+	@GetMapping("/movies/reviews_by_user")
+	@ResponseBody
+	public List<ReviewsVO> getReviewsByUser(@RequestParam String userId) {
+	    return reviewService.getReviewsByUser(userId);
+	}
+
+	
+	// ai 리뷰 요청 및 받아오기
+	@PostMapping("/movies/ai_review")
+	@ResponseBody
+	public ResponseEntity<String> analyzeReviews(@RequestBody AiReviewRequestVO request){
+		
+		//DB에서 userId 조건으로 리뷰 조회
+		 List<ReviewsVO> userReviews = reviewService.getReviewsByUser(request.getUserId());
+		
+		// GPT 분석
+		// String result = chatGptService.askGPT(userReviews);
+		
+		return ResponseEntity.ok("result");
 	}
 		
 
