@@ -2,7 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/navbar.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,7 +33,7 @@
 
             </div>
 
-			<a href="/movielist/customer/inquiry_detail" class="inq_detail">
+			<a href="/movielist/customer/inquiries/inquiry_detail" class="inq_detail">
             <div class="inquiry_list">
                 <c:forEach var="inquiriesVO" items="${inquiry_list}">
                     <div class="inquiry_item">
@@ -64,12 +63,17 @@
  
 
 </div>
+
+
  </a>
-	
+ 
+
+
 <a href="/movielist/customer/write_inquiry" class="inq">
 	<div class="inq-con">
 		<p>1:1 문의하기</p>
 	</div>
+
 	</a>
 
 </body>

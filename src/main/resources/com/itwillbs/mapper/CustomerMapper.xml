@@ -18,6 +18,10 @@
 	select count(*) from inquiries where user_id = #{userId}
 
 </select>
+<select id="inquiry_detail" resultType="com.itwillbs.domain.InquiriesVO">
+	select user_id as userId,title,created_at as createdAt, answered_at as answeredAt from inquiries where user_id = #{userId}
+</select>
+
   <update id="inquiry_update">
   	update board
   	set title = #{title}, content = #{content}, status = #{status}
@@ -28,5 +32,13 @@
   	delete from inquiries
   	where id = #{id}
   </delete>
+  
+  <select id="movie_request" resultType="com.itwillbs.domain.MovieRequestVO">
+  	select user_id,status,created_at as createdAt,processed_at as processedAt from movie_request where user_id = #{userId}
+  </select>
+  
+  <select id="movie_request_count" resultType="java.lang.Integer">
+  	select count(*) from movie_request where user_id = #{userId}
+  </select>
 
 </mapper>
