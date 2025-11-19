@@ -17,4 +17,7 @@ public class MovieRequestVO {
     private int count;
     private LocalDateTime createdAt;
     private LocalDateTime processedAt;
+    
+    private String title;
+    private String content;
 }
