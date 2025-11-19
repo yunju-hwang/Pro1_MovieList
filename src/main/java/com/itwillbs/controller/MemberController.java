@@ -37,10 +37,47 @@ public class MemberController {
 		return "/user/register_step2";
 	}
 	
+	//
+	@PostMapping("/register/step2Pro")
+	public String step2Pro(MemberVO memberVO,HttpSession session) {
+		memberService.insertMember(memberVO);
+		session.setAttribute("user_id", memberVO.getUser_id());
+        session.setAttribute("role", memberVO.getRole());
+        System.out.println(memberVO);
+		return "redirect:/register/step3";
+	}
+	
 	// 회원가입 -> 선호 장르 선택
 	@GetMapping("/register/step3")
-	public String register3() {
+	public String register3(Model model) {
+		List<GenresVO> genresVOList = memberService.getGenres();
+		model.addAttribute("genresVOList", genresVOList);
+		System.out.println(genresVOList);
 		return "/user/register_step3";
+	}
+	
+	//
+	@PostMapping("/register/step3Pro")
+	public String step3Pro(HttpServletRequest request, HttpSession session) {
+	    String userId = (String) session.getAttribute("user_id");
+	    String[] genreArray = request.getParameterValues("genre");
+
+	    if (genreArray != null && genreArray.length > 0) {
+	    	 List<UserGenresVO> userGenresList = new ArrayList<UserGenresVO>()	;
+	    	 for(String genreId : genreArray) {
+	    		 UserGenresVO vo = new UserGenresVO();
+	    		 vo.setUserId(userId);
+	    		 vo.setGenreId(Integer.parseInt(genreId)); 
+	    	  	 userGenresList.add(vo);
+	    	 }
+	    	 
+	   	
+	        	System.out.println("userGenresList======"  + userGenresList);
+	        // Service 호출
+	        memberService.insertGenresList(userGenresList);
+	    }
+
+	    return "redirect:/login";
 	}
 	
 // ------------------------------------------------
@@ -72,7 +109,16 @@ public class MemberController {
             return "/user/login"; 
         }
     }
+    
+ // 로그아웃
+    @GetMapping("/logout")
+    public String logout (HttpSession session) {
+    	System.out.println("MemberController logout()");
+        session.invalidate();
+        return "redirect:/login";
+    }
 }
 	
-	
+
+
 
