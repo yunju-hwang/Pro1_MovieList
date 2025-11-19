@@ -137,6 +137,8 @@ public class MemberController {
             session.setAttribute("nickname", resultVO.getNickname());
           System.out.println(resultVO);
 
+            
+     
             // JSP에서 편하게 체크할 수 있도록 ${not empty sessionScope.loginUser} 체크
             session.setAttribute("loginUser", resultVO);
             if ("admin".equals(resultVO.getRole())) { // role이 'admin'이면
