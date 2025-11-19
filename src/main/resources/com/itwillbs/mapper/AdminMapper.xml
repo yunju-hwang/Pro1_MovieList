@@ -237,7 +237,6 @@
 		r.tmdb_id AS tmdbId,
 		r.user_id AS userId,
 		r.content,
-		r.sentiment,
 		r.rating,
 		r.created_at AS createdAt,
 		m.title AS
