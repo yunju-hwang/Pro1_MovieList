@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%> 
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/navbar.jsp"%>
 <!DOCTYPE html>
 <html>
@@ -9,6 +12,7 @@
 <title>마이페이지 | 문의 내역</title>
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <style>
 /* ========================================================== */
@@ -315,10 +319,15 @@ body {
 
 .inquiry-button {
 	background-color: #cd0000; /* 네비게이션과 동일한 진한 빨간색 */
-	color: white; border : none; width : 100%; /* 너비를 100%로 확장 */ padding :
-	18px 20px;
-	/* 버튼 높이를 키움 */ border-radius : 4px; font-size : 18px; /* 글자 크기 키움 */
-	font-weight : bold; cursor : pointer;
+	color: white;
+	border: none;
+	width: 100%; /* 너비를 100%로 확장 */
+	padding: 18px 20px;
+	/* 버튼 높이를 키움 */
+	border-radius: 4px;
+	font-size: 18px; /* 글자 크기 키움 */
+	font-weight: bold;
+	cursor: pointer;
 	transition: background-color 0.2s;
 	color: white;
 	border: none;
@@ -329,6 +338,13 @@ body {
 	font-weight: bold;
 	cursor: pointer;
 	border: none;
+	width: 100%; /* 너비를 100%로 확장 */
+	padding: 18px 20px;
+	/* 버튼 높이를 키움 */
+	border-radius: 4px;
+	font-size: 18px; /* 글자 크기 키움 */
+	font-weight: bold;
+	cursor: pointer;
 	width: 100%; /* 너비를 100%로 확장 */
 	padding: 18px 20px;
 	/* 버튼 높이를 키움 */
@@ -375,37 +391,47 @@ body {
 </head>
 <body>
 
-	<div class="header-nav">
-		<ul>
-			<li><a href="/movielist/mypage/reservations"><i
-					class="fa-solid fa-calendar-check"></i> 예매 내역</a></li>
-			<li><a href="/movielist/mypage/favorites"><i
-					class="fa-regular fa-heart"></i> 관심 목록</a></li>
-			<li><a href="/movielist/mypage/profile"><i
-					class="fa-regular fa-user"></i> 회원 정보</a></li>
-			<li><a href="/movielist/mypage/theaters"><i
-					class="fa-solid fa-map-pin"></i> 선호 영화관</a></li>
-			<li><a href="/movielist/mypage/paymentmethod"><i
-					class="fa-solid fa-credit-card"></i> 결제 수단</a></li>
-			<li class="active"><a href="/movielist/mypage/inquiries"><i
-					class="fa-regular fa-clipboard"></i> 문의 내역</a></li>
-			<li><a href="/movielist/mypage/movierequest"><i
-					class="fa-solid fa-film"></i> 영화 요청</a></li>
-		</ul>
-	</div>
+	<div class="header-nav"></div>
 
 	<div class="container">
 		<div class="content-box">
 			<h1>문의 내역</h1>
-			<p class="count" id="page-count">총 ${ inquiryCount }건의 문의</p>
+			<p class="count" id="page-count">총 ${ fn:length(qnaList) }건의 문의</p>
 
 			<div id="inquiry-list-area">
 				<div class="inquiry-list">
-					<div class="no-inquiries">
-						<i class="fa-regular fa-comment-dots"></i>
-						<p>문의 내역이 없습니다</p>
-					</div>
-
+					<c:choose>
+						<c:when test="${not empty qnaList}">
+							<div class="inquiry-header">
+								<div class="col-type">상태</div>
+								<div class="col-title">제목</div>
+								<div class="col-date">작성일</div>
+								<div class="col-status">유형</div>
+							</div>
+							<c:forEach var="inquiry" items="${qnaList}">
+								<div class="inquiry-item">
+									<div class="col-type">
+										<span
+											class="status-<c:out value='${inquiry.status eq "완료" ? "completed" : "pending"}'/>">
+											<c:out value="${inquiry.status}" />
+										</span>
+									</div>
+									<div class="col-title">${inquiry.title}</div>
+									<div class="col-date">
+										<fmt:formatDate value="${inquiry.createdAt}"
+											pattern="yyyy.MM.dd" />
+									</div>
+									<div class="col-status">기타</div>
+								</div>
+							</c:forEach>
+						</c:when>
+						<c:otherwise>
+							<div class="no-inquiries">
+								<i class="fa-regular fa-comment-dots"></i>
+								<p>문의 내역이 없습니다</p>
+							</div>
+						</c:otherwise>
+					</c:choose>
 				</div>
 
 				<div class="action-bar">
@@ -417,11 +443,14 @@ body {
 			<div id="inquiry-form-area" style="display: none;">
 				<p class="form-description">궁금한 사항을 남겨주시면 빠르게 답변 드리겠습니다</p>
 
-				<form id="inquiry-form">
-
+				<form id="inquiry-form" action="/movielist/mypage/inquiries"
+					method="POST">
+					                                                             <input
+						type="hidden" name="userId" value="${sessionScope.userId}" />
 
 					<div class="form-group">
-						<label for="type">문의 유형 *</label> <select id="type"
+						<label for="type">문의 유형 *</label>                                 
+						                <select id="type" name="type"
 							class="form-input select-input">
 							<option value="" disabled selected>문의 유형을 선택하세요</option>
 							<option value="reservation">예매/결제</option>
@@ -434,21 +463,25 @@ body {
 					</div>
 
 					<div class="form-group">
-						<label for="title">제목 *</label> <input type="text" id="title"
+						<label for="title">제목 *</label>                                   
+						              <input type="text" id="title" name="title"
 							class="form-input" placeholder="문의 제목을 입력하세요">
 						<p id="title-error" class="error-message"></p>
 					</div>
 
 					<div class="form-group">
-						<label for="email">이메일 주소 *</label> <input type="email" id="email"
+						<label for="email">이메일 주소 *</label>                               
+						                  <input type="email" id="email" name="email"
 							class="form-input" placeholder="답변 받으실 이메일 주소">
 						<p class="help-text">답변은 입력하신 이메일로 발송됩니다</p>
 						<p id="email-error" class="error-message"></p>
 					</div>
 
 					<div class="form-group">
-						<label for="content">문의 내용 *</label>
-						<textarea id="content" class="form-input textarea-input"
+						<label for="content">문의 내용 *</label>                              
+						                 
+						<textarea id="content" name="content"
+							class="form-input textarea-input"
 							placeholder="문의 내용을 10자 이상 입력해주세요"></textarea>
 						<p class="help-text min-length">최소 10자 이상 입력해주세요</p>
 						<p id="content-error" class="error-message"></p>
@@ -482,138 +515,168 @@ body {
 
 	<script>
 document.addEventListener('DOMContentLoaded', function() {
-    // ---------------------- 요소 연결 ----------------------
-    const listArea = document.getElementById('inquiry-list-area'); 
-    const formArea = document.getElementById('inquiry-form-area'); 
-    const showFormButton = document.getElementById('show-form-button'); 
-    const hideFormButton = document.getElementById('hide-form-button'); 
-    const inquiryForm = document.getElementById('inquiry-form');
+    // ---------------------- 요소 연결 ----------------------
+    const listArea = document.getElementById('inquiry-list-area'); 
+    const formArea = document.getElementById('inquiry-form-area'); 
+    const showFormButton = document.getElementById('show-form-button'); 
+    const hideFormButton = document.getElementById('hide-form-button'); 
+    const inquiryForm = document.getElementById('inquiry-form');
+    
+    // 폼 요소
+    const inquiryType = document.getElementById('type'); 
+    const inquiryTitle = document.getElementById('title');
+    const inquiryEmail = document.getElementById('email');
+    const inquiryContent = document.getElementById('content');
+    
+    // 오류 메시지 요소
+    const typeError = document.getElementById('type-error');
+    const titleError = document.getElementById('title-error');
+    const emailError = document.getElementById('email-error');
+    const contentError = document.getElementById('content-error');
+    
+    // 페이지 상태 표시 요소
+    const pageTitle = document.querySelector('.content-box h1');
+    const pageCount = document.querySelector('.content-box p.count');
+    const formDescription = document.querySelector('#inquiry-form-area .form-description');
+
+    // ---------------------- 유틸리티 함수 ----------------------
+
+    /** 모든 오류 메시지를 숨김 */
+    function clearErrors() {
+        [typeError, titleError, emailError, contentError].forEach(el => {
+            if (el) { el.textContent = ''; el.style.display = 'none'; }
+        });
+    }
+
+    /** 특정 요소에 오류 메시지를 표시하고 포커스 */
+    function displayError(inputElement, errorElement, message) {
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        if (inputElement) {
+            inputElement.focus();
+        }
+    }
+
+    // ---------------------- ✅ 유효성 검사 함수 ----------------------
+    function validateForm() {
+        clearErrors(); 
+
+        // 1. 문의 유형 검사
+        if (inquiryType && inquiryType.value === "") {
+            displayError(inquiryType, typeError, '문의 유형을 선택해주세요.');
+            return false;
+        }
+        
+        // 2. 제목 검사
+        if (inquiryTitle && inquiryTitle.value.trim() === "") {
+            displayError(inquiryTitle, titleError, '제목을 입력해야 합니다.');
+            return false;
+        }
+
+        // 3. 이메일 검사 (빈 값)
+        if (inquiryEmail && inquiryEmail.value.trim() === "") {
+            displayError(inquiryEmail, emailError, '답변 받으실 이메일 주소를 입력해야 합니다.');
+            return false;
+        }
+        
+        // 4. 이메일 형식 검사
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (inquiryEmail && !emailRegex.test(inquiryEmail.value.trim())) {
+             displayError(inquiryEmail, emailError, '올바른 이메일 형식으로 입력해주세요.');
+             return false;
+        }
+
+        // 5. 문의 내용 검사 (10자 미만)
+        if (inquiryContent && inquiryContent.value.trim().length < 10) {
+            displayError(inquiryContent, contentError, '문의 내용을 최소 10자 이상 입력해주세요.');
+            return false;
+        }
+        
+        return true;
+    }
+    
+    // ---------------------- 이벤트 핸들러 ----------------------
+
+    // '1:1 문의하기' 버튼 클릭 시 (목록 -> 폼)
+    showFormButton.addEventListener('click', function() {
+        listArea.style.display = 'none';
+        formArea.style.display = 'block';
+        
+        pageTitle.textContent = '1:1 문의';
+        pageTitle.style.textAlign = 'left';
+
+        pageCount.style.display = 'none'; 
+        formDescription.style.display = 'block'; 
+        
+        clearErrors();
+    });
+    
+    // '취소' 버튼 클릭 시 (폼 -> 목록)
+    hideFormButton.addEventListener('click', function() {
+        formArea.style.display = 'none';
+        listArea.style.display = 'block';
+        
+        pageTitle.textContent = '문의 내역';
+        pageTitle.style.textAlign = 'center';
+        
+        pageCount.style.display = 'block'; 
+        formDescription.style.display = 'none';
+        
+        if (inquiryForm) inquiryForm.reset();
+        clearErrors();
+    });
+
+    // 🚨 폼의 submit 이벤트를 가로챕니다. (AJAX 통신)
+    if (inquiryForm) { 
+        inquiryForm.addEventListener('submit', function(e) {
+            e.preventDefault();  // 🛑 주소 이동 방지
+
+            if (validateForm()) {
+                // 💡 [핵심 수정] 전통적인 폼 제출 대신 AJAX로 데이터 전송
+                const formData = $(this).serialize(); // 폼 데이터를 직렬화
+
+                $.ajax({
+                    // Controller의 @PostMapping("/mypage/inquiries")와 일치
+                    url: $(this).attr('action'), 
+                    type: 'POST',
+                    data: formData,
+
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8', 
+
+                    dataType: 'text',
+                    
+                    success: function(response) {
+    // 성공 메시지 표시 (Controller에서 반환된 "문의가 성공적으로 등록되었습니다." 예상)
+    alert(response); 
+    inquiryForm.reset();
     
-    // 폼 요소
-    const inquiryType = document.getElementById('type'); 
-    const inquiryTitle = document.getElementById('title');
-    const inquiryEmail = document.getElementById('email');
-    const inquiryContent = document.getElementById('content');
+    // 폼 숨기고 목록 보기 상태로 전환
+    document.getElementById('inquiry-form-area').style.display = 'none'; 
+    document.getElementById('inquiry-list-area').style.display = 'block';
+    document.querySelector('.content-box h1').textContent = '문의 내역';
     
-    // 🚨 오류 메시지 요소 (HTML에 추가한 ID를 사용)
-    const typeError = document.getElementById('type-error');
-    const titleError = document.getElementById('title-error');
-    const emailError = document.getElementById('email-error');
-    const contentError = document.getElementById('content-error');
+    window.location.reload(); 
+},
+error: function(xhr) {
+    // 🚨 [수정] 깨진 문자열 대신 HTTP 상태 코드와 응답 본문을 확인
+    // xhr.responseText에 깨지지 않은 에러 메시지가 담겨야 합니다.
+    let errorMessage = xhr.responseText || '알 수 없는 오류가 발생했습니다.';
     
-    // 페이지 상태 표시 요소
-    const pageTitle = document.querySelector('.content-box h1');
-    const pageCount = document.querySelector('.content-box p.count');
-    const formDescription = document.querySelector('#inquiry-form-area .form-description');
-
-    // ---------------------- 유틸리티 함수 ----------------------
-
-    /** 모든 오류 메시지를 숨김 */
-    function clearErrors() {
-        [typeError, titleError, emailError, contentError].forEach(el => {
-            if (el) { // 요소가 존재하는지 확인
-                el.textContent = '';
-                el.style.display = 'none';
-            }
-        });
-    }
-
-    /** 특정 요소에 오류 메시지를 표시하고 포커스 */
-    function displayError(inputElement, errorElement, message) {
-        if (errorElement) {
-            errorElement.textContent = message;
-            errorElement.style.display = 'block'; // 메시지 보이기
-        }
-        if (inputElement) {
-            inputElement.focus(); // 포커스 이동
-        }
-    }
-
-    // ---------------------- ✅ 유효성 검사 함수 (업데이트) ----------------------
-    function validateForm() {
-        clearErrors(); // 새로운 검사 전에 기존 오류를 모두 지웁니다.
-
-        // 1. 문의 유형 검사
-        if (inquiryType && inquiryType.value === "") {
-            displayError(inquiryType, typeError, '문의 유형을 선택해주세요.');
-            return false;
-        }
-
-        // 2. 제목 검사
-        if (inquiryTitle && inquiryTitle.value.trim() === "") {
-            displayError(inquiryTitle, titleError, '제목을 입력해야 합니다.');
-            return false;
-        }
-
-        // 3. 이메일 검사 (빈 값)
-        if (inquiryEmail && inquiryEmail.value.trim() === "") {
-            displayError(inquiryEmail, emailError, '답변 받으실 이메일 주소를 입력해야 합니다.');
-            return false;
-        }
-        
-        // 4. 이메일 형식 검사
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (inquiryEmail && !emailRegex.test(inquiryEmail.value.trim())) {
-             displayError(inquiryEmail, emailError, '올바른 이메일 형식으로 입력해주세요.');
-             return false;
-        }
-
-        // 5. 문의 내용 검사 (10자 미만)
-        if (inquiryContent && inquiryContent.value.trim().length < 10) {
-            displayError(inquiryContent, contentError, '문의 내용을 최소 10자 이상 입력해주세요.');
-            return false;
-        }
-        
-        return true; // 모든 검사를 통과했을 경우
-    }
+    // HTTP 상태 코드 확인 (400 Bad Request, 500 Internal Server Error 등)
+    let status = xhr.status; 
     
-    // ---------------------- 이벤트 핸들러 ----------------------
+    alert(`문의 등록 실패 (상태: ${status}): ${errorMessage}`);
+}
+                });
+            }
+        });
+    }
 
-    // '1:1 문의하기' 버튼 클릭 시 (목록 -> 폼)
-    showFormButton.addEventListener('click', function() {
-        listArea.style.display = 'none';
-        formArea.style.display = 'block';
-        
-        pageTitle.textContent = '1:1 문의';
-        pageTitle.style.textAlign = 'left';
-
-        pageCount.style.display = 'none'; 
-        formDescription.style.display = 'block'; 
-        
-        clearErrors(); // 폼이 열릴 때 혹시 모를 기존 오류 메시지 제거
-    });
-    
-    // '취소' 버튼 클릭 시 (폼 -> 목록)
-    hideFormButton.addEventListener('click', function() {
-        formArea.style.display = 'none';
-        listArea.style.display = 'block';
-        
-        pageTitle.textContent = '문의 내역';
-        pageTitle.style.textAlign = 'center';
-        
-        pageCount.style.display = 'block'; 
-        formDescription.style.display = 'none';
-        
-        if (inquiryForm) inquiryForm.reset();
-        clearErrors(); // 폼 닫을 때 오류 메시지 제거
-    });
-
-    // 🚨 폼의 submit 이벤트를 가로챕니다. (유효성 검사 실행)
-    if (inquiryForm) { 
-        inquiryForm.addEventListener('submit', function(e) {
-            e.preventDefault(); 
-
-            if (validateForm()) {
-                // 유효성 검사 통과 시
-                alert('문의가 성공적으로 접수되었습니다! (서버 전송 시뮬레이션)');
-                // 여기에 실제 서버 전송 로직: this.submit();
-            }
-        });
-    }
-
-    // 페이지 로드 시 초기 상태 설정
-    formDescription.style.display = 'none';
-    clearErrors();
+    // 페이지 로드 시 초기 상태 설정
+    formDescription.style.display = 'none';
+    clearErrors();
 });
 </script>
 
