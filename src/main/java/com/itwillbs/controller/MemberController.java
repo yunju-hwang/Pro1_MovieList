@@ -122,7 +122,7 @@ public class MemberController {
 		
     
     // 로그인 POST 
-    @PostMapping("/login")
+    @PostMapping("/loginPro")
     public String loginPOST(MemberVO memberVO, HttpSession session, Model model) {
         
     	// 1.로그인 service -> db에서 로그인 결과값 받아오기 (일치하는 회원값)
