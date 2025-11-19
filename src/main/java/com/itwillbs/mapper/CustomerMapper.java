@@ -29,6 +29,8 @@ public interface CustomerMapper {
 
 	List<MovieRequestVO> movie_request(String userId);
 
+	void insert_movie_request(MovieRequestVO movieRequestVO);
+
 	
 
 }

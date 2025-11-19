@@ -33,12 +33,17 @@
   	where id = #{id}
   </delete>
   
-  <select id="movie_request" resultType="com.itwillbs.domain.MovieRequestVO">
-  	select user_id,status,created_at as createdAt,processed_at as processedAt from movie_request where user_id = #{userId}
-  </select>
+  <insert id="insert_movie_request">
+  	insert into movie_request(user_id,title, content, status, created_at)
+  	values (#{userId},#{title},#{content},#{status},#{createdAt})
+  </insert>
   
   <select id="movie_request_count" resultType="java.lang.Integer">
   	select count(*) from movie_request where user_id = #{userId}
+  </select>
+  
+  <select id="movie_request" resultType="com.itwillbs.domain.MovieRequestVO">
+  	select * from movie_request where user_id = #{userId}
   </select>
 
 </mapper>

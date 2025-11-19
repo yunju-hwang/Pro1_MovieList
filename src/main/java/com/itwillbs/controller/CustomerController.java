@@ -135,7 +135,7 @@ public class CustomerController {
 		movieRequestVO.setUserId((String)session.getAttribute("user_id"));
 		
 		System.out.println("movieRequestVO = " + movieRequestVO);
-//		customerService.(movieRequestVO);
+		customerService.insert_movie_request(movieRequestVO);
 		
 		
 		return "redirect:/customer/movie_request";

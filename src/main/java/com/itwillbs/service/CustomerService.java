@@ -62,6 +62,14 @@ public class CustomerService {
 		return customerMapper.movie_request_count(userId);
 	}
 
+	public void insert_movie_request(MovieRequestVO movieRequestVO) {
+		movieRequestVO.setStatus("pending");
+		movieRequestVO.setCreatedAt(LocalDateTime.now());
+
+		customerMapper.insert_movie_request(movieRequestVO);
+		
+	}
+
 
 	
 
