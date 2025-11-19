@@ -6,9 +6,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.itwillbs.domain.ReviewsVO;
 import com.itwillbs.domain.NoticesVO;
 import com.itwillbs.domain.ReservationsVO;
+import com.itwillbs.domain.ReviewsAdminVO;
 import com.itwillbs.domain.FaqsVO;
 import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MemberVO;
@@ -60,13 +60,12 @@ public int updateMovieRequests(@Param("id") int id, @Param("status") String stat
 public int deleteMovieRequests(int id);
 
 // 리뷰 관리
-public List<ReviewsVO> AdminReviewsList();
+public List<ReviewsAdminVO> AdminReviewsList();
 
 public int deleteReviews(int id);
 
 // 예매 관리
 public List<ReservationsVO> AdminReservationsList();
-
 
 public void AdminReservationsRefund(int id);
 
@@ -82,7 +81,7 @@ public int AdminFaqsUpdate(FaqsVO faqs);
 public int AdminFaqsDelete(int id);
 
 
-// Notices
+// 공지사항
 public List<NoticesVO> AdminNoticesList();
 
 public int AdminNoticesWrite(NoticesVO notices);
