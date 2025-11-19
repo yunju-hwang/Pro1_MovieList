@@ -1,126 +1,142 @@
 package com.itwillbs.controller;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itwillbs.domain.MemberVO;
+import com.itwillbs.domain.TheatersVO;
 import com.itwillbs.domain.UserFavoritesVO;
 import com.itwillbs.service.MypageService;
 
 @Controller
 public class MypageController {
-	
+
 	@Inject // 또는 @Autowired
-    private MypageService mypageService;
+	private MypageService mypageService;
 
 	// 마이페이지 -> 관심 영화 목록
 	@GetMapping("/mypage/favorites")
 	public String getFavoriteMovies(HttpSession session, Model model) {
 		// 1. 로그인된 사용자 정보 확인
-        MemberVO user = (MemberVO) session.getAttribute("loginUser");
+		MemberVO user = (MemberVO) session.getAttribute("loginUser");
 
-        if (user == null) {
-            // 로그인되어 있지 않으면 로그인 페이지 등으로 리다이렉트
-            return "redirect:/login"; 
-        }
+		if (user == null) {
+			// 로그인되어 있지 않으면 로그인 페이지 등으로 리다이렉트
+			return "redirect:/login";
+		}
 
-        String userId = user.getUser_id();
-        
-        // 2. Service를 호출하여 찜한 영화 목록 가져오기
-        // UserFavoritesVO에는 tmdbId 외에 movie_title, poster_path가 함께 담겨 있습니다.
-        List<UserFavoritesVO> favoriteList = mypageService.getFavoriteList(userId); 
-        
-        // 3. 목록을 JSP로 전달 (JSP에서 ${favoriteList}로 사용 가능)
-        model.addAttribute("favoriteList", favoriteList);
-        
-        // 4. JSP 파일 경로 반환 (예: WEB-INF/views/mypage/favorites.jsp)	
-		return "/mypage/favorites";
+		String userId = user.getUser_id();
+
+		// 2. Service를 호출하여 찜한 영화 목록 가져오기
+		// UserFavoritesVO에는 tmdbId 외에 movie_title, poster_path가 함께 담겨 있습니다.
+		List<UserFavoritesVO> favoriteList = mypageService.getFavoriteList(userId);
+
+		Map<Integer, List<String>> genresMap = mypageService.getMovieGenresMap(favoriteList);
+
+	    // 4. 목록과 맵을 JSP로 전달 (model에 추가)
+	    model.addAttribute("favoriteList", favoriteList);
+	    model.addAttribute("genresMap", genresMap); // 💡 이 코드가 반드시 있어야 합니다!
+
+	    return "/mypage/favorites";
 	}
 	
+	@DeleteMapping("/mypage/favorites/{tmdbId}")
+	@ResponseBody
+	public ResponseEntity<String> deleteFavoriteMovie(@PathVariable("tmdbId") int tmdbId, HttpSession session) {
+		// 1. 로그인된 사용자 정보 확인
+		MemberVO user = (MemberVO) session.getAttribute("loginUser");
+
+		if (user == null) {
+			// 로그인되어 있지 않으면 권한 없음 응답
+			return new ResponseEntity<>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
+		}
+
+		String userId = user.getUser_id();
+
+		// 2. Service를 호출하여 찜한 영화 삭제
+		// 삭제할 정보: 사용자 ID와 영화 ID
+		int result = mypageService.deleteFavoriteMovie(userId, tmdbId);
+
+		// 3. 삭제 결과에 따른 응답 반환
+		if (result > 0) {
+			// 성공 시 200 OK
+			return new ResponseEntity<>("관심 영화가 삭제되었습니다.", HttpStatus.OK);
+		} else {
+			// 실패 시 404 NOT FOUND 또는 500 INTERNAL SERVER ERROR
+			return new ResponseEntity<>("삭제할 관심 영화를 찾을 수 없거나 DB 오류입니다.", HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	
+
 	// 마이페이지 -> 문의 목록
 	@GetMapping("/mypage/inquiries")
-public String inquiries(Model model, HttpSession session) {
-        
-        // 1. 사용자 ID 가져오기 (세션에서 로그인된 사용자 ID를 'loginUserId' 키로 가정)
-        String userId = (String) session.getAttribute("loginUserId"); 
-        
-        // 2. userId가 null이 아닐 경우에만 서비스 호출
-        if (userId != null) {
-            
-            // 🚨🚨🚨 여기에 문의 건수를 가져오는 로직을 작성해야 합니다. 🚨🚨🚨
-            // 주의: InquiryService 객체를 필드로 주입(Inject)해야 이 코드가 실행될 수 있습니다.
-            
-            // 예시 코드 (실제 실행을 위해서는 InquiryService 주입 및 메서드 구현 필요)
-            // int count = inquiryService.getInquiryCountByUserId(userId);
-            // model.addAttribute("inquiryCount", count);
-            
-            // 임시로 0건을 설정하여 JSP 테스트를 진행할 수 있습니다.
-             int count = 0; 
-             model.addAttribute("inquiryCount", count);
-             
-            // 문의 목록 리스트도 여기서 가져와 model에 담아야 합니다.
-            // List<Inquiry> list = inquiryService.getInquiriesByUserId(userId);
-            // model.addAttribute("inquiryList", list);
-        }
-        
-		return "/mypage/inquiries"; // 이 JSP로 'inquiryCount' 데이터가 전달됩니다.
-	}
-	
-	// (생략: payment(), movieRequest(), profile(), reservations(), theaters() 메서드)
-	
-	// 마이페이지 -> 결제 수단 등록
-	@GetMapping("/mypage/paymentmethod")
-	public String payment() {
-		return "/mypage/payment_method";
-	}
-	
+	public String inquiries() {
+		return "/mypage/inquiries";
+	}	
+
 	// 마이페이지 -> 영화 요청 목록
 	@GetMapping("/mypage/movierequest")
 	public String movieRequest() {
 		return "/mypage/movie_request";
 	}
-	
+
 	// 마이페이지 -> 회원정보수정
 	@GetMapping("/mypage/profile")
 	public String profile(HttpSession session, Model model) {
-		
+
 		MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
-		
+
 		if (loginUser == null) {
-            // 2-1. 로그인 정보가 없으면 로그인 페이지로 리다이렉트
-            return "redirect:/login"; // 또는 다른 적절한 로그인 페이지 경로
-        }
-		
+			// 2-1. 로그인 정보가 없으면 로그인 페이지로 리다이렉트
+			return "redirect:/login"; // 또는 다른 적절한 로그인 페이지 경로
+		}
+
 		String userId = loginUser.getUser_id();
-		
+
 		MemberVO memberInfoFromDB = mypageService.getMember(userId);
-		
+
 		if (memberInfoFromDB != null) {
-            model.addAttribute("loginMember", memberInfoFromDB);
-        } else {
-            // (선택) DB에서 정보를 찾지 못한 경우 처리
-            model.addAttribute("msg", "회원 정보를 찾을 수 없습니다.");
-        }
-		
+			model.addAttribute("loginMember", memberInfoFromDB);
+		} else {
+			// (선택) DB에서 정보를 찾지 못한 경우 처리
+			model.addAttribute("msg", "회원 정보를 찾을 수 없습니다.");
+		}
+
 		return "/mypage/profile";
-		
+
 	}
-	
+
 	// 마이페이지 -> 영화 예약 조회
 	@GetMapping("/mypage/reservations")
 	public String reservations() {
 		return "/mypage/reservations";
 	}
-	
+
 	// 마이페이지 -> 선호 영화관 목록
 	@GetMapping("/mypage/theaters")
-	public String theaters() {
-		return "/mypage/theaters";
+	public String theaters(HttpSession session, Model model) {
+		List<TheatersVO> theaterList = mypageService.getTheaterList();
+		
+		model.addAttribute("theaterList", theaterList);
+		
+	    return "/mypage/theaters";
 	}
+	
+	
+	
 }
