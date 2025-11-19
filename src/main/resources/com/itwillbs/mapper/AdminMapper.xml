@@ -172,7 +172,8 @@
 		UPDATE inquiries
 		SET
 		status = 'answered',
-		answered_at = NOW(),
+		answered_at =
+		NOW(),
 		answer_content = #{answerContent}
 		WHERE id = #{id}
 	</update>
@@ -214,10 +215,18 @@
 		ORDER BY created_at DESC, id DESC;
 	</select>
 
-	<!-- <delete id="deleteMovieRequests"> -->
-	<!-- DELETE FROM movie_request -->
-	<!-- WHERE user_id = #{userId} -->
-	<!-- </delete> -->
+	<update id="updateMovieRequests">
+		UPDATE movie_request
+		SET
+		status = #{status},
+		processed_at = NOW() 
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteMovieRequests">
+		DELETE FROM movie_request
+		WHERE id = #{id}
+	</delete>
 
 
 	<!-- 리뷰관리 -->
@@ -256,19 +265,24 @@
 		r.screening_time AS screeningTime,
 		r.reservation_date AS reservationDate,
 		r.seat,
-		r.adult_people AS adultPeople,
+		r.adult_people AS
+		adultPeople,
 		r.child_people AS childPeople,
 		r.status,
-		m.title AS movieTitle,
+		m.title AS
+		movieTitle,
 		p.amount AS finalAmount,
-		CONCAT(t.name, ' (', t.location, ')') AS theaterName
+		CONCAT(t.name, ' (', t.location,
+		')') AS theaterName
 
 		FROM reservations r
 
-		LEFT JOIN movies m ON r.tmdb_id = m.tmdb_id
+		LEFT JOIN movies m ON r.tmdb_id
+		= m.tmdb_id
 		LEFT JOIN payments p ON r.id =
 		p.reservation_id
-		LEFT JOIN theaters t ON r.theater_id = t.theater_id
+		LEFT JOIN
+		theaters t ON r.theater_id = t.theater_id
 
 		ORDER BY r.id DESC;
 	</select>
@@ -288,7 +302,7 @@
 		id,
 		question,
 		answer,
-		created_at as createdAT,
+		created_at as createdAt,
 		category
 		from faqs
 		order by id desc;
@@ -311,7 +325,8 @@
 		UPDATE faqs
 		SET
 		category = #{category},
-		question = #{question},
+		question =
+		#{question},
 		answer = #{answer}
 		WHERE id = #{id}
 	</update>
@@ -331,6 +346,56 @@
 		#{question},
 		#{answer},
 		#{category},
+		NOW()
+		)
+	</insert>
+
+	<!-- NOTICES -->
+	<select id="AdminNoticesList"
+		resultType="com.itwillbs.domain.NoticesVO">
+		SELECT
+		id,
+		title,
+		content,
+		created_at as createdAt
+		from notices
+		order by id desc;
+	</select>
+
+	<select id="getNoticesDetail"
+		resultType="com.itwillbs.domain.NoticesVO">
+		SELECT
+		id,
+		title,
+		content,
+		created_at as createdAt
+		from notices
+		WHERE id = #{id}
+	</select>
+
+	<update id="AdminNoticesUpdate">
+		UPDATE notices
+		SET
+		title = #{title},
+		content =
+		#{content}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="AdminNoticesDelete">
+		DELETE FROM notices
+		WHERE id = #{id}
+	</delete>
+
+	<insert id="AdminNoticesWrite">
+		INSERT INTO notices (
+		title,
+		content,
+		created_at
+		) VALUES
+		(
+		#{title},
+		#{content},
 		NOW()
 		)
 	</insert>
