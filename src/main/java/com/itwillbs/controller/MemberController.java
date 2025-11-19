@@ -1,15 +1,23 @@
 package com.itwillbs.controller;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.itwillbs.domain.GenresVO;
 import com.itwillbs.domain.MemberVO;
-import com.itwillbs.service.AdminService;
+import com.itwillbs.domain.UserGenresVO;
 import com.itwillbs.service.MemberService;
 
 @Controller
@@ -39,7 +47,9 @@ public class MemberController {
 	
 	//
 	@PostMapping("/register/step2Pro")
+//	public String step2Pro(MemberVO memberVO,HttpSession session,@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate birthDate  ) {
 	public String step2Pro(MemberVO memberVO,HttpSession session) {
+		
 		memberService.insertMember(memberVO);
 		session.setAttribute("user_id", memberVO.getUser_id());
         session.setAttribute("role", memberVO.getRole());
@@ -55,6 +65,14 @@ public class MemberController {
 		System.out.println(genresVOList);
 		return "/user/register_step3";
 	}
+	
+	 // 로그아웃
+    @GetMapping("/member/logout")
+    public String logout (HttpSession session) {
+    	System.out.println("MemberController logout()");
+        session.invalidate();
+        return "redirect:/login";
+    }
 	
 	//
 	@PostMapping("/register/step3Pro")
@@ -110,13 +128,11 @@ public class MemberController {
         }
     }
     
- // 로그아웃
-    @GetMapping("/logout")
-    public String logout (HttpSession session) {
-    	System.out.println("MemberController logout()");
-        session.invalidate();
-        return "redirect:/login";
-    }
+
+    
+    
+    
+    
 }
 	
 
