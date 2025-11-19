@@ -32,5 +32,5 @@
 		</ul>
 	</nav>
 
-</body>
-</html>
+<!-- 푸터 아래 고정용 -->
+<div class="content-wrap">

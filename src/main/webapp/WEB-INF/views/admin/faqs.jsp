@@ -1,21 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%-- 네비게이션 바는 dashboard.jsp처럼 상단에 포함 --%>
 <%@ include file="/WEB-INF/views/admin/admin_navbar.jsp"%>
-<!DOCTYPE html>
 <html lang="ko">
-<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FAQ 관리</title>
 <link rel="stylesheet"
 	href="<c:url value='/resources/css/admin_base.css' />">
 <link rel="stylesheet"
 	href="<c:url value='/resources/css/admin_form.css' />">
 <link rel="stylesheet"
 	href="<c:url value='/resources/css/admin_table.css' />">
-</head>
 <body>
 	<div class="dashboard-container">
 		<div class="main-content">
@@ -61,6 +56,5 @@
 			<div class="pagination-area"></div>
 
 		</div>
-	</div>
-</body>
-</html>
+		</div>
+<%@ include file="end.jsp"%>

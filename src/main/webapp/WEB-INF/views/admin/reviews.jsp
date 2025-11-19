@@ -11,7 +11,6 @@
 				<th>작성자</th>
 				<th>리뷰 내용</th>
 				<th>평점</th>
-				<th>감정</th>
 				<th>작성날짜</th>
 				<th>관리</th>
 			</tr>
@@ -27,14 +26,6 @@
 								value="${reviews.rating}" /> <c:forEach begin="1"
 								end="${rating}">⭐️</c:forEach>
 					</span></td>
-					<td><c:choose>
-							<c:when test="${reviews.sentiment ge 4}">
-								<span class="sentiment-badge positive">긍정</span> </c:when>
-							<c:when test="${reviews.sentiment le 2}">
-								<span class="sentiment-badge negative">부정</span> </c:when>
-							<c:otherwise>
-								<span class="sentiment-badge neutral">중립</span> </c:otherwise>
-						</c:choose></td>
 					<td><c:set var="createdAt"
 							value="${fn:replace(reviews.createdAt, 'T', ' ')}" /> <c:out
 							value="${fn:substring(createdAt, 0, 10)}" /> <br> <c:out

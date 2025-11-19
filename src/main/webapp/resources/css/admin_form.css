@@ -52,9 +52,10 @@
 
 .faq-form textarea,
 .answer-form textarea,
-.faq-form textarea {
+.faq-form textarea,
+.notice-form textarea {
     resize: vertical;
-    min-height: 200px;
+    min-height: 250px;
 }
 
 /* -------------------- 3-3. 1:1 문의 원본 섹션 -------------------- */
