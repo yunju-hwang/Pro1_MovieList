@@ -3,20 +3,9 @@
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
    	<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
     <%@ include file="/WEB-INF/views/admin/admin_navbar.jsp" %>
-    
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>영화 관리 대시보드</title>
 	<link rel="stylesheet" href="<c:url value='/resources/css/admin_base.css' />">
 	<link rel="stylesheet" href="<c:url value='/resources/css/admin_form.css' />">
 	<link rel="stylesheet" href="<c:url value='/resources/css/admin_table.css' />">
-</head>
-<body>
-
     <div class="dashboard-container">
 
         <div class="stats-bar">
@@ -96,4 +85,5 @@
        
     <a class="tab <c:if test="${fn:contains(currentPath, '/admin/reservations')}">active</c:if>" 
        href="<c:url value='/admin/reservations' />">예매 관리</a>
-</div>
+       
+       </div>

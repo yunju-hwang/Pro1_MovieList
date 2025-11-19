@@ -231,17 +231,15 @@
 
 	<!-- 리뷰관리 -->
 	<select id="AdminReviewsList"
-		resultType="com.itwillbs.domain.ReviewsVO">
+		resultType="com.itwillbs.domain.ReviewsAdminVO">
 		SELECT
 		r.id,
 		r.tmdb_id AS tmdbId,
 		r.user_id AS userId,
 		r.content,
-		r.sentiment,
 		r.rating,
 		r.created_at AS createdAt,
-		m.title AS
-		movieTitle
+		m.title AS movieTitle
 
 		FROM reviews r
 		LEFT JOIN movies m ON r.tmdb_id = m.tmdb_id
@@ -350,7 +348,7 @@
 		)
 	</insert>
 
-	<!-- NOTICES -->
+	<!-- 공지사항 -->
 	<select id="AdminNoticesList"
 		resultType="com.itwillbs.domain.NoticesVO">
 		SELECT
