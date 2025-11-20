@@ -19,7 +19,7 @@ body{
 	margin:30px auto;
 	padding:20px;
 	width:80%;
-	height:500px;
+	min-height:500px;
 	border-radius: 30px;
 	background-color: white;
 	border: 1px solid black;
@@ -61,10 +61,7 @@ body{
 	color:white;
 	border-radius: 8px;
 }
-.inq_detail{
-	text-decoration: none;
-	color: inherit;
-}
+
 
 /* 리스트 */
 .inquiry_item {
@@ -94,11 +91,17 @@ body{
     color:#cd0000;
 }
 .item_status_com{
-	width:25%;
 	text-align: center; 
     font-weight: bold; 
     color:green;
 		
+}
+
+.inq_detail{
+	width:25%;
+	text-decoration: none;
+	color: inherit;
+	text-align: center;
 }
 
 /* 상태 색상 */

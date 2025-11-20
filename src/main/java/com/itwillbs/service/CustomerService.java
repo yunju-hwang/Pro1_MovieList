@@ -47,11 +47,11 @@ public class CustomerService {
 		customerMapper.inquiry_delete(id);
 	}
 
-	public List<InquiriesVO> inquiry_detail(String userId) {
-
-		
-		return customerMapper.inquiry_detail(userId);
-	}
+	
+	   public InquiriesVO inquiry_detail(int id) {
+	        return customerMapper.inquiry_detail(id);
+	    }
+	
 
 	public List<MovieRequestVO> movie_request(String userId) {
 		return customerMapper.movie_request(userId);

@@ -2,129 +2,402 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
+
 <mapper namespace="com.itwillbs.mapper.AdminMapper">
 
 
-<!-- 로그인시 admin확인 -->
-<select id="loginAdmin" resultType="com.itwillbs.domain.MemberVO">
-select *
-from users
-where user_id = #{user_id}
-and password = #{password}
-and role = 'admin'
-</select>
+	<!-- 로그인시 admin확인 -->
+	<select id="loginAdmin"
+		resultType="com.itwillbs.domain.MemberVO">
+		select *
+		from users
+		where user_id = #{user_id}
+		and password =
+		#{password}
+		and role = 'admin'
+	</select>
 
-<!-- 대쉬보드 전체 사용자  -->
-<select id="getUserCount" resultType="int">
-select count(*)
-from users
-</select>
-  
-<!--   대쉬보드 전체 리뷰 -->
-  <select id="getReviewsCount" resultType="int">
-  select count(*)
-  from reviews
-  </select>
-  
-  <!--   대쉬보드 전체 예매 -->
-<select id="getReservationsCount" resultType="int">
-  select count(*)
-  from reservations
-</select>
-  
-<!--   대쉬보드 답변 문의 -->
-<select id="getInquiriesCount" resultType="int">
-  select count(*)
-  from inquiries
-</select>
+	<!-- 대쉬보드 전체 사용자 -->
+	<select id="getUserCount" resultType="int">
+		select count(*)
+		from users
+	</select>
 
-<!--   대쉬보드 대기 요청 -->
-<select id="getMovie_RequestsCount" resultType="int">
-  select count(*)
-  from movie_request
-</select>
-  
-<!-- 영화관리 db -->
-<select id="AdminMovieList" resultType="com.itwillbs.domain.MovieVO">
-    SELECT
-        m.tmdb_id AS tmdbId,           
-        m.title,                         
-        m.poster_path AS posterPath,
-        m.release_date AS releaseDate,   
-        m.overview,
-        m.runtime,                       
-        m.popularity,
-        r_stats.rating,
-        r_stats.positiveReviewCount,
-        r_stats.negativeReviewCount,
+	<!-- 대쉬보드 전체 리뷰 -->
+	<select id="getReviewsCount" resultType="int">
+		select count(*)
+		from
+		reviews
+	</select>
 
-        GROUP_CONCAT(g.genre_name SEPARATOR ', ') AS genres2
-        
-    FROM
-        movies m
+	<!-- 대쉬보드 전체 예매 -->
+	<select id="getReservationsCount" resultType="int">
+		select count(*)
+		from reservations
+	</select>
 
-    LEFT JOIN (
-        SELECT
-            r.tmdb_id,
-            ROUND(AVG(r.rating), 1) AS rating,
-            SUM(CASE WHEN r.rating &gt;= 4 THEN 1 ELSE 0 END) AS positiveReviewCount,
-            SUM(CASE WHEN r.rating &lt;= 2 THEN 1 ELSE 0 END) AS negativeReviewCount
-        FROM reviews r
-        GROUP BY r.tmdb_id
-    ) r_stats ON m.tmdb_id = r_stats.tmdb_id 
+	<!-- 대쉬보드 답변 문의 -->
+	<select id="getInquiriesCount" resultType="int">
+		select count(*)
+		from
+		inquiries
+	</select>
 
-    LEFT JOIN movie_genres mg ON m.tmdb_id = mg.tmdb_id
-    LEFT JOIN genres g ON mg.genre_id = g.genre_id
+	<!-- 대쉬보드 대기 요청 -->
+	<select id="getMovie_RequestsCount" resultType="int">
+		select count(*)
+		from movie_request
+	</select>
 
-    GROUP BY
-        m.tmdb_id, m.title, m.release_date, m.runtime, m.poster_path, m.overview, m.popularity,
-        r_stats.rating, r_stats.positiveReviewCount, r_stats.negativeReviewCount
+	<!-- 영화관리 db -->
+	<select id="AdminMovieList"
+		resultType="com.itwillbs.domain.MovieVO">
+		SELECT
+		m.tmdb_id AS tmdbId,
+		m.title,
+		m.poster_path AS posterPath,
+		m.release_date AS releaseDate,
+		m.overview,
+		m.runtime,
+		m.popularity,
+		r_stats.rating,
+		r_stats.positiveReviewCount,
+		r_stats.negativeReviewCount,
 
-    ORDER BY m.tmdb_id DESC
-</select>
-  
-<!--   영화 관리 삭제 -->
-  <delete id="deleteMovie">
-    DELETE FROM movies 
-    WHERE tmdb_id = #{tmdbId}
-</delete>
-  
-  
-<!--  사용자 관리 -->
-<select id="AdminUserList" resultType="com.itwillbs.domain.MemberVO">
-    SELECT
-        u.user_id,
-        u.role,
-        u.username,
-        u.email,
-        u.phone,
-<!--         created_at AS createdAt,    -->
-<!--         last_login AS lastLogin,   -->
-        COUNT(DISTINCT r.id) AS reviewCount,
-        COUNT(DISTINCT res.id) AS reservationCount,
-        COUNT(DISTINCT i.id) AS inquiryCount,
-        COUNT(DISTINCT mreq.id) AS movieRequestCount
-        
-    FROM users u
+		GROUP_CONCAT(g.genre_name SEPARATOR ', ')
+		AS genres2
 
-    LEFT JOIN reviews r ON u.user_id = r.user_id
-    LEFT JOIN reservations res ON u.user_id = res.user_id
-    LEFT JOIN inquiries i ON u.user_id = i.user_id
-    LEFT JOIN movie_request mreq ON u.user_id = mreq.user_id
-        
-           
-    WHERE u.role != 'admin' 
-        
-    GROUP BY u.user_id, u.role, u.username, u.email, u.phone
-    
-	ORDER BY u.user_id DESC
-</select>
+		FROM
+		movies m
 
-<!--   사용자 관리 삭제 -->
-  <delete id="deleteUsers">
-    DELETE FROM users 
-    WHERE user_id = #{user_id}
-</delete>
-  
+		LEFT JOIN (
+		SELECT
+		r.tmdb_id,
+		ROUND(AVG(r.rating),
+		1) AS rating,
+		<!-- 3점은 표기안함 -->
+		SUM(CASE WHEN r.rating &gt;= 4 THEN 1 ELSE 0 END) AS
+		positiveReviewCount,
+		SUM(CASE WHEN r.rating &lt;= 2 THEN 1 ELSE 0 END)
+		AS negativeReviewCount
+		FROM reviews r
+		GROUP BY r.tmdb_id
+		) r_stats ON
+		m.tmdb_id = r_stats.tmdb_id
+
+		LEFT JOIN movie_genres mg ON m.tmdb_id =
+		mg.tmdb_id
+		LEFT JOIN genres g ON mg.genre_id = g.genre_id
+
+		GROUP BY
+		m.tmdb_id, m.title, m.release_date, m.runtime, m.poster_path,
+		m.overview,
+		m.popularity,
+		r_stats.rating, r_stats.positiveReviewCount,
+		r_stats.negativeReviewCount
+
+		ORDER BY m.tmdb_id DESC
+	</select>
+
+	<!-- 영화 관리 삭제 -->
+	<delete id="deleteMovie">
+		DELETE FROM movies
+		WHERE tmdb_id = #{tmdbId}
+	</delete>
+
+
+	<!-- 사용자 관리 -->
+	<select id="AdminUserList"
+		resultType="com.itwillbs.domain.MemberVO">
+		SELECT
+		u.user_id,
+		u.role,
+		u.username,
+		u.email,
+		u.phone,
+		<!-- created_at AS createdAt, -->
+		<!-- last_login AS lastLogin, -->
+		COUNT(DISTINCT r.id) AS reviewCount,
+		COUNT(DISTINCT res.id) AS
+		reservationCount,
+		COUNT(DISTINCT i.id) AS inquiryCount,
+		COUNT(DISTINCT
+		mreq.id) AS movieRequestCount
+
+		FROM users u
+
+		LEFT JOIN reviews r ON
+		u.user_id = r.user_id
+		LEFT JOIN reservations res ON u.user_id =
+		res.user_id
+		LEFT JOIN inquiries i ON u.user_id = i.user_id
+		LEFT JOIN
+		movie_request mreq ON u.user_id = mreq.user_id
+
+
+		WHERE u.role != 'admin'
+
+		GROUP BY u.user_id, u.role, u.username, u.email, u.phone
+
+		ORDER BY
+		u.user_id DESC
+	</select>
+
+	<!-- 사용자 관리 삭제 -->
+	<delete id="deleteUsers">
+		DELETE FROM users
+		WHERE user_id = #{user_id}
+	</delete>
+
+	<!-- 1:1 문의 -->
+	<select id="AdminInquiriesList"
+		resultType="com.itwillbs.domain.InquiriesVO">
+		SELECT
+		i.id,
+		i.user_id AS userId,
+		i.title,
+		i.content,
+		i.status,
+		i.created_at AS createdAt,
+		i.answered_at AS answeredAt,
+		u.email AS
+		userEmail
+		FROM inquiries i
+		LEFT JOIN
+		users u ON i.user_id = u.user_id
+		ORDER BY i.created_at DESC, i.id DESC;
+	</select>
+
+	<update id="answerInquiry">
+		UPDATE inquiries
+		SET
+		status = 'answered',
+		answered_at =
+		NOW(),
+		answer_content = #{answerContent}
+		WHERE id = #{id}
+	</update>
+
+	<select id="getInquiryDetail"
+		resultType="com.itwillbs.domain.InquiriesVO">
+		SELECT
+		i.id,
+		i.user_id AS userId,
+		i.title,
+		i.content,
+		i.status,
+		i.created_at AS createdAt,
+		i.answered_at AS answeredAt,
+		u.email AS
+		userEmail,
+		i.answer_content AS answerContent
+		FROM inquiries i
+		LEFT JOIN
+		users u ON i.user_id = u.user_id
+		WHERE
+		i.id = #{id}
+	</select>
+
+	<!-- 영화요청 -->
+	<select id="AdminRequestList"
+		resultType="com.itwillbs.domain.MovieRequestVO">
+		SELECT
+		id,
+		user_id AS userId,
+		tmdb_id AS tmdbId,
+		title,
+		content,
+		status,
+		created_at AS createdAt,
+		processed_at AS processedAt
+
+		FROM movie_request
+		ORDER BY created_at DESC, id DESC;
+	</select>
+
+	<update id="updateMovieRequests">
+		UPDATE movie_request
+		SET
+		status = #{status},
+		processed_at = NOW() 
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteMovieRequests">
+		DELETE FROM movie_request
+		WHERE id = #{id}
+	</delete>
+
+
+	<!-- 리뷰관리 -->
+	<select id="AdminReviewsList"
+		resultType="com.itwillbs.domain.ReviewsVO">
+		SELECT
+		r.id,
+		r.tmdb_id AS tmdbId,
+		r.user_id AS userId,
+		r.content,
+		r.sentiment,
+		r.rating,
+		r.created_at AS createdAt,
+		m.title AS
+		movieTitle
+
+		FROM reviews r
+		LEFT JOIN movies m ON r.tmdb_id = m.tmdb_id
+		ORDER BY r.created_at DESC, r.id DESC;
+	</select>
+
+
+	<delete id="deleteReviews">
+		DELETE FROM reviews
+		WHERE id = #{id}
+	</delete>
+
+	<!-- 예매관리 -->
+	<select id="AdminReservationsList"
+		resultType="com.itwillbs.domain.ReservationsVO">
+		SELECT
+		r.id,
+		r.user_id AS userId,
+		r.tmdb_id AS tmdbId,
+		r.theater_id AS theaterId,
+		r.screening_time AS screeningTime,
+		r.reservation_date AS reservationDate,
+		r.seat,
+		r.adult_people AS
+		adultPeople,
+		r.child_people AS childPeople,
+		r.status,
+		m.title AS
+		movieTitle,
+		p.amount AS finalAmount,
+		CONCAT(t.name, ' (', t.location,
+		')') AS theaterName
+
+		FROM reservations r
+
+		LEFT JOIN movies m ON r.tmdb_id
+		= m.tmdb_id
+		LEFT JOIN payments p ON r.id =
+		p.reservation_id
+		LEFT JOIN
+		theaters t ON r.theater_id = t.theater_id
+
+		ORDER BY r.id DESC;
+	</select>
+
+	<update id="AdminReservationsRefund">
+		UPDATE reservations
+		SET
+		status = 'cancelled'
+		WHERE id =
+		#{id}
+	</update>
+
+	<!-- FAQS -->
+	<select id="AdminFaqsList"
+		resultType="com.itwillbs.domain.FaqsVO">
+		SELECT
+		id,
+		question,
+		answer,
+		created_at as createdAt,
+		category
+		from faqs
+		order by id desc;
+	</select>
+
+	<select id="getFaqsDetail"
+		resultType="com.itwillbs.domain.FaqsVO">
+		SELECT
+		id,
+		question,
+		answer,
+		category,
+		created_at as createdAt
+		FROM faqs
+		WHERE id = #{id}
+	</select>
+
+
+	<update id="AdminFaqsUpdate">
+		UPDATE faqs
+		SET
+		category = #{category},
+		question =
+		#{question},
+		answer = #{answer}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="AdminFaqsDelete">
+		DELETE FROM faqs
+		WHERE id = #{id}
+	</delete>
+
+	<insert id="AdminFaqsWrite">
+		INSERT INTO faqs (
+		question,
+		answer,
+		category,
+		created_at
+		) VALUES (
+		#{question},
+		#{answer},
+		#{category},
+		NOW()
+		)
+	</insert>
+
+	<!-- NOTICES -->
+	<select id="AdminNoticesList"
+		resultType="com.itwillbs.domain.NoticesVO">
+		SELECT
+		id,
+		title,
+		content,
+		created_at as createdAt
+		from notices
+		order by id desc;
+	</select>
+
+	<select id="getNoticesDetail"
+		resultType="com.itwillbs.domain.NoticesVO">
+		SELECT
+		id,
+		title,
+		content,
+		created_at as createdAt
+		from notices
+		WHERE id = #{id}
+	</select>
+
+	<update id="AdminNoticesUpdate">
+		UPDATE notices
+		SET
+		title = #{title},
+		content =
+		#{content}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="AdminNoticesDelete">
+		DELETE FROM notices
+		WHERE id = #{id}
+	</delete>
+
+	<insert id="AdminNoticesWrite">
+		INSERT INTO notices (
+		title,
+		content,
+		created_at
+		) VALUES
+		(
+		#{title},
+		#{content},
+		NOW()
+		)
+	</insert>
+
 </mapper>

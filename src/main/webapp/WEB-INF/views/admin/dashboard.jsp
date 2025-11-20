@@ -8,39 +8,13 @@
 
 <html>
 <head>
-
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>영화 관리 대시보드</title>
-       <link rel="stylesheet" href="<c:url value='/resources/css/base.css' />">
-    <link rel="stylesheet" href="<c:url value='/resources/css/stats_card.css' />">
-    <link rel="stylesheet" href="<c:url value='/resources/css/tabs_buttons.css' />">
-    <link rel="stylesheet" href="<c:url value='/resources/css/tables.css' />">
-    <style>
-        /* 1. 하이퍼링크 기본 스타일 무효화 */
-        .menu-tabs a.tab {
-            text-decoration: none; /* 밑줄 제거 */
-            color: #333;          /* 글씨 색상 지정 (파란색 방지) */
-            cursor: pointer;      /* 마우스 오버 시 커서 모양 유지 */
-            
-            /* (선택 사항) 너비/높이가 틀어지는 것을 방지 */
-            display: inline-block; 
-        }
-
-        /* 2. 네가 원했던 호버(Hover) 효과 복구 */
-        /* 네 기존 CSS에 hover 스타일이 없었더라도, 버튼 느낌을 주려면 이걸 추가하는 게 좋아! */
-        .menu-tabs a.tab:hover {
-            background-color: #dc3545; 
-            color: #fff;
-            border-color: #dc3545;
-        }
-		.menu-tabs a.tab.active {
-        color: #fff !important;            
-    }
-
-    </style>
-    </head>
+	<link rel="stylesheet" href="<c:url value='/resources/css/admin_base.css' />">
+	<link rel="stylesheet" href="<c:url value='/resources/css/admin_form.css' />">
+	<link rel="stylesheet" href="<c:url value='/resources/css/admin_table.css' />">
+</head>
 <body>
 
     <div class="dashboard-container">

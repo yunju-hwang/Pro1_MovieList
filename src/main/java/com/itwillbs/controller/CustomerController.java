@@ -95,17 +95,24 @@ public class CustomerController {
 		return "redirect:/customer/inquiries";
 	}
 	
-	@GetMapping("/customer/inquiries/inquiry_detail")
-	public String inquiry_detail(HttpSession session, Model model) {
-		
-		
-	    String userId = (String) session.getAttribute("userId");
+    @GetMapping("/customer/inquiries/inquiry_detail")
+    public String inquiryDetail(@RequestParam("id") int id, Model model,
+                                HttpSession session) {
 
-	    List<InquiriesVO> list = customerService.inquiry_detail(userId);
-	    model.addAttribute("inquiries", list);
+        // 로그인 체크
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null) {
+            model.addAttribute("msg", "로그인이 필요한 서비스입니다");
+            model.addAttribute("url", "/member/login");
+            return "redirect";
+        }
 
-	    return "/customer/inquiries/inquiry_detail";
-	}
+        InquiriesVO vo = customerService.inquiry_detail(id);
+
+        model.addAttribute("inq", vo);
+        return "/customer/inquiries/inquiry_detail";
+    }
+
 	
 	// 고객센터 영화 요청
 	@GetMapping("/customer/movie_request")

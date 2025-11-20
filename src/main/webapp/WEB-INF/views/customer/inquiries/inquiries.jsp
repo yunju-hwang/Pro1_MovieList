@@ -33,7 +33,7 @@
 
             </div>
 
-			<a href="/movielist/customer/inquiries/inquiry_detail" class="inq_detail">
+
             <div class="inquiry_list">
                 <c:forEach var="inquiriesVO" items="${inquiry_list}">
                     <div class="inquiry_item">
@@ -47,8 +47,9 @@
                         <span class="item_status_pen">답변대기</span>
                         </c:if>
                         <c:if test="${inquiriesVO.status ne 'pending' }">
-						
+						<a href="/movielist/customer/inquiries/inquiry_detail?id=${inquiriesVO.id }" class="inq_detail">
                         <span class="item_status_com">답변완료</span>
+                         </a>
                         </c:if>
                       
                         
@@ -65,7 +66,7 @@
 </div>
 
 
- </a>
+
  
 
 

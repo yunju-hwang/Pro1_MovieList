@@ -25,7 +25,8 @@ public interface CustomerMapper {
 
 	void inquiry_delete(int id);
 
-	List<InquiriesVO> inquiry_detail(String userId);
+	
+	    InquiriesVO inquiry_detail(int id);
 
 	List<MovieRequestVO> movie_request(String userId);
 

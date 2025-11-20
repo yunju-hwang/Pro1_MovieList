@@ -1,10 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.itwillbs.mapper.MypageMapper">
 
+    <select id="getMember" resultType="com.itwillbs.domain.MemberVO">
+        SELECT
+            user_id,
+            username,
+            email,
+            gender,
+            birth_date AS birthDate,   phone,
+            profile_image AS profileImage, -- 비밀번호, 권한, 생성일, 마지막 로그인 등 UI에 직접 표시되지 않는 정보는 제외
+            
+            -- UI에서 참조하는 더미 데이터는 0 또는 NULL로 처리하여 SQL 오류를 방지
+            NULL AS password, 
+            NULL AS role,
+            NULL AS createdAt,
+            NULL AS lastLogin,
+            0 AS reviewCount,
+            0 AS reservationCount,
+            0 AS inquiryCount,
+            0 AS movieRequestCount
+        FROM
+            users
+        WHERE
+            user_id = #{user_id}
+    </select>
+    
+    <select id="selectFavoriteListByUserId" parameterType="string" resultType="com.itwillbs.domain.UserFavoritesVO">
+    SELECT 
+        f.id,
+        f.user_id AS userId,  
+        f.tmdb_id AS tmdbId,  
+        
+        m.title AS movie_title,          m.poster_path AS poster_path,
+        m.release_date AS release_date,
+        m.overview AS overview,          m.runtime AS runtime,            m.popularity AS popularity       
+    FROM 
+        user_favorites f
+    JOIN 
+        movies m ON f.tmdb_id = m.tmdb_id
+    WHERE 
+        f.user_id = #{userId}
+    ORDER BY
+        f.id DESC
+</select>
 
-  
+<delete id="deleteFavoriteMovie">
+    DELETE FROM 
+        user_favorites
+    WHERE
+        user_id = #{userId}
+    AND
+        tmdb_id = #{tmdbId}
+</delete>
+
+<select id="selectGenreNamesByTmdbId" resultType="string" parameterType="int">
+    SELECT
+        g.genre_name  FROM
+        movie_genres mg  JOIN
+        genres g ON mg.genre_id = g.genre_id  WHERE
+        mg.tmdb_id = #{tmdbId} 
+</select>
+
+
+
+<select id="selectTheaterList" resultType="com.itwillbs.domain.TheatersVO">
+    SELECT
+    theater_id AS theaterId,
+    name, 
+    location
+    FROM
+    theaters
+    ORDER BY
+    theater_id ASC
+</select>
+
+
+    
+    
+
+
+
+
+
+
+    
 </mapper>

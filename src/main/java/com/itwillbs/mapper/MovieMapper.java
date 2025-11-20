@@ -1,3 +1,4 @@
+
 package com.itwillbs.mapper;
 
 import java.util.List;
@@ -7,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.itwillbs.domain.GenresVO;
 import com.itwillbs.domain.MovieVO;
+import com.itwillbs.domain.TheatersVO;
 
 //interface로 구현
 @Mapper
@@ -51,4 +53,11 @@ public interface MovieMapper {
     // 찜 삭제
     void removeFavorite(@Param("userId") String userId,
             @Param("tmdbId") int tmdbId);
+    
+    // 찜 반영 movies popularity에
+    void updateMoviePopularity(MovieVO movie);
+    
+    // 영화관 값들 가져오기
+    List<TheatersVO> getAllTheaters();
 }
+

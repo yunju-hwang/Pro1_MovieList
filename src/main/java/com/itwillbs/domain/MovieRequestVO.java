@@ -20,4 +20,5 @@ public class MovieRequestVO {
     
     private String title;
     private String content;
+
 }

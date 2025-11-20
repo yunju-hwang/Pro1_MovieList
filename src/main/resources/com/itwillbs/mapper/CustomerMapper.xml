@@ -11,7 +11,7 @@
 </insert>
 
 <select id="inquiries" resultType="com.itwillbs.domain.InquiriesVO">
-	select id, user_id as userId, title, content, status, created_at as createdAt from inquiries where user_id = #{userId}
+	select id, user_id as userId, title, content, status, created_at as createdAt, answer_content as answerContent from inquiries where user_id = #{userId}
 
 </select>
 <select id="inquiry_count" resultType="java.lang.Integer">
@@ -19,7 +19,17 @@
 
 </select>
 <select id="inquiry_detail" resultType="com.itwillbs.domain.InquiriesVO">
-	select user_id as userId,title,created_at as createdAt, answered_at as answeredAt from inquiries where user_id = #{userId}
+    SELECT 
+        id,
+        user_id as userId,
+        title,
+        content,
+        status,
+        created_at as createdAt,
+        answered_at as answeredAt,
+        answer_content as answerContent
+    FROM inquiries
+    WHERE id = #{id}
 </select>
 
   <update id="inquiry_update">

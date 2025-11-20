@@ -55,6 +55,11 @@
     const ctx = container.dataset.ctx;
     const isLogin = container.dataset.islogin === 'true';
 </script>
+<script>
+    localStorage.setItem("userId", "${loginUser.user_id}");
+</script>
+
+
 <script src="${ctx}/resources/js/movieList.js"></script>
 <script src="${ctx}/resources/js/search.js"></script>
 
