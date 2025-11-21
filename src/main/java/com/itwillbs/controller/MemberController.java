@@ -30,7 +30,7 @@ import com.itwillbs.service.MemberService;
 public class MemberController {
 	
 	// MemberService 객체 생성
-	@Autowired
+
 	@Inject
 	private MemberService memberService;
 	

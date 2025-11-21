@@ -16,7 +16,6 @@ import com.itwillbs.mapper.MemberMapper;
 public class MemberService {
 	
 	
-	@Autowired
 	@Inject
 	private MemberMapper memberMapper; // MyBatis Mapper
 	
