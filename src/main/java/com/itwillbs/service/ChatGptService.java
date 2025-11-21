@@ -27,19 +27,10 @@ public class ChatGptService {
 	
 	
 	// GPT에게 질문하기
-	public String askGPT(List<UserReviewVO> reviews) {
-		if (reviews.isEmpty()) return "작성된 리뷰가 없어 AI 분석이 불가합니다.";
-		
+	public String askGPT(String prompt) {	
 		RestTemplate rest = new RestTemplate();
 		
-		// GPT에게 보낼 프롬프트
-        String prompt = "다음 영화 리뷰들을 분석하고 한줄요약, 감정, 추천 영화(제목, tmdbId)를 알려주세요:\n"
-                + reviews.stream()
-                         .map(r -> r.getTmdbId() + ": " + r.getContent())
-                         .collect(Collectors.joining("\n"));
         
-        
-		
 		// 요청 헤더 설정
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -51,16 +42,26 @@ public class ChatGptService {
 		Map<String, Object> body = new HashMap<>();
         body.put("model", "gpt-4o-mini");
         body.put("messages", List.of(Map.of("role", "user", "content", prompt)));
+		body.put("max_tokens", 1000); // 응답 최대 토큰 수 
+		body.put("temperature", 0.7);
 		
+        
 		HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 		
 		
 		// POST 요청
 		ResponseEntity<Map> response = rest.postForEntity(API_URL, entity, Map.class);
 		
+		if (response.getBody() == null || !response.getBody().containsKey("choices")) {
+            return "GPT 분석 실패: 응답이 없습니다.";
+        }
+		
+		
 		// 응답 파싱
 		 List<Map<String, Object>> choices = (List<Map<String, Object>>) response.getBody().get("choices");
-	     Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
+		 if (choices == null || choices.isEmpty()) return "GPT 분석 실패: 결과 없음";
+		 
+		 Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
 	     
 	     
 	     return (String) message.get("content");

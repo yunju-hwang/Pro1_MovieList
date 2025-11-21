@@ -20,5 +20,7 @@ public class ReviewsVO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
      
+    // join 결과용
+    private String title;
     
 }

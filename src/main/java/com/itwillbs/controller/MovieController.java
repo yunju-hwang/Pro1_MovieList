@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -184,6 +185,14 @@ public class MovieController {
     	result.put("isFavorite", isFavorite);
     	result.put("popularity", movie.getPopularity()); 
     	return result;
+    }
+    
+    // 영화 tmdbId 값 받아와서 프론트에 카드 list 형태로 반환하기
+    // 프론트에서 tmdbId 배열 받음 
+    @PostMapping("/getmovie/details")
+    public ResponseEntity<List<Map<String, Object>>> getMovieCard(@RequestBody List<String> tmdbIds){
+    	List<Map<String, Object>> movieList = movieService.getMoviesDetails(tmdbIds);
+        return ResponseEntity.ok(movieList);
     }
     
 
