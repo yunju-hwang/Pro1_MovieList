@@ -9,12 +9,12 @@
 <title>회원가입</title>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/register_step2.css" />
-	
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-3.7.1.js"></script>
 <!-- 아이디 중복체크 -->
 <script type="text/javascript">
     $(function() {
         $('#check-btn').click(function() {
-            alert("클릭");
+//             alert("클릭");
             if ($('#user_id').val() == "") {
                 alert("아이디 입력하세요");
                 $('#user_id').focus();
@@ -27,11 +27,11 @@
                 data: { user_id: $('#user_id').val() }, // 파라미터 이름 확인
                 dataType: "json",
                 success: function(result) {
-                    alert(JSON.stringify(result)); // 응답 확인
+//                     alert(JSON.stringify(result)); // 응답 확인
                     if (result.exists) { // 예: exists라는 속성을 사용한다고 가정
-                        $('#divCheck').html("아이디 중복");
+                        $('#divCheck2').html("아이디 중복");
                     } else {
-                        $('#divCheck').html("아이디 사용가능");
+                        $('#divCheck2').html("아이디 사용가능");
                     }
                 },
                 error: function(xhr, status, error) {
@@ -56,6 +56,7 @@
 				<input type="text" id="user_id" name="user_id" placeholder="아이디를 입력하세요" required>
 				<button type="button" id="check-btn" class="check-btn">중복 확인</button>
 			</div>
+			<div id="divCheck2"></div>
 
 			<label>비밀번호 *</label> <input type="password" name="password"
 				placeholder="비밀번호 (8자 이상)" required> <label>비밀번호 확인
