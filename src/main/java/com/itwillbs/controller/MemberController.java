@@ -122,7 +122,7 @@ public class MemberController {
 		
     
     // 로그인 POST 
-    @PostMapping("/login")
+    @PostMapping("/loginPro")
     public String loginPOST(MemberVO memberVO, HttpSession session, Model model) {
         
     	// 1.로그인 service -> db에서 로그인 결과값 받아오기 (일치하는 회원값)
@@ -133,12 +133,8 @@ public class MemberController {
         if (resultVO != null) {
             session.setAttribute("user_id", resultVO.getUser_id());
             session.setAttribute("role", resultVO.getRole());
-
             session.setAttribute("nickname", resultVO.getNickname());
-          System.out.println(resultVO);
-
-            
-     
+                 
             // JSP에서 편하게 체크할 수 있도록 ${not empty sessionScope.loginUser} 체크
             session.setAttribute("loginUser", resultVO);
             if ("admin".equals(resultVO.getRole())) { // role이 'admin'이면

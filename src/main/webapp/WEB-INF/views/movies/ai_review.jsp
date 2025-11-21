@@ -10,11 +10,19 @@
 <link rel="stylesheet" href="${ctx}/resources/css/ai_review.css">
 </head>
 <body onload="loadUserReviews()">
+
+<div class="mnavbar">
+    <a href="${ctx}/main">Home</a>
+    <a href="${ctx}/movies/ai_review" id="aiReviewBtn">AI Review</a>
+</div>
+
 <div class="review-section">
     
 	<!-- AI 리뷰 영역 -->
     <div class="ai-review-section">
         <h2>AI 리뷰 요약</h2>
+        <div id="aiAnalysisContainer"></div> <!-- analysis 전용 -->
+        <h3>추천 영화</h3>
         <div id="aiReviewContainer">AI 분석 중...</div>
     </div>
 	

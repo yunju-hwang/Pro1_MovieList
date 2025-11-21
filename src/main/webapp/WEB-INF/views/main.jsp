@@ -54,10 +54,10 @@
     const container = document.getElementById("movie-list");
     const ctx = container.dataset.ctx;
     const isLogin = container.dataset.islogin === 'true';
+    const loginUser = '<c:out value="${sessionScope.loginUser.user_id}" default=""/>';
+    localStorage.setItem("userId", "${sessionScope.loginUser.user_id}");
 </script>
-<script>
-    localStorage.setItem("userId", "${loginUser.user_id}");
-</script>
+
 
 
 <script src="${ctx}/resources/js/movieList.js"></script>

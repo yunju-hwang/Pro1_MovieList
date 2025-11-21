@@ -15,8 +15,6 @@ import com.itwillbs.mapper.MemberMapper;
 @Service
 public class MemberService {
 	
-	
-	@Autowired
 	@Inject
 	private MemberMapper memberMapper; // MyBatis Mapper
 	
@@ -57,6 +55,8 @@ public class MemberService {
     public boolean checkUserIdExists(String user_id) {
         return memberMapper.checkUserIdExists(user_id) > 0; // 아이디가 존재하는지 체크
     }
+
+	
 	
 	
 }
