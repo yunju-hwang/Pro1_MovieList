@@ -1,8 +1,31 @@
 @charset "UTF-8";
 
-body {
-    background: #F7F7F7 ;
+/* body { */
+/*     margin: 0; */
+/*     padding: 0; */
+/*     background: #F7F7F7; */
+/*     font-family: 'Noto Sans KR', sans-serif; */
+/* } */
+
+/* body { */
+/*      background: #F7F7F7 ; */
+/*     font-family: 'Noto Sans KR', sans-serif; */
+/*     margin: 0; */
+/*     padding: 0; */
+/*     🔥 flex 제거 → navbar가 내려오는 문제 해결 */
+/* } */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #F7F7F7;
     font-family: 'Noto Sans KR', sans-serif;
+    box-sizing: border-box;
+}
+
+* {
+    box-sizing: inherit; /* 모든 요소가 box-sizing을 상속 */
 }
 
 /* .join-container { */
@@ -57,11 +80,47 @@ body {
     background: #f6f6f8;
 }
 
+/* 수정부분 시작 */
 .input-row {
     display: flex;
     align-items: center;
     gap: 10px;
+    width: 100%;          /* 부모 폭이 충분히 넓게 */
+    box-sizing: border-box;
 }
+
+.input-row input {
+    flex: 1 1 auto;       /* 입력창이 가용 공간 다 차지 */
+    min-width: 0;         /* flex 아이템 최소 폭 0으로 설정 */
+    height: 40px;
+    padding: 0 10px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    line-height: 40px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #f6f6f8;
+}
+
+.input-row .check-btn {
+    flex: 0 0 auto;       /* 버튼은 내용 크기만큼 */
+    height: 40px;
+    padding: 0 15px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    line-height: 40px;
+    box-sizing: border-box;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #f4f4f4;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+/* 수정부분 끝 */
 
 .check-btn {
     padding: 10px 15px;
