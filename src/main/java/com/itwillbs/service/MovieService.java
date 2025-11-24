@@ -8,6 +8,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -188,7 +190,7 @@ public class MovieService {
 			}
 			br.close();
 			result = sb.toString();
-			
+			System.out.println(result);
 			
 			
 		} catch(Exception e) {
@@ -269,5 +271,37 @@ public class MovieService {
 	// DB에서 모든 영화관 조회
 	public List<TheatersVO> getAllTheaters(){
 		return movieMapper.getAllTheaters();
+	}
+	
+	// tmdb id 받아서 영화 상세 정보 가져오기
+	public List<Map<String, Object>> getMoviesDetails(List<String> tmdbIds){
+		List<Map<String, Object>> movieList = new ArrayList<>();
+		RestTemplate restTemplate = new RestTemplate();
+		
+		for (String tmdbId : tmdbIds) {
+	        try {
+	            String url = "https://api.themoviedb.org/3/movie/" + tmdbId +
+	                         "?api_key=" + tmdbApiKey + "&language=ko";
+	            Map<String, Object> movieData = restTemplate.getForObject(url, Map.class);
+
+	            if (movieData == null) continue; // null이면 건너뛰기
+
+	            Map<String, Object> result = new HashMap<>();
+	            result.put("tmdbId", tmdbId);
+	            result.put("title", movieData.get("title"));
+	            result.put("overview", movieData.get("overview"));
+	            result.put("poster", movieData.get("poster_path") != null
+	                    ? "https://image.tmdb.org/t/p/w200" + movieData.get("poster_path")
+	                    : "");
+	            movieList.add(result);
+
+	        } catch (Exception e) {
+	            System.err.println("TMDB API 호출 실패 tmdbId=" + tmdbId + ", error=" + e.getMessage());
+	            // 예외 발생해도 movieList에 영향 X
+	        }
+	    }
+
+	        return movieList;
+		
 	}
 }

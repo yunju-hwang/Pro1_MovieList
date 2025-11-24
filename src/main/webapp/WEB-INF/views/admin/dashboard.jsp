@@ -6,8 +6,6 @@
 	<link rel="stylesheet" href="<c:url value='/resources/css/admin_base.css' />">
 	<link rel="stylesheet" href="<c:url value='/resources/css/admin_form.css' />">
 	<link rel="stylesheet" href="<c:url value='/resources/css/admin_table.css' />">
-<body>
-
     <div class="dashboard-container">
 
         <div class="stats-bar">
@@ -87,4 +85,5 @@
        
     <a class="tab <c:if test="${fn:contains(currentPath, '/admin/reservations')}">active</c:if>" 
        href="<c:url value='/admin/reservations' />">예매 관리</a>
-</div>
+       
+       </div>

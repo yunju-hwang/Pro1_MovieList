@@ -14,7 +14,7 @@ import com.itwillbs.domain.MovieRequestVO;
 import com.itwillbs.domain.MovieVO;
 import com.itwillbs.domain.NoticesVO;
 import com.itwillbs.domain.ReservationsVO;
-import com.itwillbs.domain.ReviewsVO;
+import com.itwillbs.domain.ReviewsAdminVO;
 import com.itwillbs.mapper.AdminMapper;
 
 
@@ -100,7 +100,7 @@ public class AdminService {
 
     
  // 리뷰 관리
-    public List<ReviewsVO> AdminReviewsList(){
+    public List<ReviewsAdminVO> AdminReviewsList(){
     	return adminMapper.AdminReviewsList();
     }
     
@@ -138,7 +138,7 @@ public class AdminService {
     	return adminMapper.AdminFaqsDelete(id);
     }
     
-    // Notices
+    // 공지사항
     public List<NoticesVO> AdminNoticesList(){
     	return adminMapper.AdminNoticesList();
     }
