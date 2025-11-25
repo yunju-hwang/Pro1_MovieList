@@ -11,28 +11,66 @@
 	</insert>
 	
 	<!-- 영화 리뷰 목록 가져오기 -->
-	<select id="selectReviewListByTmdbId" parameterType="int" resultType="com.itwillbs.domain.ReviewsVO">
-		SELECT
-	        id,
-	        tmdb_id AS tmdbId,
-	        user_id AS userId,
-	        content,
-	        rating,
-	        created_at AS createdAt
+	<select id="selectReviewListByTmdbId" parameterType="map" resultType="com.itwillbs.domain.ReviewsVO">
+		 SELECT
+	        r.id,
+	        r.tmdb_id AS tmdbId,
+	        r.user_id AS userId,
+	        u.nickname AS nickname,   <!-- user 테이블에서 닉네임 가져오기 -->
+	        r.content,
+	        r.rating,
+	        r.created_at AS createdAt
+	    FROM reviews r
+	    JOIN users u ON r.user_id = u.user_id   <!-- user_id로 조인 -->
+	    WHERE r.tmdb_id = #{tmdbId}
+	    ORDER BY r.created_at DESC
+	    LIMIT #{size} OFFSET #{offset}
+	</select>
+	
+	<!-- 리뷰 총 개수 -->
+	<select id="selectReviewCountByTmdbId" resultType="int">
+	    SELECT COUNT(*)
 	    FROM reviews
 	    WHERE tmdb_id = #{tmdbId}
 	</select>
+		
 	
 	<!-- userId값에 맞는 reveiw값 받아오기  -->
 	<select id="selectByUserId" parameterType="String" resultType="com.itwillbs.domain.ReviewsVO">
 		SELECT
-	        id,
-	        tmdb_id AS tmdbId,
-	        user_id AS userId,
-	        content,
-	        rating,
-	        created_at AS createdAt
-	    FROM reviews
+	        r.id,
+	        r.tmdb_id AS tmdbId,
+	        r.user_id AS userId,
+	        r.content,
+	        r.rating,
+	        r.created_at AS createdAt,
+	        m.title
+	    FROM reviews r
+	    JOIN movies m ON r.tmdb_id = m.tmdb_id
 	    WHERE user_id = #{userId}
 	</select>
+	
+	
+	<!-- 리뷰 수정 -->
+	<update id="updateReview" parameterType="com.itwillbs.domain.ReviewsVO">
+	    UPDATE reviews
+	    SET content = #{content},
+	        rating = #{rating},
+	        created_at = NOW()
+	    WHERE id = #{id}
+	</update>
+	
+	
+	
+	<!-- 1개 리뷰 조회 -->
+	<select id="selectReviewById" resultType="com.itwillbs.domain.ReviewsVO" parameterType="int">
+        SELECT * FROM reviews WHERE id = #{reviewId}
+    </select>
+    
+    <!-- 리뷰 삭제 -->
+    <delete id="deleteReview" parameterType="int">
+        DELETE FROM reviews WHERE id = #{reviewId}
+    </delete>
+    
+    
 </mapper>

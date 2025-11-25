@@ -16,10 +16,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>MovieList Main</title>
+
 <link rel="stylesheet" href="${ctx}/resources/css/movieList.css">
 <link rel="stylesheet" href="${ctx}/resources/css/main.css">
 <link rel="stylesheet" href="${ctx}/resources/css/search.css">
+<title>MovieList Main</title>
 </head>
 <body>
 
@@ -54,10 +55,10 @@
     const container = document.getElementById("movie-list");
     const ctx = container.dataset.ctx;
     const isLogin = container.dataset.islogin === 'true';
+    const loginUser = '<c:out value="${sessionScope.loginUser.user_id}" default=""/>';
+    localStorage.setItem("userId", "${sessionScope.loginUser.user_id}");
 </script>
-<script>
-    localStorage.setItem("userId", "${loginUser.user_id}");
-</script>
+
 
 
 <script src="${ctx}/resources/js/movieList.js"></script>

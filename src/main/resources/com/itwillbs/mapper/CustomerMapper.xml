@@ -2,9 +2,67 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
+
 <mapper namespace="com.itwillbs.mapper.CustomerMapper">
 
+<insert id="insertinquirty">
+	insert into inquiries(user_id,title,content,status,created_at)
+	values (#{userId},#{title},#{content},#{status},#{createdAt})
+</insert>
 
+<select id="inquiries" resultType="com.itwillbs.domain.InquiriesVO">
+	select id, user_id as userId, title, content, status, created_at as createdAt, answer_content as answerContent from inquiries where user_id = #{userId}
+
+</select>
+<select id="inquiry_count" resultType="java.lang.Integer">
+	select count(*) from inquiries where user_id = #{userId}
+
+</select>
+<select id="inquiry_detail" resultType="com.itwillbs.domain.InquiriesVO">
+    SELECT 
+        id,
+        user_id as userId,
+        title,
+        content,
+        status,
+        created_at as createdAt,
+        answered_at as answeredAt,
+        answer_content as answerContent
+    FROM inquiries
+    WHERE id = #{id}
+</select>
+
+  <update id="inquiry_update">
+  	update board
+  	set title = #{title}, content = #{content}, status = #{status}
+  	where id = #{id}
+  </update>
+
+  <delete id="inquiry_delete">
+  	delete from inquiries
+  	where id = #{id}
+  </delete>
+
+  <insert id="insert_movie_request">
+  	insert into movie_request(user_id,title, content, status, created_at)
+  	values (#{userId},#{title},#{content},#{status},#{createdAt})
+  </insert>
+
+  <select id="movie_request_count" resultType="java.lang.Integer">
+  	select count(*) from movie_request where user_id = #{userId}
+  </select>
+
+  <select id="movie_request" resultType="com.itwillbs.domain.MovieRequestVO">
+  	select * from movie_request where user_id = #{userId}
+  </select>
   
+  <select id="notices" resultType="com.itwillbs.domain.NoticesVO">
+  	select * from notices where id = #{id}
+  </select>
+  
+  <select id="notice_count" resultType="java.lang.Integer">
+	select count(*) from notices where id = #{id}
+
+</select>
+
 </mapper>
