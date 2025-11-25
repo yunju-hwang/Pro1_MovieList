@@ -2,7 +2,8 @@
 
 body{
 	background-color: #f7f7f7;
-	height: 1300px;
+	  margin: 0px;
+  padding: 0px;
 }
 .title{
 	text-align: center;
@@ -12,13 +13,28 @@ body{
 	color: gray;
 }
 .notice {
-	margin: 50px auto;
-	width: 70%;
-	height: 150px;
-	border-radius: 30px;
-	background-color: white;
-	padding: 20px;
-	box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    margin: 50px auto;
+    width: 70%;
+    height: 150px;
+    border-radius: 30px;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    
+    /* 부드러운 전환 효과 */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.notice:hover {
+    /* 살짝 커지면서 떠 있는 느낌 */
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 12px 12px rgba(0,0,0,0.22);
+}
+
+.notice-link {
+    color: inherit;
+    text-decoration: none;
+    display: block; /* 전체 카드가 클릭 영역이 되도록 */
 }
 
 .nottitle{
@@ -37,9 +53,5 @@ body{
   margin-right: 15px;
   margin-bottom: 30px;
 }
-.notice-link {
-  color: inherit;
-  text-decoration: none;
-  height:150px;
-}
+
 

@@ -2,8 +2,16 @@
 
 body{
 	background-color: #f7f7f7;
+	  margin: 0px;
+  padding: 0px;
 }
 
+.film-icon {
+    width: 30px;          /* 아이콘 크기 조정 */
+    height: 30px;
+    vertical-align: middle; /* 텍스트와 수직 정렬 */
+    margin-right: 10px;     /* 텍스트와 간격 */
+}
 .movie-req{
 	text-align: center;
 	margin-top: 70px;
@@ -25,15 +33,6 @@ body{
 	padding: 15px;
 }
 
-.mov-write{
-	width: 80%;
-	height:50px;
-	border-radius: 30px;
-	background-color: #cd0000;
-	color:white;
-	font-size: 1.5em;
-}
-
 
 
 .ma{
@@ -44,22 +43,31 @@ body{
 	padding: 50px 0;
 }
 
+
 .mov-write{
 	margin:auto;
-	width:80%;
+	width:20%;
 	height: 40px;
 	background-color: #CD0000;
 	border-radius: 20px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-		text-decoration: none;
 }
+
 
 .movie{
 	text-decoration: none;
 	color: white;
 }
+a.mov-write {
+    text-decoration: none; /* 링크 밑줄 제거 */
+    color: inherit;        /* 부모 색상 상속 */
+}
+
+
+
+
 
 .inquiry_head {
     display: flex;
@@ -111,7 +119,7 @@ body{
 	text-align: center; 
     font-weight: bold; 
     color:green;
-		
+	text-decoration: none;
 }
 .item_status_pen{
 	width:25%;

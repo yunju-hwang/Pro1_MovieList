@@ -7,11 +7,15 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta charset="UTF-8">
 <title>Insert title here</title>
-
+<link rel="stylesheet" href="<c:url value='/resources/css/movie_request_detail' />">
 </head>
 <body>
+
+
+
 
 </body>
 </html>

@@ -43,7 +43,6 @@
                         <span class="item_status_pen">답변대기</span>
                         </c:if>
                         <c:if test="${inquiriesVO.status ne 'pending' }">
-
 						<a href="/movielist/customer/inquiries/inquiry_detail?id=${inquiriesVO.id }" class="inq_detail">
                         <span class="item_status_com">답변완료</span>
                          </a>
@@ -71,3 +70,4 @@
 	</a>
 </body>
 </html>
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
