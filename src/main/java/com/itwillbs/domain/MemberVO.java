@@ -22,6 +22,7 @@ public class MemberVO {
 	private String profileImage; // 프로필 사진 경로 저장
 	
 	
+	
 	private LocalDate createdAt;      // 가입일 (DB에 created_at이 있다면)
     private LocalDate lastLogin;      // 최근 접속일 (DB에 last_login이 있다면)
     private Integer reviewCount;      // 리뷰 건수

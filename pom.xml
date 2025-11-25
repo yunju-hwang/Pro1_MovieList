@@ -82,7 +82,12 @@
 <!-- 			</exclusions> -->
 <!-- 			<scope>runtime</scope> -->
 <!-- 		</dependency> -->
-
+<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+<dependency>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+    <version>2.13.1</version>
+</dependency>
 
 
 		<!-- log4jdbc-log4j2-jdbc4.1 를 사용하기위해 log4j 버전 변경 -->
