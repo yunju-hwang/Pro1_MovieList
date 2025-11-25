@@ -14,8 +14,6 @@
 	public interface MypageMapper {
 		
 		public MemberVO getMember(String user_id);
-		
-		int updateMember(MemberVO member);
 	
 		public List<UserFavoritesVO> selectFavoriteListByUserId(String userId);
 		
@@ -30,20 +28,6 @@
 		public List<String> selectGenreNamesByTmdbId(int tmdbId);
 		
 		public List<TheatersVO> selectTheaterList();
-		
-		void deleteUserTheaters(@Param("userId") String userId);
-	    
-	    /**
-	     * 새로운 선호 영화관 목록을 user_theaters 테이블에 삽입합니다.
-	     * @param userId 현재 사용자 ID
-	     * @param theaterIds 삽입할 영화관 ID 목록
-	     */
-	    void insertUserTheaters(
-	        @Param("userId") String userId, 
-	        @Param("theaterIds") List<Integer> theaterIds
-	    );
-	    
-	    List<Integer> selectUserTheaterIds(@Param("userId") String userId);
 	
 		
 	}

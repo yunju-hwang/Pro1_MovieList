@@ -1,7 +1,6 @@
 package com.itwillbs.service;
 
 import java.util.HashMap;
-
 import java.util.List;
 import java.util.Map;
 
@@ -24,9 +23,6 @@ public class MypageService {
 	public MemberVO getMember(String user_id) {
 		return mypageMapper.getMember(user_id);
 	}
-	public int updateMember(MemberVO member) {
-        return mypageMapper.updateMember(member);
-    }
 
 	public List<UserFavoritesVO> getFavoriteList(String userId) {
 		
@@ -57,25 +53,6 @@ public class MypageService {
 	public List<TheatersVO> getTheaterList() {
 		return mypageMapper.selectTheaterList();
 	}
-	
-	@Transactional
-    public void saveUserTheaters(String userId, List<Integer> selectedTheaterIds) {
-        
-        // 1. 기존 선호 영화관 정보 전체 삭제
-        mypageMapper.deleteUserTheaters(userId);
-
-        // 2. 새로 받은 목록이 비어있지 않은 경우에만 INSERT 실행
-        if (selectedTheaterIds != null && !selectedTheaterIds.isEmpty()) {
-            
-            // Mapper 호출: 사용자 ID와 새로운 영화관 ID 목록을 전달
-            mypageMapper.insertUserTheaters(userId, selectedTheaterIds);
-        }
-    }
-	
-	public List<Integer> getSavedTheaterIds(String userId) {
-	    return mypageMapper.selectUserTheaterIds(userId); 
-	}
-	
 
 	
 }
