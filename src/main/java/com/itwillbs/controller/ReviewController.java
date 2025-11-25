@@ -73,9 +73,23 @@ public class ReviewController {
 	// 영화 상세 페이지에서 리뷰 목록 불러오기
 	@GetMapping("/movies/review_list")
 	@ResponseBody
-	public List<ReviewsVO> getReviewList(@RequestParam int tmdbId) {
-		System.out.println(tmdbId);
-		return reviewService.getReviewListByTmdbId(tmdbId);
+	public Map<String, Object> getReviewList(@RequestParam int tmdbId,
+							@RequestParam(defaultValue = "1") int page,
+							@RequestParam(defaultValue = "10") int size
+	) {
+		System.out.println("tmdbId: " + tmdbId + ", page: " + page + ", size: " + size);
+		List<ReviewsVO> reviews = reviewService.getReviewListByTmdbId(tmdbId, page, size);
+		int total = reviewService.getReviewCountByTmdbId(tmdbId);
+		
+		Map<String, Object> result = new HashMap<>();
+	    result.put("reviews", reviews);
+	    result.put("total", total);
+	    result.put("page", page);
+        result.put("size", size);
+
+	    return result;
+
+		
 	}
 		
 		

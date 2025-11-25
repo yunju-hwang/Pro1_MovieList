@@ -16,10 +16,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>MovieList Main</title>
+
 <link rel="stylesheet" href="${ctx}/resources/css/movieList.css">
 <link rel="stylesheet" href="${ctx}/resources/css/main.css">
 <link rel="stylesheet" href="${ctx}/resources/css/search.css">
+<title>MovieList Main</title>
 </head>
 <body>
 

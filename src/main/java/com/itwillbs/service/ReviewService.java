@@ -1,5 +1,6 @@
 package com.itwillbs.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,9 +23,20 @@ public class ReviewService {
 	
 	
 	// tmdbId값에 맞는 리뷰 리스트 가져오기
-	public List<ReviewsVO> getReviewListByTmdbId(int tmdbId){
-		System.out.println(reviewMapper.selectReviewListByTmdbId(tmdbId));
-		return reviewMapper.selectReviewListByTmdbId(tmdbId);
+	public List<ReviewsVO> getReviewListByTmdbId(int tmdbId,int page, int size){
+		int offset = (page - 1) * size;
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put("tmdbId", tmdbId);
+		params.put("size", size);
+		params.put("offset", offset);
+		
+		return reviewMapper.selectReviewListByTmdbId(params);
+	}
+	
+	// 리뷰 개수 세기
+	public int getReviewCountByTmdbId(int tmdbId) {
+	    return reviewMapper.selectReviewCountByTmdbId(tmdbId);
 	}
 	
 	// userId 일치하는 모든 리뷰 테이블 가져오기
