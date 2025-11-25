@@ -32,6 +32,8 @@
 		public List<TheatersVO> selectTheaterList();
 		
 		void deleteUserTheaters(@Param("userId") String userId);
+		
+		void deleteOneUserTheater(@Param("userId") String userId, @Param("theaterId") int theaterId);
 	    
 	    /**
 	     * 새로운 선호 영화관 목록을 user_theaters 테이블에 삽입합니다.
@@ -42,6 +44,8 @@
 	        @Param("userId") String userId, 
 	        @Param("theaterIds") List<Integer> theaterIds
 	    );
+	    
+	    List<TheatersVO> searchTheatersByKeyword(@Param("keyword") String keyword);
 	    
 	    List<Integer> selectUserTheaterIds(@Param("userId") String userId);
 	    

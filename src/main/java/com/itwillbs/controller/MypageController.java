@@ -189,10 +189,12 @@ public class MypageController {
 	    return "/mypage/theaters";
 	}
 	
+	// 예시: MyPageController.java (수정된 메서드)
+
 	@PostMapping("/mypage/theaters/update")
 	public String updateTheaters(
-	    // 📢 [수정]: required = false를 추가하여 파라미터가 전송되지 않아도 오류가 나지 않게 함.
 	    @RequestParam(value = "theaterId", required = false) List<Integer> selectedTheaterIds,
+	    // 📢 [삭제] @RequestParam(defaultValue = "false") boolean isAjaxDelete 파라미터를 제거합니다.
 	    HttpSession session,
 	    RedirectAttributes redirectAttributes) {
 
@@ -204,27 +206,72 @@ public class MypageController {
 	    }
 	    String userId = loginUser.getUser_id();
 
-	    // 📢 [추가 로직]: 파라미터가 전송되지 않아 null로 넘어온 경우, 빈 리스트로 초기화합니다.
+	    // 📢 [AJAX 오류 방지 로직 삭제] isAjaxDelete가 없어졌으므로 관련 로직을 제거합니다.
+	    // if (isAjaxDelete && (selectedTheaterIds == null || selectedTheaterIds.isEmpty())) { ... }
+
+	    // 📢 [유지] selectedTheaterIds가 null이면 빈 리스트로 초기화합니다.
 	    if (selectedTheaterIds == null) {
-	        // List.of()는 Java 9 이상에서 사용 가능하며, 불변(immutable) 빈 리스트를 만듭니다.
-	        // Java 8 이하를 사용 중이라면: selectedTheaterIds = new java.util.ArrayList<>(); 를 사용하세요.
-	        selectedTheaterIds = List.of(); 
+	        selectedTheaterIds = List.of();
 	    }
-
-	    // 2. Service에 DB 저장 로직 위임
+	    
+	    // 2. Service에 DB 처리 로직 위임 (전체 갱신)
 	    try {
-	        // selectedTheaterIds가 빈 리스트(0개)인 경우, Service는 해당 사용자의 
-	        // 기존 선호 영화관을 모두 삭제(DELETE) 처리하게 됩니다.
-	        mypageService.saveUserTheaters(userId, selectedTheaterIds); 
+	        // 🎯 [핵심 변경] isAjaxDelete 파라미터를 제거하고 Service 메서드를 호출합니다.
+	        mypageService.processTheaterUpdate(userId, selectedTheaterIds); 
 	        
+	        // 3. 응답 방식 (폼 제출이므로 항상 리다이렉트)
 	        redirectAttributes.addFlashAttribute("successMessage", "선호 영화관 목록이 성공적으로 저장되었습니다.");
+	        return "redirect:/mypage/theaters";
+	        
 	    } catch (Exception e) {
-	        e.printStackTrace(); 
+	        e.printStackTrace();
+	        
+	        // 폼 제출 실패 시 처리
 	        redirectAttributes.addFlashAttribute("errorMessage", "선호 영화관 저장 중 오류가 발생했습니다.");
+	        return "redirect:/mypage/theaters";
+	        
+	        // 📢 [AJAX 실패 로직 삭제] isAjaxDelete 관련 catch 블록 로직을 제거합니다.
 	    }
-
-	    // 3. 처리가 완료되면 마이페이지/영화관 설정 화면으로 리다이렉트
-	    return "redirect:/mypage/theaters"; 
+	}
+	@PostMapping("/mypage/theaters/delete/ajax") // 새로운 AJAX 전용 주소
+	@ResponseBody // 👈 여기에만 @ResponseBody 적용
+	public String deleteTheaterAjax(
+	    @RequestParam(value = "theaterId") int theaterId, // 단일 ID를 int로 받도록 명확히 합니다.
+	    HttpSession session) {
+	    
+	    // 1. 사용자 ID 검증 (로그인 체크)
+	    MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
+	    if (loginUser == null) {
+	        // AJAX 요청 실패 시 401 Unauthorized 상태 코드를 반환하는 것이 가장 좋으나, 
+	        // 간단히 throw를 사용하여 500 오류를 유발하고 클라이언트가 처리하게 합니다.
+	        throw new RuntimeException("로그인 세션이 만료되었습니다."); 
+	    }
+	    String userId = loginUser.getUser_id();
+	    
+	    try {
+	        // Service에 단일 삭제 로직을 위한 별도의 메서드를 호출합니다.
+	        // Service 로직 변경이 필요합니다! (아래 3단계 참고)
+	        mypageService.deleteOneTheater(userId, theaterId); 
+	        
+	        return "ok"; // 200 OK 응답 본문에 "ok"를 담아 클라이언트에게 성공을 알립니다.
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        // 500 Internal Server Error 발생 유도
+	        throw new RuntimeException("선호 영화관 즉시 삭제 중 오류 발생", e); 
+	    }
+	}
+	
+	@GetMapping("/mypage/theaters/search")
+	@ResponseBody // 반환 값을 HTTP 응답 본문에 JSON 형태로 직접 넣습니다.
+	public List<TheatersVO> searchTheaters(@RequestParam("keyword") String keyword) {
+	    // 키워드가 없거나 짧으면 검색하지 않고 빈 목록을 반환할 수 있습니다.
+	    if (keyword == null || keyword.trim().isEmpty() || keyword.length() < 2) {
+	        // Java 9+
+	        return List.of(); 
+	    }
+	    
+	    // Service를 통해 키워드를 포함하는 영화관 목록을 조회합니다.
+	    return mypageService.searchTheatersByKeyword(keyword);
 	}
 	
 	

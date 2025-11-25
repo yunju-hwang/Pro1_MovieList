@@ -87,18 +87,33 @@
         WHERE user_id = #{userId}
     </delete>
     
+    <delete id="deleteOneUserTheater">
+        DELETE FROM user_theaters
+        WHERE user_id = #{userId} 
+          AND theater_id = #{theaterId}
+    </delete>
+
     <insert id="insertUserTheaters">
-        <if test="theaterIds != null and !theaterIds.isEmpty()">
-            INSERT INTO user_theaters (theater_id, user_id)
-            VALUES
-            <foreach collection="theaterIds" item="theaterId" separator=",">
-                (
-                    #{theaterId}, 
-                    #{userId} 
-                )
-            </foreach>
-        </if>
+        INSERT INTO user_theaters (user_id, theater_id)
+        VALUES
+        <foreach item="theaterId" collection="theaterIds" separator=",">
+            (#{userId}, #{theaterId})
+        </foreach>
     </insert>
+    
+    <select id="searchTheatersByKeyword" resultType="com.itwillbs.domain.TheatersVO">
+    SELECT 
+        theater_id AS theaterId, 
+        name, 
+        location
+    FROM 
+        theaters
+    WHERE 
+        name LIKE CONCAT('%', #{keyword}, '%') 
+        OR location LIKE CONCAT('%', #{keyword}, '%')
+    ORDER BY
+        name
+    LIMIT 10 </select>
     
 
 </mapper>
