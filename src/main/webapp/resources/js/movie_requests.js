@@ -42,25 +42,6 @@ function updateBatchControls() {
     rowCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', updateBatchControls);
     });
-
-    // 폼 제출 시 ID 세팅
-    batchApproveForm.addEventListener('submit', function(e) {
-        const ids = getCheckedIds().join(',');
-        document.getElementById('selectedIdsForApprove').value = ids;
-        if (!ids) {
-            alert('처리할 요청을 선택해주세요.');
-            e.preventDefault();
-        }
-    });
-
-    batchDeleteForm.addEventListener('submit', function(e) {
-        const ids = getCheckedIds().join(',');
-        document.getElementById('selectedIdsForDelete').value = ids;
-        if (!ids) {
-            alert('삭제할 요청을 선택해주세요.');
-            e.preventDefault();
-        }
-    });
     
     // 페이지 로드 시 초기 상태 업데이트
     updateBatchControls();

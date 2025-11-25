@@ -3,12 +3,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="dashboard.jsp"%>
 <div class="table-header">
-        <button type="button" id="ApproveBtn" 
-            class="action-btn approve-btn" disabled
-            onclick="handleBatchAction('update')">처리 완료</button>
-        <button type="button" id="DeleteBtn"
-            class="action-btn delete-btn" disabled
-            onclick="handleBatchAction('delete')">삭제</button>
+	<button type="button" id="ApproveBtn" class="action-btn approve-btn"
+		disabled onclick="handleBatchAction('update')">처리 완료</button>
+	<button type="button" id="DeleteBtn" class="action-btn delete-btn"
+		disabled onclick="handleBatchAction('delete')">삭제</button>
 </div>
 <div class="table-section">
 	<table class="request-table">
@@ -54,7 +52,7 @@
 								<span class="status-badge pending">검토 대기</span>
 							</c:when>
 							<c:when test="${movie_requests.status eq 'approved'}">
-							 	<span class="status-badge approve">처리 완료</span>
+								<span class="status-badge approved">처리 완료</span>
 							</c:when>
 							<c:otherwise>
 								<span class="status-badge error">상태 오류</span>
@@ -73,9 +71,9 @@
 		<h2>요청 상세 정보</h2>
 		<div id="modalBodyContent"></div>
 		<div class="modal-actions">
-		<button class="action-btn delete-btn" onclick="deleteFromModal()">삭제</button>
-		<button class="action-btn approve-btn" onclick="approveFromModal()">처리
+			<button class="action-btn approve-btn" onclick="approveFromModal()">처리
 				완료</button>
+			<button class="action-btn delete-btn" onclick="deleteFromModal()">삭제</button>
 		</div>
 	</div>
 </div>

@@ -91,11 +91,6 @@ public class AdminService {
     public List<MovieRequestVO> AdminRequestList(){
     	return adminMapper.AdminRequestList();
     }
-    
-    public MovieRequestVO getMovieRequestDetail(int id) {
-        return adminMapper.getMovieRequestDetail(id);
-    }
-                      
     public void updateMovieRequests(String[] idArray, String status) {
         // 1. Map 객체 생성
         Map<String, Object> params = new HashMap<>(); 
@@ -116,6 +111,11 @@ public class AdminService {
         // 3. Mapper 호출
      	adminMapper.deleteMovieRequests(params); // <--- Mapper.java의 메서드와 연결
     }
+
+    public MovieRequestVO getMovieRequestDetail(int id) {
+        return adminMapper.getMovieRequestDetail(id);
+    }
+                      
 
     
     

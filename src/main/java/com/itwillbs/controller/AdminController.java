@@ -173,64 +173,80 @@ public class AdminController {
 		return "/admin/movie_requests";
 	}
 
-	@PostMapping("/movie_requests/update") 
+	@PostMapping("/movie_requests/update")
 	@ResponseBody
-	public Map<String, Object> updateMovieRequests(HttpSession session, @RequestParam("id") String id) { // <--- int 대신 String으로 받음
-	    Map<String, Object> response = new HashMap<>();
-	    
-	    // 권한 체크는 그대로 유지
-	    String userID = (String) session.getAttribute("user_id");
-	    String role = (String) session.getAttribute("role");
-	    if (userID == null || !"admin".equals(role)) {
-	        response.put("success", false);
-	        response.put("message", "권한이 없습니다.");
-	        return response;
-	    }
-	    
-	    try {
-	        // 단일 ID를 String 배열로 만듭니다. (Service의 통합 메서드에 맞춤)
-	        String[] idArray = {id}; 
-	        
-	        // Service는 String[]을 받는 통합 메서드를 호출
-	        adminService.updateMovieRequests(idArray, "approved");
-	        
-	        response.put("success", true);
-	        response.put("message", id + "번 요청 처리가 완료되었습니다.");
-	    } catch (Exception e) {
-	        response.put("success", false);
-	        response.put("message", "처리 중 오류가 발생했습니다.");
-	    }
-	    return response;
+	public Map<String, Object> updateMovieRequests(HttpSession session, @RequestParam("id") String idString) { 
+		Map<String, Object> response = new HashMap<>();
+
+		// 1. 권한 체크 (기존 코드 유지)
+		String userID = (String) session.getAttribute("user_id");
+		String role = (String) session.getAttribute("role");
+		if (userID == null || !"admin".equals(role)) {
+			response.put("success", false);
+			response.put("message", "권한이 없습니다.");
+			return response;
+		}
+
+		try {
+			// 2. 핵심: 쉼표로 구분된 문자열을 배열로 분리 (단일 ID든 복수 ID든 모두 처리 가능)
+			String[] idArray = idString.split(",");
+			
+			// 3. Service 호출 (Service는 String[]을 받는 통합 메서드를 호출)
+			adminService.updateMovieRequests(idArray, "approved");
+			
+			// 4. 응답 메시지 (처리된 항목 수에 따라 메시지를 다르게 표시)
+			String message = (idArray.length > 1) 
+							? idArray.length + "개의 요청이 성공적으로 처리 완료되었습니다." 
+							: idArray[0] + "번 요청 처리가 완료되었습니다."; 
+			
+			response.put("success", true);
+			response.put("message", message);
+			
+		} catch (Exception e) {
+			// 디버깅을 위해 에러 로그를 출력하는 것이 좋습니다.
+			e.printStackTrace(); 
+			response.put("success", false);
+			response.put("message", "처리 중 오류가 발생했습니다. (자세한 내용은 서버 로그 확인)");
+		}
+		return response;
 	}
+
 
 	@PostMapping("/movie_requests/delete")
 	@ResponseBody
-	public Map<String, Object> deleteMovieRequests(HttpSession session, @RequestParam("id") String id) { // <--- int 대신 String으로 받음
-	    Map<String, Object> response = new HashMap<>();
-	    
-	    // 권한 체크는 그대로 유지
-	    String userID = (String) session.getAttribute("user_id");
-	    String role = (String) session.getAttribute("role");
-	    if (userID == null || !"admin".equals(role)) {
-	        response.put("success", false);
-	        response.put("message", "권한이 없습니다.");
-	        return response;
-	    }
-	    
-	    try {
-	        // 단일 ID를 String 배열로 만듭니다. (Service의 통합 메서드에 맞춤)
-	        String[] idArray = {id};
-	        
-	        // Service는 String[]을 받는 통합 메서드를 호출
-	        adminService.deleteMovieRequests(idArray);
-	        
-	        response.put("success", true);
-	        response.put("message", id + "번 요청이 삭제되었습니다.");
-	    } catch (Exception e) {
-	        response.put("success", false);
-	        response.put("message", "삭제 중 오류가 발생했습니다.");
-	    }
-	    return response;
+	public Map<String, Object> deleteMovieRequests(HttpSession session, @RequestParam("id") String idString) { 
+		Map<String, Object> response = new HashMap<>();
+
+		// 1. 권한 체크 (기존 코드 유지)
+		String userID = (String) session.getAttribute("user_id");
+		String role = (String) session.getAttribute("role");
+		if (userID == null || !"admin".equals(role)) {
+			response.put("success", false);
+			response.put("message", "권한이 없습니다.");
+			return response;
+		}
+
+		try {
+			// 2. 핵심: 쉼표로 구분된 문자열을 배열로 분리 (단일 ID든 복수 ID든 모두 처리 가능)
+			String[] idArray = idString.split(",");
+			
+			// 3. Service 호출 (Service는 String[]을 받는 통합 메서드를 호출)
+			adminService.deleteMovieRequests(idArray);
+			
+			// 4. 응답 메시지
+			String message = (idArray.length > 1) 
+							? idArray.length + "개의 요청이 성공적으로 삭제되었습니다." 
+							: idArray[0] + "번 요청이 삭제되었습니다.";
+			
+			response.put("success", true);
+			response.put("message", message);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("success", false);
+			response.put("message", "삭제 중 오류가 발생했습니다. (자세한 내용은 서버 로그 확인)");
+		}
+		return response;
 	}
 
 		@GetMapping("/movie_requests/detail")
