@@ -146,6 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         reviews.forEach(review => {
                             const reviewItem = document.createElement("div");
                             reviewItem.classList.add("review-item");
+                            reviewItem.dataset.reviewId = review.id; // DOM에 reviewId 저장
                             
                             let createdAtStr = '';
 						    if (review.createdAt) {
@@ -166,8 +167,122 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <span>⭐ ${review.rating}</span>
                                 <p>${review.content}</p>
                                 <small>${createdAtStr}</small>
+                                ${review.userId === localStorage.getItem("userId") ? '<button class="edit-review-btn">수정</button><button class="delete-review-btn">🗑️</button>' : ''}
+          
                             `;
                             reviewListDiv.appendChild(reviewItem);
+                            
+                            // 🔥 삭제 버튼 이벤트
+						const deleteBtn = reviewItem.querySelector(".delete-review-btn");
+						if (deleteBtn) {
+						    deleteBtn.addEventListener("click", () => {
+						        if (!confirm("리뷰를 삭제하시겠습니까?")) return;
+						
+						        const reviewId = reviewItem.dataset.reviewId;
+								const userId = reviewItem.dataset.userId;  // ★ 추가
+								
+						        fetch(`${ctx}/movies/review_delete`, {
+						            method: "POST",
+						            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+						            body: new URLSearchParams({
+						                reviewId: reviewId,
+						                userId: userId
+						            })
+						        })
+						        .then(res => res.json())
+						        .then(data => {
+						            if (data.success) {
+						                alert("리뷰가 삭제되었습니다!");
+						                loadReviewList(); // 삭제 후 목록 새로 로드
+						            } else {
+						                alert("리뷰 삭제에 실패했습니다.");
+						            }
+						        })
+						        .catch(err => console.error(err));
+						    });
+						}
+                            
+                            
+                            
+                             // ✅ 수정 버튼 이벤트
+		                const editBtn = reviewItem.querySelector(".edit-review-btn");
+						if (editBtn) {
+						    editBtn.addEventListener("click", () => {
+						        const currentContent = review.content;
+						        const currentRating = review.rating;
+								const reviewId = reviewItem.dataset.reviewId;
+						        // reviewItem 전체를 수정 UI로 교체 (outerHTML 제거)
+						        reviewItem.innerHTML = `
+						            <div class="edit-review">
+								        <textarea class="edit-content" rows="3">${currentContent}</textarea>
+								        <div class="edit-star-rating"></div>
+								        <div class="edit-buttons">
+								            <button class="save-review-btn">저장</button>
+								            <button class="cancel-review-btn">취소</button>
+								        </div>
+								    </div>
+														        `;
+											
+						
+						        // ⭐ 별점 UI
+						        const editStarsContainer = reviewItem.querySelector(".edit-star-rating");
+						        const editStars = [];
+						        let selectedEditRating = currentRating;
+						        for (let i = 1; i <= 5; i++) {
+						            const star = document.createElement("span");
+						            star.classList.add("star");
+						            star.dataset.value = i;
+						            star.textContent = i <= selectedEditRating ? '★' : '☆';
+						            star.style.fontSize = "20px";
+						            star.style.cursor = "pointer";
+						            star.style.marginRight = "3px";
+						            editStarsContainer.appendChild(star);
+						            editStars.push(star);
+						
+						            star.addEventListener("click", () => {
+						                selectedEditRating = i;
+						                editStars.forEach((s, idx) => s.textContent = idx < i ? '★' : '☆');
+						            });
+						        }
+						
+						
+                        // 저장 버튼
+                        reviewItem.querySelector(".save-review-btn").addEventListener("click", () => {
+                            const newContent = reviewItem.querySelector(".edit-content").value.trim();
+                            if (!newContent || selectedEditRating === 0) {
+                                alert("내용과 별점을 모두 입력해주세요.");
+                                return;
+                            }
+
+                            fetch(`${ctx}/movies/review_update`, {
+                                method: "POST",
+                                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                                body: new URLSearchParams({
+                                    reviewId: reviewId,
+                                    content: newContent,
+                                    rating: selectedEditRating
+                                })
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    alert("리뷰가 수정되었습니다!");
+                                    loadReviewList(); // 수정 후 리뷰 목록 갱신
+                                } else {
+                                    alert(data.message);
+                                }
+                            })
+                            .catch(err => console.error(err));
+                        });
+
+		                        // 취소 버튼
+		                        reviewItem.querySelector(".cancel-review-btn").addEventListener("click", () => {
+		                            loadReviewList(); // 원래 목록으로 복원
+		                        });
+		                    });
+		                }
+		                            
+		                            
                         });
                     })
                     .catch(err => {

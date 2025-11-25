@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,7 +21,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itwillbs.domain.AiReviewRequestVO;
-import com.itwillbs.domain.MovieVO;
 import com.itwillbs.domain.ReviewsVO;
 import com.itwillbs.service.ChatGptService;
 import com.itwillbs.service.MovieService;
@@ -93,6 +93,67 @@ public class ReviewController {
 	@ResponseBody
 	public List<ReviewsVO> getReviewsByUser(@RequestParam String userId) {
 	    return reviewService.getReviewsByUser(userId);
+	}
+	
+	
+	// 리뷰 수정
+	@PostMapping("/movies/review_update")
+	@ResponseBody
+	public Map<String, Object> updateReview(
+			@RequestParam int reviewId, 
+			@RequestParam String content,
+			@RequestParam int rating){
+		Map<String, Object> result = new HashMap<>();
+		
+
+	    try {
+	        ReviewsVO review = new ReviewsVO();
+	        review.setId(reviewId);
+	        review.setContent(content);
+	        review.setRating(rating);
+
+	        int updateCount = reviewService.updateReview(review);
+
+	        if(updateCount > 0) {
+	            result.put("success", true);
+	            result.put("message", "리뷰가 수정되었습니다.");
+	        } else {
+	            result.put("success", false);
+	            result.put("message", "리뷰 수정 실패: 리뷰가 존재하지 않거나 권한이 없습니다.");
+	        }
+
+	    } catch(Exception e) {
+	        e.printStackTrace();
+	        result.put("success", false);
+	        result.put("message", "리뷰 수정 중 오류 발생");
+	    }
+
+	    return result;
+		
+	}
+	
+	
+	// 리뷰 삭제
+	@PostMapping("/movies/review_delete")
+	@ResponseBody
+	public Map<String, Object> deleteReview(@RequestParam("reviewId")int reviewId, @RequestParam String userId){
+	
+		Map<String, Object> result = new HashMap<>();
+		
+		try {
+	        boolean success = reviewService.deleteReview(reviewId, userId);
+	        result.put("success", success);
+
+	        if (!success) {
+	            result.put("message", "삭제 권한이 없거나 삭제 실패");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        result.put("success", false);
+	        result.put("message", "서버 오류 발생");
+	    }
+		
+		return result;
 	}
 
 	

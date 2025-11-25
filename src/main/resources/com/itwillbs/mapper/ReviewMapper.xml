@@ -37,4 +37,28 @@
 	    JOIN movies m ON r.tmdb_id = m.tmdb_id
 	    WHERE user_id = #{userId}
 	</select>
+	
+	
+	<!-- 리뷰 수정 -->
+	<update id="updateReview" parameterType="com.itwillbs.domain.ReviewsVO">
+	    UPDATE reviews
+	    SET content = #{content},
+	        rating = #{rating},
+	        created_at = NOW()
+	    WHERE id = #{id}
+	</update>
+	
+	
+	
+	<!-- 1개 리뷰 조회 -->
+	<select id="selectReviewById" resultType="com.itwillbs.domain.ReviewsVO" parameterType="int">
+        SELECT * FROM reviews WHERE id = #{reviewId}
+    </select>
+    
+    <!-- 리뷰 삭제 -->
+    <delete id="deleteReview" parameterType="int">
+        DELETE FROM reviews WHERE id = #{reviewId}
+    </delete>
+    
+    
 </mapper>
