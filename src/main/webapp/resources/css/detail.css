@@ -387,6 +387,51 @@ body{
     transform: scale(0.95);
 }
 
+/* 📌 페이징 버튼 기본 스타일 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    gap: 5px; /* 버튼 간격 */
+    flex-wrap: wrap; /* 화면 좁으면 줄 바꿈 */
+}
+
+.pagination button {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+    background-color: #f0f0f0;
+    border-color: #999;
+}
+
+.pagination button:disabled {
+    background-color: #cd0000;
+    color: #fff;
+    border-color: #cd0000;
+    cursor: default;
+}
+
+/* 이전/다음 버튼 구분 */
+.pagination button:first-child,
+.pagination button:last-child {
+    font-weight: bold;
+}
+
+/* 모바일 대응 */
+@media (max-width: 480px) {
+    .pagination button {
+        padding: 5px 8px;
+        font-size: 12px;
+    }
+}
+
 
 
 

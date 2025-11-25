@@ -21,7 +21,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itwillbs.domain.AiReviewRequestVO;
-import com.itwillbs.domain.MovieVO;
 import com.itwillbs.domain.ReviewsVO;
 import com.itwillbs.service.ChatGptService;
 import com.itwillbs.service.MovieService;
@@ -74,9 +73,23 @@ public class ReviewController {
 	// 영화 상세 페이지에서 리뷰 목록 불러오기
 	@GetMapping("/movies/review_list")
 	@ResponseBody
-	public List<ReviewsVO> getReviewList(@RequestParam int tmdbId) {
-		System.out.println(tmdbId);
-		return reviewService.getReviewListByTmdbId(tmdbId);
+	public Map<String, Object> getReviewList(@RequestParam int tmdbId,
+							@RequestParam(defaultValue = "1") int page,
+							@RequestParam(defaultValue = "10") int size
+	) {
+		System.out.println("tmdbId: " + tmdbId + ", page: " + page + ", size: " + size);
+		List<ReviewsVO> reviews = reviewService.getReviewListByTmdbId(tmdbId, page, size);
+		int total = reviewService.getReviewCountByTmdbId(tmdbId);
+		
+		Map<String, Object> result = new HashMap<>();
+	    result.put("reviews", reviews);
+	    result.put("total", total);
+	    result.put("page", page);
+        result.put("size", size);
+
+	    return result;
+
+		
 	}
 		
 		
@@ -95,7 +108,7 @@ public class ReviewController {
 	public List<ReviewsVO> getReviewsByUser(@RequestParam String userId) {
 	    return reviewService.getReviewsByUser(userId);
 	}
-
+	
 	
 	// 리뷰 수정
 	@PostMapping("/movies/review_update")
@@ -156,7 +169,6 @@ public class ReviewController {
 		
 		return result;
 	}
-
 
 	
 	// ai 리뷰 요청 및 받아오기
