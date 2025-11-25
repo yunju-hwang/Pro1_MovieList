@@ -13,5 +13,5 @@ public class TheatersVO {
     private int theaterId;
     private String name;
     private String location;
-    private LocalDateTime createdAt;
+//    private LocalDateTime createdAt;
 }
