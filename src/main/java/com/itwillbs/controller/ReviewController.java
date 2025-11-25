@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itwillbs.domain.AiReviewRequestVO;
+import com.itwillbs.domain.MovieVO;
 import com.itwillbs.domain.ReviewsVO;
 import com.itwillbs.service.ChatGptService;
 import com.itwillbs.service.MovieService;
@@ -94,7 +95,7 @@ public class ReviewController {
 	public List<ReviewsVO> getReviewsByUser(@RequestParam String userId) {
 	    return reviewService.getReviewsByUser(userId);
 	}
-	
+
 	
 	// 리뷰 수정
 	@PostMapping("/movies/review_update")
@@ -155,6 +156,7 @@ public class ReviewController {
 		
 		return result;
 	}
+
 
 	
 	// ai 리뷰 요청 및 받아오기

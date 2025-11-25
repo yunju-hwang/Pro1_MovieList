@@ -18,4 +18,5 @@ public interface ReviewMapper {
 	
 	ReviewsVO selectReviewById(int reviewId);
 	int deleteReview(int reviewId);
+
 }
