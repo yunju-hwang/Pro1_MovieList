@@ -28,7 +28,7 @@
             user_id = #{user_id}
     </select>
     
-    <select id="selectFavoriteListByUserId" parameterType="string" resultType="com.itwillbs.domain.UserFavoritesVO">
+ <select id="selectFavoriteListByUserId" parameterType="string" resultType="com.itwillbs.domain.UserFavoritesVO">
     SELECT 
         f.id,
         f.user_id AS userId,  
@@ -67,24 +67,38 @@
 
 
 <select id="selectTheaterList" resultType="com.itwillbs.domain.TheatersVO">
-    SELECT
-    theater_id AS theaterId,
-    name, 
-    location
-    FROM
-    theaters
-    ORDER BY
-    theater_id ASC
-</select>
-
-
+        SELECT 
+            theater_id AS theaterId,  name,
+            location
+            FROM 
+            theaters
+        ORDER BY
+            theaterId
+    </select>
     
+    <select id="selectUserTheaterIds" resultType="int">
+        SELECT theater_id 
+        FROM user_theaters
+        WHERE user_id = #{userId}
+    </select>
+    
+    <delete id="deleteUserTheaters">
+        DELETE FROM user_theaters
+        WHERE user_id = #{userId}
+    </delete>
+    
+    <insert id="insertUserTheaters">
+        <if test="theaterIds != null and !theaterIds.isEmpty()">
+            INSERT INTO user_theaters (theater_id, user_id)
+            VALUES
+            <foreach collection="theaterIds" item="theaterId" separator=",">
+                (
+                    #{theaterId}, 
+                    #{userId} 
+                )
+            </foreach>
+        </if>
+    </insert>
     
 
-
-
-
-
-
-    
 </mapper>

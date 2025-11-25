@@ -1,442 +1,456 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-       pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="/WEB-INF/views/common/navbar.jsp" %>
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ include file="/WEB-INF/views/common/navbar.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>마이페이지 | 회원 정보 수정</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마이페이지 | 회원 정보 수정</title>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
 /* (스타일 유지) */
 /* ========================================================== */
 /* 1. NAV BAR 스타일 (기존 유지) */
 /* ========================================================== */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f7f7f7;
-    min-height: 100vh;
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	background-color: #f7f7f7;
+	min-height: 100vh;
 }
 
 .header-nav {
-    width: 100%;
-    background-color: #ffffff;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 3px 0;    
+	width: 100%;
+	background-color: #ffffff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	padding: 3px 0;
 }
 
 .header-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: center;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	justify-content: center;
 }
 
 .header-nav li {
-    padding: 12px 20px;    
-    font-size: 14px;
-    color: #555;
-    cursor: pointer;
-    transition: color 0.3s, background-color 0.3s;    
-    border-bottom: none;    
-    border-radius: 4px;    
-    margin: 0 7px;    
+	padding: 12px 20px;
+	font-size: 14px;
+	color: #555;
+	cursor: pointer;
+	transition: color 0.3s, background-color 0.3s;
+	border-bottom: none;
+	border-radius: 4px;
+	margin: 0 7px;
 }
 
 .header-nav li:hover {
-    color: white;    
-    background-color: #cd0000;    
+	color: white;
+	background-color: #cd0000;
 }
 
 .header-nav li a {
-    text-decoration: none;    
-    color: inherit;    
-    display: flex;    
-    align-items: center;    
+	text-decoration: none;
+	color: inherit;
+	display: flex;
+	align-items: center;
 }
 
 .header-nav li.active {
-    color: white;    
-    background-color: #cd0000;    
-    border-bottom: none;    
-    font-weight: bold;
+	color: white;
+	background-color: #cd0000;
+	border-bottom: none;
+	font-weight: bold;
 }
 
 .header-nav li.active:hover {
-    background-color: #a00000;    
-    color: white;
+	background-color: #a00000;
+	color: white;
 }
 
 .header-nav li i {
-    margin-right: 5px;
+	margin-right: 5px;
 }
-        
-        /* ========================================================== */
-        /* 2. 메인 컨텐츠 스타일 */
-        /* ========================================================== */
-        .container {
-            padding: 40px 20px;
-            width: 100%;
-            max-width: 500px;    
-            margin: 40px auto;    
-        }
 
-        .content-box {
-            background-color: #ffffff;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);    
-        }
+/* ========================================================== */
+/* 2. 메인 컨텐츠 스타일 */
+/* ========================================================== */
+.container {
+	padding: 40px 20px;
+	width: 100%;
+	max-width: 500px;
+	margin: 40px auto;
+}
 
-        .content-box h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 24px;
-            color: #333;
-        }
+.content-box {
+	background-color: #ffffff;
+	padding: 40px;
+	border-radius: 8px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
 
-        /* ========================================================== */
-        /* 3. 회원 정보 폼 전용 스타일 (상세) */
-        /* ========================================================== */
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
+.content-box h1 {
+	text-align: center;
+	margin-bottom: 30px;
+	font-size: 24px;
+	color: #333;
+}
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #333;
-            font-size: 15px;
-        }
-        
-        /* 필수 항목 별표(*) 스타일 */
-        .form-group label .required {
-            color: #cd0000;
-            margin-left: 3px;
-            font-size: 1.1em;
-        }
+/* ========================================================== */
+/* 3. 회원 정보 폼 전용 스타일 (상세) */
+/* ========================================================== */
+.form-group {
+	margin-bottom: 20px;
+}
 
-        .form-group input[type="text"],
-        .form-group input[type="email"],
-        .form-group input[type="password"],
-        .form-group input[type="date"],
-        .form-group select { /* select 추가 */
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 15px;
-            box-sizing: border-box;
-            background-color: #fff;
-        }
-        
-        /* 아이디와 같은 수정 불가 필드 스타일 */
-        .form-group input:read-only {
-            background-color: #f0f0f0;
-            color: #666;
-            cursor: not-allowed;
-        }
-        
-        .help-text {
-            font-size: 12px;
-            color: #888;
-            margin-top: 5px;
-        }
-        
-        /* 오류 메시지 스타일 */
-        .error-message {
-            color: #cd0000; /* 빨간색 */
-            font-size: 13px;
-            margin-top: 5px;
-            display: none; /* 초기에는 숨김 */
-            font-weight: bold;
-        }
+.form-group label {
+	display: block;
+	margin-bottom: 8px;
+	font-weight: bold;
+	color: #333;
+	font-size: 15px;
+}
 
-        /* 성별 라디오 버튼 그룹 스타일 */
-        .radio-group {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            padding: 12px 0;
-        }
-        
-        .radio-group input[type="radio"] {
-            margin-right: 5px;
-        }
+/* 필수 항목 별표(*) 스타일 */
+.form-group label .required {
+	color: #cd0000;
+	margin-left: 3px;
+	font-size: 1.1em;
+}
 
-        /* 비밀번호 변경 버튼 그룹 */
-        .password-group {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 10px;
-        }
-        
-        /* 비밀번호 변경 버튼 스타일 */
-        .btn-password-change {
-            background-color: #cd0000;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.2s;
-        }
+.form-group input[type="text"], .form-group input[type="email"],
+	.form-group input[type="password"], .form-group input[type="date"],
+	.form-group select { /* select 추가 */
+	width: 100%;
+	padding: 12px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 15px;
+	box-sizing: border-box;
+	background-color: #fff;
+}
 
-        .btn-password-change:hover {
-            background-color: #a00000;
-        }
+/* 아이디와 같은 수정 불가 필드 스타일 */
+.form-group input:read-only {
+	background-color: #f0f0f0;
+	color: #666;
+	cursor: not-allowed;
+}
 
-        /* 저장 버튼 */
-        .submit-button {
-            width: 100%;
-            background-color: #cd0000;    
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 4px;
-            font-size: 17px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 30px;
-            transition: background-color 0.2s;
-        }
+.help-text {
+	font-size: 12px;
+	color: #888;
+	margin-top: 5px;
+}
 
-        .submit-button:hover {
-            background-color: #a00000;
-        }
-        
-        /* 회원 탈퇴 버튼 스타일 */
-        .btn-withdrawal {
-            width: 100%;
-            background-color: #6c757d;    
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 4px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 20px;
-        }
+/* 오류 메시지 스타일 */
+.error-message {
+	color: #cd0000; /* 빨간색 */
+	font-size: 13px;
+	margin-top: 5px;
+	display: none; /* 초기에는 숨김 */
+	font-weight: bold;
+}
 
-        .btn-withdrawal:hover {
-            background-color: #5a6268;
-        }
+/* 성별 라디오 버튼 그룹 스타일 */
+.radio-group {
+	display: flex;
+	gap: 20px;
+	align-items: center;
+	padding: 12px 0;
+}
 
-        /* 프로필 이미지 및 파일 업로드 관련 스타일 */
-        .profile-section {
-            text-align: center;    
-            margin-bottom: 30px;
-        }
+.radio-group input[type="radio"] {
+	margin-right: 5px;
+}
 
-        .profile-image-container {
-            position: relative;    
-            display: inline-block;    
-            width: 90px;    
-            height: 90px;
-            margin-bottom: 10px;
-        }
+/* 비밀번호 변경 버튼 그룹 */
+.password-group {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 10px;
+}
 
-        /* 기본 프로필 아이콘 */
-        .profile-circle-icon {
-            font-size: 80px;    
-            color: #ccc;
-            line-height: 90px;    
-            position: absolute;    
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: block;    
-        }
+/* 비밀번호 변경 버튼 스타일 */
+.btn-password-change {
+	background-color: #cd0000;
+	color: white;
+	border: none;
+	padding: 10px 15px;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 14px;
+	transition: background-color 0.2s;
+}
 
-        /* 프로필 미리보기 이미지 스타일 */
-        #profileImagePreview {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;    
-            object-fit: cover;    
-            position: absolute;
-            top: 0;
-            left: 0;
-            display: none;    
-        }
+.btn-password-change:hover {
+	background-color: #a00000;
+}
 
-        /* 연필 아이콘 스타일 */
-        .profile-pencil-icon {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            background-color: #cd0000;    
-            color: white;
-            border-radius: 50%;    
-            padding: 3px;    
-            font-size: 10px;    
-            cursor: pointer;
-            width: 18px;    
-            height: 18px;    
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid #fff;    
-            box-shadow: 0 0 3px rgba(0,0,0,0.2);    
-            z-index: 10;    
-        }
-        
-        .profile-section input[type="file"] {
-            display: none;    
-        }
+/* 저장 버튼 */
+.submit-button {
+	width: 100%;
+	background-color: #cd0000;
+	color: white;
+	border: none;
+	padding: 15px;
+	border-radius: 4px;
+	font-size: 17px;
+	font-weight: bold;
+	cursor: pointer;
+	margin-top: 30px;
+	transition: background-color 0.2s;
+}
 
-        /* 아이디와 이름 표시 스타일 */
-        .profile-name-id {
-            font-size: 16px;
-            color: #333;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .profile-id {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 20px;
-        }
+.submit-button:hover {
+	background-color: #a00000;
+}
 
-        /* 이메일 입력 그룹 스타일 */
-        .email-input-group {
-            /* 이메일 필드를 하나로 통일했으므로 flex 속성은 유지해도 되지만, input이 100%를 차지하게 됩니다. */
-            display: flex; 
-            align-items: center;
-            gap: 10px;    
-        }
-        
-        /* 단일 이메일 input에 100% 적용 */
-        .email-input-group input[type="text"] {
-             width: 100% !important; 
-        }
+/* 회원 탈퇴 버튼 스타일 */
+.btn-withdrawal {
+	width: 100%;
+	background-color: #6c757d;
+	color: white;
+	border: none;
+	padding: 10px;
+	border-radius: 4px;
+	font-size: 15px;
+	font-weight: bold;
+	cursor: pointer;
+	margin-top: 20px;
+}
 
-        .email-input-group .at-sign {
-            font-weight: bold;
-            color: #333;
-            font-size: 16px;
-            flex-shrink: 0; 
-        }
-    </style>
+.btn-withdrawal:hover {
+	background-color: #5a6268;
+}
+
+/* 프로필 이미지 및 파일 업로드 관련 스타일 */
+.profile-section {
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+.profile-image-container {
+	position: relative;
+	display: inline-block;
+	width: 90px;
+	height: 90px;
+	margin-bottom: 10px;
+}
+
+/* 기본 프로필 아이콘 */
+.profile-circle-icon {
+	font-size: 80px;
+	color: #ccc;
+	line-height: 90px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: block;
+}
+
+/* 프로필 미리보기 이미지 스타일 */
+#profileImagePreview {
+	width: 90px;
+	height: 90px;
+	border-radius: 50%;
+	object-fit: cover;
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: none;
+}
+
+/* 연필 아이콘 스타일 */
+.profile-pencil-icon {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	background-color: #cd0000;
+	color: white;
+	border-radius: 50%;
+	padding: 3px;
+	font-size: 10px;
+	cursor: pointer;
+	width: 18px;
+	height: 18px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 2px solid #fff;
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+	z-index: 10;
+}
+
+.profile-section input[type="file"] {
+	display: none;
+}
+
+/* 아이디와 이름 표시 스타일 */
+.profile-name-id {
+	font-size: 16px;
+	color: #333;
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+.profile-id {
+	font-size: 14px;
+	color: #666;
+	margin-bottom: 20px;
+}
+
+/* 이메일 입력 그룹 스타일 */
+.email-input-group {
+	/* 이메일 필드를 하나로 통일했으므로 flex 속성은 유지해도 되지만, input이 100%를 차지하게 됩니다. */
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+/* 단일 이메일 input에 100% 적용 */
+.email-input-group input[type="text"] {
+	width: 100% !important;
+}
+
+.email-input-group .at-sign {
+	font-weight: bold;
+	color: #333;
+	font-size: 16px;
+	flex-shrink: 0;
+}
+</style>
 </head>
 <body>
-    
-    <div class="header-nav">
-    <ul>
-            <li><a href="/movielist/mypage/reservations"><i class="fa-solid fa-calendar-check"></i> 예매 내역</a></li>
-            <li><a href="/movielist/mypage/favorites"><i class="fa-regular fa-heart"></i> 관심 목록</a></li>
-            <li class="active"><a href="/movielist/mypage/profile"><i class="fa-regular fa-user"></i> 회원 정보</a></li>
-            <li><a href="/movielist/mypage/theaters"><i class="fa-solid fa-map-pin"></i> 선호 영화관</a></li>
-            <li><a href="/movielist/mypage/inquiries"><i class="fa-regular fa-clipboard"></i> 문의 내역</a></li>
-            <li><a href="/movielist/mypage/movierequest"><i class="fa-solid fa-film"></i> 영화 요청</a></li>
-        </ul>
-        </div>
 
-    <div class="container">
-        <div class="content-box">
-            <h1>회원 정보 수정</h1>
-            
-            <div class="profile-section">
-                <div class="profile-image-container">
-                    
-                    <c:set var="hasProfileImage" value="${not empty loginMember.profileImage}"/>
+	<div class="header-nav">
+		<ul>
+			<li><a href="/movielist/mypage/reservations"><i
+					class="fa-solid fa-calendar-check"></i> 예매 내역</a></li>
+			<li><a href="/movielist/mypage/favorites"><i
+					class="fa-regular fa-heart"></i> 관심 목록</a></li>
+			<li class="active"><a href="/movielist/mypage/profile"><i
+					class="fa-regular fa-user"></i> 회원 정보</a></li>
+			<li><a href="/movielist/mypage/theaters"><i
+					class="fa-solid fa-map-pin"></i> 선호 영화관</a></li>
+			<li><a href="/movielist/mypage/inquiries"><i
+					class="fa-regular fa-clipboard"></i> 문의 내역</a></li>
+			<li><a href="/movielist/mypage/movierequest"><i
+					class="fa-solid fa-film"></i> 영화 요청</a></li>
+		</ul>
+	</div>
 
-                    <img id="profileImagePreview" 
-                         src="${loginMember.profileImage}" 
-                         alt="Profile Image Preview"
-                         style="display: ${hasProfileImage ? 'block' : 'none'};"> 
-                    
-                    <i id="profileIcon" 
-                       class="fa-regular fa-circle-user profile-circle-icon"
-                       style="display: ${hasProfileImage ? 'none' : 'block'};">
-                    </i>
+	<div class="container">
+		<div class="content-box">
+			<h1>회원 정보 수정</h1>
 
-                    <i class="fa-solid fa-pencil profile-pencil-icon" onclick="document.getElementById('profileImageUpload').click();"></i>
-                    
-                    <input type="file" id="profileImageUpload" name="profileImage" accept="image/*" onchange="handleImageUpload(event)">
-                </div>
-                
-                <p class="profile-name-id">${loginMember.username} 님</p>
-                <p class="profile-id">ID: ${loginMember.user_id}</p>
-            </div>
-            
-            <form action="/mypage/updateMember" method="POST" onsubmit="return validateForm()">
-                
-                <div class="form-group">
-                    <label>아이디</label>
-                    <input type="text" value="${loginMember.user_id}" readonly>    
-                </div>
+			<div class="profile-section">
+				<div class="profile-image-container">
 
-                <div class="form-group">
-                    <label>비밀번호 <span class="required">*</span></label>
-                    <input type="password" readonly> 
-                    <p class="help-text">비밀번호는 보안을 위해 별도의 변경 절차를 거칩니다.</p>
-                    <div class="password-group">
-                        <button type="button" class="btn-password-change" onclick="openPasswordChangeModal()">
-                            <i class="fa-solid fa-lock"></i> 비밀번호 변경
-                        </button>
-                    </div>
-                </div>
+					<c:set var="hasProfileImage"
+						value="${not empty loginMember.profileImage}" />
 
-                <div class="form-group">
-                    <label for="memberEmail">이메일 <span class="required">*</span></label>
-                    <div class="email-input-group">
-                        <input type="text" id="memberEmail" name="memberEmail" value="${loginMember.email}">
-                        
-                        </div>
-                    <div id="emailError" class="error-message"></div>
-                </div>
-                
-                <div class="form-group">
-                    <label>성별 <span class="required">*</span></label>
-                    <div class="radio-group" id="genderGroup">
-                        <input type="radio" id="genderM" name="memberGender" value="M"    
-                                <c:if test="${loginMember.gender eq 'M'}">checked</c:if>>
-                        <label for="genderM" style="font-weight: normal; margin-bottom: 0;">남성</label>
-                        
-                        <input type="radio" id="genderF" name="memberGender" value="F"    
-                                <c:if test="${loginMember.gender eq 'F'}">checked</c:if>>
-                        <label for="genderF" style="font-weight: normal; margin-bottom: 0;">여성</label>
-                    </div>
-                    <div id="genderError" class="error-message"></div>
-                </div>
+					<img id="profileImagePreview" src="${loginMember.profileImage}"
+						alt="Profile Image Preview"
+						style="display: ${hasProfileImage ? 'block' : 'none'};"> <i
+						id="profileIcon"
+						class="fa-regular fa-circle-user profile-circle-icon"
+						style="display: ${hasProfileImage ? 'none' : 'block'};"> </i> <i
+						class="fa-solid fa-pencil profile-pencil-icon"
+						onclick="document.getElementById('profileImageUpload').click();"></i>
 
-                <div class="form-group">
-                    <label for="memberBirth">생년월일 <span class="required">*</span></label>
-                    <input type="date" id="memberBirth" name="memberBirth" value="${loginMember.birthDate}">
-                    <div id="birthError" class="error-message"></div>
-                </div>
+					<input type="file" id="profileImageUpload" name="profileImage"
+						accept="image/*" onchange="handleImageUpload(event)">
+				</div>
 
-                <div class="form-group">
-                    <label for="memberPhone">전화번호 <span class="required">*</span></label>
-                    <input type="text" id="memberPhone" name="memberPhone" value="${loginMember.phone}">
-                    <div id="phoneError" class="error-message"></div>
-                </div>
+				<p class="profile-name-id">${loginMember.username}님</p>
+				<p class="profile-id">ID: ${loginMember.user_id}</p>
+			</div>
 
-                <button type="submit" class="submit-button">
-                    저장
-                </button>
-            </form>
-            
-            <button type="button" class="btn-withdrawal" onclick="openWithdrawalConfirm()">
-                회원 탈퇴
-            </button>
-            
-            </div>
-    </div>
+			<form action="/mypage/profile/update" method="POST"
+				onsubmit="return validateForm()">
 
-    <script>
+				<div class="form-group">
+					<label>닉네임</label> <input type="text"
+						value="${loginMember.user_id}">
+				</div>
+
+				<div class="form-group">
+					<label>비밀번호 <span class="required">*</span></label> <input
+						type="password" readonly>
+					<p class="help-text">비밀번호는 보안을 위해 별도의 변경 절차를 거칩니다.</p>
+					<div class="password-group">
+						<button type="button" class="btn-password-change"
+							onclick="openPasswordChangeModal()">
+							<i class="fa-solid fa-lock"></i> 비밀번호 변경
+						</button>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="memberEmail">이메일 <span class="required">*</span></label>
+					<div class="email-input-group">
+						<input type="text" id="memberEmail" name="memberEmail"
+							value="${loginMember.email}">
+
+					</div>
+					<div id="emailError" class="error-message"></div>
+				</div>
+
+				<div class="form-group">
+					<label>성별 <span class="required">*</span></label>
+					<div class="radio-group" id="genderGroup">
+
+						<%-- **Step 1: DB에서 불러온 성별 값을 대문자로 변환하여 변수에 저장합니다.** --%>
+						<c:set var="genderUpper"
+							value="${fn:toUpperCase(loginMember.gender)}" />
+
+						<%-- **Step 2: 변환된 genderUpper 값과 'M'을 비교합니다.** --%>
+						<input type="radio" id="genderM" name="memberGender" value="M"
+							<c:if test="${genderUpper eq 'M'}">checked</c:if>> <label
+							for="genderM" style="font-weight: normal; margin-bottom: 0;">남성</label>
+
+						<%-- **Step 3: 변환된 genderUpper 값과 'F'를 비교합니다.** --%>
+						<input type="radio" id="genderF" name="memberGender" value="F"
+							<c:if test="${genderUpper eq 'F'}">checked</c:if>> <label
+							for="genderF" style="font-weight: normal; margin-bottom: 0;">여성</label>
+					</div>
+					<div id="genderError" class="error-message"></div>
+				</div>
+
+				<div class="form-group">
+					<label for="memberBirth">생년월일 <span class="required">*</span></label>
+					<input type="date" id="memberBirth" name="memberBirth"
+						value="${loginMember.birthDate}">
+					<div id="birthError" class="error-message"></div>
+				</div>
+
+				<div class="form-group">
+					<label for="memberPhone">전화번호 <span class="required">*</span></label>
+					<input type="text" id="memberPhone" name="memberPhone"
+						value="${loginMember.phone}">
+					<div id="phoneError" class="error-message"></div>
+				</div>
+
+				<button type="submit" class="submit-button">저장</button>
+			</form>
+
+			<button type="button" class="btn-withdrawal"
+				onclick="openWithdrawalConfirm()">회원 탈퇴</button>
+
+		</div>
+	</div>
+
+	<script>
         // 헬퍼 함수: 오류 메시지 표시
         function displayError(elementId, message) {
             // memberEmail의 오류 메시지는 id="emailError"에 표시해야 합니다.
@@ -560,6 +574,7 @@ body {
                  // window.location.href = "/mypage/withdrawalConfirm"; // 실제 탈퇴 확인 페이지로 이동
             }
         }
+        
         
     </script>
 </body>
