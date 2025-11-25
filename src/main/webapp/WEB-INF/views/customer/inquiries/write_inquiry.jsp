@@ -76,7 +76,7 @@ function changePlaceholder(value) {
 
 <div class="btn-form">
   <input type="submit" value="취소하기" class="no-sub">
-  <input type="submit" value="요청하기" class="sub">
+  <input type="submit" value="문의하기" class="sub">
 </div>
 	</div>
 </form>

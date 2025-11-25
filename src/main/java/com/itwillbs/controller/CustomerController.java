@@ -95,7 +95,7 @@ public class CustomerController {
 		return "redirect:/customer/inquiries";
 	}
 	
-    @GetMapping("/customer/inquiries/inquiry_detail")
+    @GetMapping("/customer/inquiry_detail")
     public String inquiryDetail(@RequestParam("id") int id, Model model,
                                 HttpSession session) {
 
@@ -110,7 +110,7 @@ public class CustomerController {
         InquiriesVO vo = customerService.inquiry_detail(id);
 
         model.addAttribute("inq", vo);
-        return "/customer/inquiries/inquiry_detail";
+        return "redirect:/customer/inquiry_detail";
     }
 
 	
