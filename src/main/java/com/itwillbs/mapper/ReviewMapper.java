@@ -13,4 +13,10 @@ public interface ReviewMapper {
 	void insertReview(ReviewsVO review);
 	List<ReviewsVO> selectReviewListByTmdbId(int tmdbId);
 	List<ReviewsVO> selectByUserId(String userId);
+	
+	int updateReview(ReviewsVO reviews);
+	
+	ReviewsVO selectReviewById(int reviewId);
+	int deleteReview(int reviewId);
+
 }

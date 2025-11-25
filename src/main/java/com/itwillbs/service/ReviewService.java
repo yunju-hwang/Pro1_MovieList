@@ -32,6 +32,20 @@ public class ReviewService {
         return reviewMapper.selectByUserId(userId); // Mapper에서 userId 조건으로 SELECT
     }
 	
+
+	// 리뷰 수정하기
+	public int updateReview(ReviewsVO review) {
+	    return reviewMapper.updateReview(review); // mapper 호출
+	}
+	
+	// 리뷰 삭제하기
+	public boolean deleteReview(int reviewId, String userId) {
+        // 본인 리뷰 확인 후 삭제
+        ReviewsVO review = reviewMapper.selectReviewById(reviewId);
+        return reviewMapper.deleteReview(reviewId) > 0;
+    }
+
+
 	
 	
 	
