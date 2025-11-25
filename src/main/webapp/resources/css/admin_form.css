@@ -153,3 +153,17 @@
     background-color: #e2e6ea;
     transform: scale(1.05);
 }
+
+/* 비활성화된 버튼 스타일 */
+.action-btn:disabled {
+    opacity: 0.5; /* 버튼을 반투명하게 만듦 */
+    cursor: not-allowed; /* 마우스 커서를 '금지' 모양으로 바꿈 */
+    pointer-events: none; /* (안전장치) 클릭 이벤트를 완전히 막음 */
+}
+
+/* approve-btn과 delete-btn 모두에 적용 */
+.approve-btn:disabled, 
+.delete-btn:disabled {
+    background-color: #ccc; /* 비활성화 색상 */
+    border-color: #ccc;
+}

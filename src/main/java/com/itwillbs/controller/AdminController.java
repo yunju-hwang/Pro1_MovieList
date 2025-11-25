@@ -1,6 +1,8 @@
 package com.itwillbs.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itwillbs.domain.FaqsVO;
 import com.itwillbs.domain.InquiriesVO;
@@ -30,7 +33,7 @@ public class AdminController {
 
 	private static final int List = 0;
 	@Inject
-	private AdminMapper adminService;
+	private AdminService adminService;
 
 	private void dashboardStats(Model model) {
 		int userCount = adminService.getUserCount();
@@ -171,31 +174,80 @@ public class AdminController {
 	}
 
 	@PostMapping("/movie_requests/update") 
-	public String updateMovieRequests(HttpSession session, @RequestParam("id") int id) {
-		String userID = (String) session.getAttribute("user_id");
-		String role = (String) session.getAttribute("role");
-		if (userID == null || !"admin".equals(role)) {
-			return "redirect:/login";
-		}
-	    adminService.updateMovieRequests(id, "approved"); 
-
-	    return "redirect:/admin/movie_requests";
+	@ResponseBody
+	public Map<String, Object> updateMovieRequests(HttpSession session, @RequestParam("id") String id) { // <--- int 대신 String으로 받음
+	    Map<String, Object> response = new HashMap<>();
+	    
+	    // 권한 체크는 그대로 유지
+	    String userID = (String) session.getAttribute("user_id");
+	    String role = (String) session.getAttribute("role");
+	    if (userID == null || !"admin".equals(role)) {
+	        response.put("success", false);
+	        response.put("message", "권한이 없습니다.");
+	        return response;
+	    }
+	    
+	    try {
+	        // 단일 ID를 String 배열로 만듭니다. (Service의 통합 메서드에 맞춤)
+	        String[] idArray = {id}; 
+	        
+	        // Service는 String[]을 받는 통합 메서드를 호출
+	        adminService.updateMovieRequests(idArray, "approved");
+	        
+	        response.put("success", true);
+	        response.put("message", id + "번 요청 처리가 완료되었습니다.");
+	    } catch (Exception e) {
+	        response.put("success", false);
+	        response.put("message", "처리 중 오류가 발생했습니다.");
+	    }
+	    return response;
 	}
 
-	
-		@PostMapping("/movie_requests/delete") 
-		public String deleteMovieRequests(HttpSession session, @RequestParam("id") int id) {
-			String userID = (String) session.getAttribute("user_id");
-			String role = (String) session.getAttribute("role");
-			if (userID == null || !"admin".equals(role)) {
-				return "redirect:/login";
-			}
-		    adminService.deleteMovieRequests(id); 
+	@PostMapping("/movie_requests/delete")
+	@ResponseBody
+	public Map<String, Object> deleteMovieRequests(HttpSession session, @RequestParam("id") String id) { // <--- int 대신 String으로 받음
+	    Map<String, Object> response = new HashMap<>();
+	    
+	    // 권한 체크는 그대로 유지
+	    String userID = (String) session.getAttribute("user_id");
+	    String role = (String) session.getAttribute("role");
+	    if (userID == null || !"admin".equals(role)) {
+	        response.put("success", false);
+	        response.put("message", "권한이 없습니다.");
+	        return response;
+	    }
+	    
+	    try {
+	        // 단일 ID를 String 배열로 만듭니다. (Service의 통합 메서드에 맞춤)
+	        String[] idArray = {id};
+	        
+	        // Service는 String[]을 받는 통합 메서드를 호출
+	        adminService.deleteMovieRequests(idArray);
+	        
+	        response.put("success", true);
+	        response.put("message", id + "번 요청이 삭제되었습니다.");
+	    } catch (Exception e) {
+	        response.put("success", false);
+	        response.put("message", "삭제 중 오류가 발생했습니다.");
+	    }
+	    return response;
+	}
 
-		    return "redirect:/admin/movie_requests";
+		@GetMapping("/movie_requests/detail")
+		@ResponseBody // 응답 본문을 JSON 데이터로 직접 보냅니다.
+		public MovieRequestVO getMovieRequestDetail(@RequestParam("id") int id) {
+		    // 권한 체크 로직은 여기에 넣거나 Interceptor에서 처리해야 합니다.
+		    // ...
 		    
-		}
+		    // Service를 통해 상세 정보를 가져옵니다.
+		    MovieRequestVO request = adminService.getMovieRequestDetail(id);
 
+		    return request; // Jackson 라이브러리가 자동으로 JSON으로 변환합니다.
+		}
+		
+		
+		
+		
 	// 리뷰 관리
 	@GetMapping("/reviews")
 	public String reviews(HttpSession session, Model model) {

@@ -1,6 +1,8 @@
 package com.itwillbs.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -90,14 +92,32 @@ public class AdminService {
     	return adminMapper.AdminRequestList();
     }
     
-    public int updateMovieRequests(int id, String status) {
-    	return adminMapper.updateMovieRequests(id, status);
+    public MovieRequestVO getMovieRequestDetail(int id) {
+        return adminMapper.getMovieRequestDetail(id);
     }
-    
-    public int deleteMovieRequests(int id) {
-    	return adminMapper.deleteMovieRequests(id);
+                      
+    public void updateMovieRequests(String[] idArray, String status) {
+        // 1. Map 객체 생성
+        Map<String, Object> params = new HashMap<>(); 
+        // 2. ID 배열과 상태를 Map에 담기. (Mapper의 <foreach collection="ids">와 연결됨)
+        params.put("ids", idArray);
+        params.put("status", status);
+        
+        // 3. Mapper 호출
+     	adminMapper.updateMovieRequests(params); // <--- Mapper.java의 메서드와 연결
     }
 
+    public void deleteMovieRequests(String[] idArray) {
+        // 1. Map 객체 생성
+        Map<String, Object> params = new HashMap<>();
+        // 2. ID 배열을 Map에 담기
+        params.put("ids", idArray); 
+        
+        // 3. Mapper 호출
+     	adminMapper.deleteMovieRequests(params); // <--- Mapper.java의 메서드와 연결
+    }
+
+    
     
  // 리뷰 관리
     public List<ReviewsAdminVO> AdminReviewsList(){
@@ -151,7 +171,7 @@ public class AdminService {
     	return adminMapper.getNoticesDetail(id);
     }
     
-    public int AdminNoticeUpdate(NoticesVO notices) {
+    public int AdminNoticesUpdate(NoticesVO notices) {
     	return adminMapper.AdminNoticesUpdate(notices);
     }
     

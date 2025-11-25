@@ -84,6 +84,15 @@
     text-decoration: none; /* 마우스 오버 시 밑줄 다시 생기지 않도록 확실히 제거! */
 }
 
+.board-table a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.board-table a:hover {
+    text-decoration: none; 
+}
+
 
 /* -------------------- 2-3. 테이블 상단 등록 버튼 영역 및 버튼 스타일 -------------------- */
 .table-header {
@@ -116,7 +125,8 @@
 .action-btn.delete-user-btn,
 .action-btn.pending,
 .action-btn.answered-link,
-.action-btn.refund-btn {
+.action-btn.refund-btn,
+.action-btn.approve-btn {
     padding: 6px 12px;
     font-size: 13px;
     font-weight: 500;
@@ -165,12 +175,15 @@
 }
 
 /* 1:1 문의 - 답변하기 버튼 */
-.action-btn.pending {
+.action-btn.pending,
+.action-btn.approve-btn
+{
     color: #007bff;
     border: 1px solid #007bff;
     background-color: #fff;
 }
-.action-btn.pending:hover {
+.action-btn.pending:hover,
+.action-btn.approve-btn:hover {
     color: #fff;
     background-color: #007bff;
     border-color: #007bff;
@@ -325,4 +338,10 @@
 }
 .action-icon-btn:hover {
     transform: scale(1.1);
+}
+
+.table-header{
+    display: flex;
+    align-items: center;
+    gap: 5px; /* 간격을 5px로 줄이거나 원하는 값으로 설정 */
 }
