@@ -44,7 +44,4 @@
 		</tbody>
 	</table>
 </div>
-
-</div>
-</div>
 <%@ include file="end.jsp"%>

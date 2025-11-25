@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MovieRequestVO;
+import com.itwillbs.domain.NoticesVO;
 import com.itwillbs.mapper.CustomerMapper;
 
 @Service
@@ -26,15 +27,15 @@ public class CustomerService {
 	}
 
 	public List<InquiriesVO> inquiries(String userId) {
-		
-		
-		
-		
+
+
+
+
 		return customerMapper.inquiries(userId);
 	}
 
 	public int inquiry_count(String userId) {
-		
+
 		return customerMapper.inquiry_count(userId);
 	}
 
@@ -47,18 +48,18 @@ public class CustomerService {
 		customerMapper.inquiry_delete(id);
 	}
 
-	
+
 	   public InquiriesVO inquiry_detail(int id) {
 	        return customerMapper.inquiry_detail(id);
 	    }
-	
+
 
 	public List<MovieRequestVO> movie_request(String userId) {
 		return customerMapper.movie_request(userId);
 	}
 
 	public int movie_request_count(String userId) {
-		
+
 		return customerMapper.movie_request_count(userId);
 	}
 
@@ -67,12 +68,20 @@ public class CustomerService {
 		movieRequestVO.setCreatedAt(LocalDateTime.now());
 
 		customerMapper.insert_movie_request(movieRequestVO);
-		
+
+	}
+
+	public List<NoticesVO> notices(String id) {
+		return customerMapper.notices(id);
+	}
+
+	public int notice_count(String id) {
+
+		return customerMapper.notice_count(id);
 	}
 
 
-	
+
 
 }
-
 

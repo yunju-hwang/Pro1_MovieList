@@ -1,4 +1,3 @@
-
 package com.itwillbs.mapper;
 
 import java.util.List;
@@ -60,4 +59,3 @@ public interface MovieMapper {
     // 영화관 값들 가져오기
     List<TheatersVO> getAllTheaters();
 }
-

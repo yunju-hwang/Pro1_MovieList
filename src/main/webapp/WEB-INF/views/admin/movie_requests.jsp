@@ -57,7 +57,7 @@
 							<input type="hidden" name="id" value="${movie_requests.id}">
 							<button type="submit" class="action-icon-btn check-btn"
 								onclick="return confirm('${movie_requests.title} 요청을 정말로 처리 완료 하시겠습니까?');"
-								<c:if test="${movie_requests.status eq '처리 완료'}">disabled</c:if>>
+								<c:if test="${movie_requests.status eq 'approved'}">disabled</c:if>>
 								<img
 									src="${pageContext.request.contextPath}/resources/img/check_green.png"
 									alt="확인 아이콘">

@@ -14,11 +14,11 @@ public class MovieRequestVO {
     private String userId;
     private int tmdbId;
     private String status;
-    private int count;
     private LocalDateTime createdAt;
     private LocalDateTime processedAt;
     
     private String title;
     private String content;
-
+    
+    
 }

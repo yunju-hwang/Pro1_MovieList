@@ -11,12 +11,9 @@
 function changePlaceholder(value) {
   const select = document.getElementById('selectBox');
   const input = document.getElementById('textInput');
-
   const selectedOption = select.options[select.selectedIndex];
   const newPlaceholder = selectedOption.getAttribute('data-placeholder');
-
   input.placeholder = newPlaceholder || '예매/결제';
-
   // 입력 가능 여부 조정
   if (value === "4") {
     input.removeAttribute('readonly');
@@ -81,11 +78,11 @@ function changePlaceholder(value) {
 	</div>
 </form>
 
-	
+
 	<div class="faq-con">
 		<p>자주 묻는 질문을 확인해보셨나요?</p>
 		<a href="/movielist/customer/faqs" class="faq">faq 바로가기 -></a>
 	</div>
-	
+
 </body>
 </html>

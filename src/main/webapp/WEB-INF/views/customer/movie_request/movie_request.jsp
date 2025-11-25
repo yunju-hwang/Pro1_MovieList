@@ -21,17 +21,15 @@
 		</c:when>
 		
         <c:otherwise>
-
             <div class="inquiry_head">
             	<span class="sp_num">글번호</span>
                 <span class="sp_title">제목</span>
                 <span class="sp_content">내용</span>
                 <span class="sp_wri_date">작성일</span>
 				<span class="sp_ans">승인여부</span>
-
             </div>
-            
-            		
+
+
             <div class="inquiry_list">
                 <c:forEach var="movieRequestVO" items="${movie_request_list}">
                     <div class="inquiry_item">
@@ -55,8 +53,6 @@
                         </c:if>
                       
                         
-
-
                     </div>
                 </c:forEach>
             </div>

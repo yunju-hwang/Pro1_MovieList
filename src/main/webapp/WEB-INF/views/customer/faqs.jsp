@@ -10,20 +10,16 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const faqItems = document.querySelectorAll('.faq-item');
-
   faqItems.forEach(item => {
     const question = item.querySelector('.book');
     const answer = item.querySelector('.answer');
-
     // 요소가 존재하는지 확인 (안전하게)
     if (!question || !answer) return;
-
     question.addEventListener('click', () => {
       // 다른 항목 닫기 (선택 사항)
       faqItems.forEach(i => {
         if (i !== item) i.querySelector('.answer').classList.remove('open');
       });
-
       // 클릭한 항목 열기/닫기
       answer.classList.toggle('open');
     });
@@ -32,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </head>
 <body>
+	<h1>FAQ페이지</h1>
 	<h1 class="faq">자주 묻는 질문</h1>
 	<h4 class="led">MovieList 이용 중 궁금한 점을 빠르게 해결하세요</h4>
 
@@ -72,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
   </div>
 
 
-	
+
 	<div class="inquirey">
 	<p class="want"> 원하는 답변을 찾지 못하셨나요?</p>
 	<a href="/movielist/customer/write_inquiry" class="inq">1:1 문의하기 -></a>

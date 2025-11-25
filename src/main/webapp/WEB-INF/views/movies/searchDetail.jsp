@@ -20,9 +20,7 @@
                     <span class="heart-icon" id="heartIcon">♡</span>
                 </button>
             </div>
-            <div class="popularity-box">
-                <strong>❤️ ${popularity}</strong> <!-- 필요하면 model로 popularity 추가 -->
-            </div>
+           
         </div>
 
         <!-- 오른쪽 박스: 영화 정보 -->
@@ -41,10 +39,7 @@
     <div class="review-section">
         <h2>리뷰</h2>
         <div class="review-list">
-            <div class="review-item">
-                <strong>테스트 사용자</strong>
-                <p>영화 너무 좋았습니다!</p>
-            </div>
+            
         </div>
 
         <div class="my-review">

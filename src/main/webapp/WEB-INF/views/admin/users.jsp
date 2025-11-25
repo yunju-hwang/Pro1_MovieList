@@ -17,19 +17,6 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td>골드</td>
-				<td>user101</td>
-				<td>2023.10.01</td>
-				<td>2025.11.05</td>
-				<td>12건</td>
-				<td>3건</td>
-				<td>0건</td>
-				<td>1건</td>
-				<td>
-					<button class="action-btn delete-user-btn">탈퇴</button>
-				</td>
-			</tr>
 			<c:forEach var="users" items="${adminuserList}">
 				<tr>
 					<td>${users.role}</td>
@@ -54,4 +41,3 @@
 </div>
 
 <%@ include file="end.jsp"%>
-

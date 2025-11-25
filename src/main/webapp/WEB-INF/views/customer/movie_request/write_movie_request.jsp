@@ -10,7 +10,6 @@
 <script>
   function changePlaceholder(value) {
     const input = document.getElementById("textInput");
-
     if (value === "direct") {
       // 직접 입력 선택 → input 활성화
       input.value = "";
@@ -36,7 +35,7 @@
 			<input type="text" placeholder="영화 제목을 입력하세요" class="text" required name="title">
 		</div>
 <!-- 		<p class="unity">장르*</p> -->
-		
+
 <div class="input-row">
   <!-- 장르 선택 -->
 <!--   <div class="input-dropdown"> -->
@@ -69,7 +68,7 @@
 		<div class="text-con">
 			<textarea rows="5" cols="40" placeholder="이 영화를 등록하길 요청하시는 사유를 작성해 주세요" class="textarea" name="content"></textarea>
 		</div>
-	
+
 	<div class="notification">
 		<p class="not-title">안내사항</p>
 		<ul class="ul">
@@ -78,7 +77,7 @@
 			<li class="not">영화등록 요청 결과는 마이페이지에서 확인 가능합니다</li>
 		</ul>
 	</div>
-	
+
 	<div class="standard">
 		<p class="sta-title">영화 등록 기준</p>
 <div class="standard-con">
@@ -99,18 +98,18 @@
   </div>
 </div>
 	</div>
-	
+
 <div class="btn-form">
   <input type="submit" value="취소하기" class="no-sub">
   <input type="submit" value="요청하기" class="sub">
 </div>
 </form>
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	</div>
 </body>
 </html>

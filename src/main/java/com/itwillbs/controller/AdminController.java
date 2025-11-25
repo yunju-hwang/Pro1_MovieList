@@ -19,7 +19,7 @@ import com.itwillbs.domain.MovieRequestVO;
 import com.itwillbs.domain.MovieVO;
 import com.itwillbs.domain.NoticesVO;
 import com.itwillbs.domain.ReservationsVO;
-import com.itwillbs.domain.ReviewsVO;
+import com.itwillbs.domain.ReviewsAdminVO;
 import com.itwillbs.mapper.AdminMapper;
 import com.itwillbs.service.AdminService;
 import com.mysql.cj.Session;
@@ -205,7 +205,7 @@ public class AdminController {
 		if (userID == null || !"admin".equals(role)) {
 			return "redirect:/login";
 		}
-		List<ReviewsVO> adminReviewsList = adminService.AdminReviewsList();
+		List<ReviewsAdminVO> adminReviewsList = adminService.AdminReviewsList();
 		model.addAttribute("adminReviewsList", adminReviewsList);
 
 		return "/admin/reviews";

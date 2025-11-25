@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MovieRequestVO;
+import com.itwillbs.domain.NoticesVO;
 
 //interface로 구현
 @Mapper
@@ -25,13 +26,17 @@ public interface CustomerMapper {
 
 	void inquiry_delete(int id);
 
-	
+
 	    InquiriesVO inquiry_detail(int id);
 
 	List<MovieRequestVO> movie_request(String userId);
 
 	void insert_movie_request(MovieRequestVO movieRequestVO);
 
-	
+	List<NoticesVO> notices(String id);
+
+	int notice_count(String id);
+
+
 
 }
