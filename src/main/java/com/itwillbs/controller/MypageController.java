@@ -1,11 +1,16 @@
 package com.itwillbs.controller;
 
 import java.util.List;
+
+
+import java.io.File;
+import java.util.UUID;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -125,37 +131,119 @@ public class MypageController {
 	}
 	
 	@PostMapping("/mypage/profile/update")
-	public String updateMember(MemberVO updateMember, HttpSession session) {
-	        // 1. 로그인 여부 확인 및 userId 가져오기
-	        MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
+	public String updateMember(
+	    MemberVO updateMember,
+	    HttpSession session,
+	    MultipartFile uploadFile, 
+	    HttpServletRequest request,
+	    RedirectAttributes rttr 
+	) {
+	    // 1. 로그인 여부 확인 및 userId 가져오기
+	    MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
 
-	        if (loginUser == null) {
-	            // 로그인 정보가 없으면 로그인 페이지로 리다이렉트 (보안)
-	            return "redirect:/login"; 
-	        }
+	    if (loginUser == null) {
+	        return "redirect:/login";  
+	    }
 
-	        // 2. 수정 대상 userId를 VO에 설정 (로그인된 사용자의 ID 사용)
-	        String userId = loginUser.getUser_id();
-	        updateMember.setUser_id(userId); 
+	    String userId = loginUser.getUser_id();
+	    updateMember.setUser_id(userId); 
+	    
+	    // =================================================================
+	    // 🟢 파일 업로드 처리 로직 (기존 유지)
+	    // =================================================================
+	    
+	    if (uploadFile != null && !uploadFile.isEmpty()) {
 	        
-	        // **중요: 비밀번호는 여기서 수정하지 않고, 별도 페이지에서 처리해야 합니다.**
-	        // updateMember 객체에는 사용자가 수정하려는 이메일, 생년월일, 성별, 전화번호 등이 담겨 있습니다.
-
-	        // 3. Service를 호출하여 DB 정보 업데이트
-	        int result = mypageService.updateMember(updateMember); // DB 업데이트 로직 호출
-
-	        if (result > 0) {
-	            // 4. DB 수정 성공 시, 세션 정보 갱신
-	            // 최신 정보를 다시 조회하여 세션을 갱신합니다.
-	            MemberVO updatedInfo = mypageService.getMember(userId);
-	            session.setAttribute("loginUser", updatedInfo); 
-	            
-	            // 메시지 관련 로직이 사라졌습니다.
+	        // 🚨 [핵심 수정] 실제 소스 코드 폴더 경로를 직접 지정
+	        String realPath = "D:" + File.separator + "JSP" + File.separator + "workspace_git" + File.separator 
+	                          + "Pro1_MovieList" + File.separator + "src" + File.separator + "main" + File.separator 
+	                          + "webapp" + File.separator + "resources" + File.separator + "upload";
+	        
+	        System.out.println("✅ Final Correct Path: " + realPath);
+	        
+	        File targetDir = new File(realPath);
+	        if (!targetDir.exists()) {
+	            targetDir.mkdirs();
 	        }
+	        
+	        String originalFileName = uploadFile.getOriginalFilename();
+	        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+	        String savedFileName = UUID.randomUUID().toString() + extension;
+	        
+	        File targetFile = new File(realPath, savedFileName);
+	        
+	        System.out.println("✅ Final Target File Path: " + targetFile.getAbsolutePath());
+	        
+	        try {
+	            uploadFile.transferTo(targetFile);
+	            
+	            String webPath = "/resources/upload/" + savedFileName;
+	            updateMember.setProfileImage(webPath);
+	            
+	        } catch (Exception e) {
+	            System.err.println("파일 업로드 실패: " + e.getMessage());
+	        }
+	    } 
+	    // =================================================================
+	    // 🟢 파일 업로드 처리 로직 종료
+	    // =================================================================
 
-	        // 6. 회원 정보 조회 페이지로 다시 리다이렉트
+	    // =================================================================
+	    // 🟢 핵심 수정: 필드별 중복 검사 및 메시지 조합
+	    // =================================================================
+	    StringBuilder errorFields = new StringBuilder();
+	    boolean isDuplicate = false;
+
+	    // 1. 닉네임 중복 검사
+	    if (mypageService.checkDuplicateNicknameForUpdate(updateMember) > 0) {
+	        errorFields.append("닉네임, ");
+	        isDuplicate = true;
+	    }
+
+	    // 2. 이메일 중복 검사
+	    if (mypageService.checkDuplicateEmailForUpdate(updateMember) > 0) {
+	        errorFields.append("이메일, ");
+	        isDuplicate = true;
+	    }
+
+	    // 3. 전화번호 중복 검사
+	    if (mypageService.checkDuplicatePhoneForUpdate(updateMember) > 0) {
+	        errorFields.append("전화번호, ");
+	        isDuplicate = true;
+	    }
+
+	    if (isDuplicate) {
+	        // 🚨 중복 발견! 오류 메시지 생성
+	        
+	        // 최종 메시지: "닉네임, 이메일, 전화번호이(가) 이미 사용 중입니다. 다른 값으로 수정해주세요."
+	        String fieldList = errorFields.substring(0, errorFields.length() - 2); 
+	        String finalErrorMsg = fieldList + "이(가) 이미 사용 중입니다.";
+	        
+	        rttr.addFlashAttribute("errorMsg", finalErrorMsg);
+	        
 	        return "redirect:/mypage/profile";
 	    }
+	    // =================================================================
+	    // 🟢 중복 검사 로직 종료
+	    // =================================================================
+
+	    // 2. Service를 호출하여 DB 정보 업데이트 (중복이 없을 때만 실행)
+	    int result = mypageService.updateMember(updateMember);
+
+	    if (result > 0) {
+	        // 3. DB 수정 성공 시, 세션 정보 갱신
+	        MemberVO updatedInfo = mypageService.getMember(userId);
+	        session.setAttribute("loginUser", updatedInfo); 
+	        rttr.addFlashAttribute("msg", "회원 정보가 성공적으로 수정되었습니다.");
+	    } else {
+	        // DB 업데이트 실패 (예: 쿼리 오류 등)
+	        rttr.addFlashAttribute("errorMsg", "데이터베이스 오류로 인해 회원 정보 수정에 실패했습니다.");
+	    }
+
+	    // 4. 회원 정보 조회 페이지로 다시 리다이렉트
+	    return "redirect:/mypage/profile";
+	}
+
 
 	// 마이페이지 -> 영화 예약 조회
 	@GetMapping("/mypage/reservations")
