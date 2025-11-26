@@ -77,6 +77,7 @@
                 <p>약관 동의:</p>
                 <ul>
                     <li>이용약관 동의: ${termsAgree != null ? termsAgree : "미동의"}</li>
+                    
                     <li>개인정보 처리방침 동의: ${privacyAgree != null ? privacyAgree : "미동의"}</li>
                     <li>마케팅 정보 수신 동의: ${marketingAgree != null ? marketingAgree : "미동의"}</li>
                 </ul>
