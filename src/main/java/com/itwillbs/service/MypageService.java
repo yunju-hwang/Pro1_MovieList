@@ -24,8 +24,21 @@ public class MypageService {
 	public MemberVO getMember(String user_id) {
 		return mypageMapper.getMember(user_id);
 	}
+	
 	public int updateMember(MemberVO member) {
         return mypageMapper.updateMember(member);
+    }
+	
+	public int checkDuplicateNicknameForUpdate(MemberVO vo) {
+        return mypageMapper.checkDuplicateNicknameForUpdate(vo);
+    }
+	
+	public int checkDuplicateEmailForUpdate(MemberVO vo) {
+        return mypageMapper.checkDuplicateEmailForUpdate(vo);
+    }
+	
+	public int checkDuplicatePhoneForUpdate(MemberVO vo) {
+        return mypageMapper.checkDuplicatePhoneForUpdate(vo);
     }
 
 	public List<UserFavoritesVO> getFavoriteList(String userId) {

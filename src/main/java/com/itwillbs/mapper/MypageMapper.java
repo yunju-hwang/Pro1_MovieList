@@ -16,6 +16,10 @@
 		public MemberVO getMember(String user_id);
 		
 		int updateMember(MemberVO member);
+		
+		public int checkDuplicateNicknameForUpdate(MemberVO member);
+		public int checkDuplicateEmailForUpdate(MemberVO member);
+		public int checkDuplicatePhoneForUpdate(MemberVO member);
 	
 		public List<UserFavoritesVO> selectFavoriteListByUserId(String userId);
 		
