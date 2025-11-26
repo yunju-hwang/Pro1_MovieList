@@ -181,6 +181,19 @@
   			<version>2.15.2</version> <!-- 프로젝트의 jackson-databind 버전에 맞게 조정 -->
 		</dependency>
 		
+		<!-- 결제 API용  -->
+		<dependency>
+		    <groupId>com.github.iamport</groupId>
+		    <artifactId>iamport-rest-client-java</artifactId>
+		    <version>0.2.23</version>
+		</dependency>
+		<!-- 트랜잭션 -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+	
 		<!-- Servlet -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -208,6 +221,14 @@
 			<scope>test</scope>
 		</dependency>        
 	</dependencies>
+	
+	<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+
     <build>
         <plugins>
             <plugin>

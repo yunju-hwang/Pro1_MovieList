@@ -8,6 +8,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +24,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itwillbs.domain.GenresVO;
 import com.itwillbs.domain.MovieVO;
+import com.itwillbs.domain.TheatersVO;
 import com.itwillbs.mapper.MovieMapper;
 
 @Service
@@ -29,8 +32,11 @@ public class MovieService {
 	@Inject
 	private MovieMapper movieMapper;
 	
-	// api key 삽입
+	// api key 삽입 -> tmdb api key
 	@Value("${tmdb.api.key}")
+	
+
+	
 	private String tmdbApiKey;
 	private final String TMDB_BASE_URL = "https://api.themoviedb.org/3/movie";
 	
@@ -184,7 +190,7 @@ public class MovieService {
 			}
 			br.close();
 			result = sb.toString();
-			
+			System.out.println(result);
 			
 			
 		} catch(Exception e) {
@@ -216,6 +222,14 @@ public class MovieService {
         return movies;
 	}
 	
+	
+	// 찜 여부 확인
+	public boolean checkFavorite(String userId, int tmdbId) {
+		Integer count = movieMapper.isFavorite(userId, tmdbId);
+		return count != null && count>0;
+	}
+	
+	
 	// 찜 여부 반영 (isFavorite 세팅)
     private void addFavoriteStatus(List<MovieVO> movies, String userId) {
         if (userId != null) {
@@ -240,4 +254,60 @@ public class MovieService {
 	    }
 		
 	}
+	
+	// movies에서 popularity 업데이트
+	public void updatePopularity(int tmdbId, double change) {
+		MovieVO movie = movieMapper.getMovieById(tmdbId);
+	    if (movie == null) {
+	        // 로그 남기고 종료 또는 예외 처리
+	        System.out.println("해당 tmdbId 영화가 존재하지 않습니다: " + tmdbId);
+	        return;
+	    }
+	    Double currentPopularity = movie.getPopularity() != null ? movie.getPopularity() : 0.0;
+	    movie.setPopularity(currentPopularity + change);
+	    movieMapper.updateMoviePopularity(movie);
+	}
+	
+	// DB에서 모든 영화관 조회
+	public List<TheatersVO> getAllTheaters(){
+		return movieMapper.getAllTheaters();
+	}
+	
+	// tmdb id 받아서 영화 상세 정보 가져오기
+	public List<Map<String, Object>> getMoviesDetails(List<String> tmdbIds){
+		List<Map<String, Object>> movieList = new ArrayList<>();
+		RestTemplate restTemplate = new RestTemplate();
+		
+		for (String tmdbId : tmdbIds) {
+	        try {
+	            String url = "https://api.themoviedb.org/3/movie/" + tmdbId +
+	                         "?api_key=" + tmdbApiKey + "&language=ko";
+	            Map<String, Object> movieData = restTemplate.getForObject(url, Map.class);
+
+	            if (movieData == null) continue; // null이면 건너뛰기
+
+	            Map<String, Object> result = new HashMap<>();
+	            result.put("tmdbId", tmdbId);
+	            result.put("title", movieData.get("title"));
+	            result.put("overview", movieData.get("overview"));
+	            result.put("poster", movieData.get("poster_path") != null
+	                    ? "https://image.tmdb.org/t/p/w200" + movieData.get("poster_path")
+	                    : "");
+	            movieList.add(result);
+
+	        } catch (Exception e) {
+	            System.err.println("TMDB API 호출 실패 tmdbId=" + tmdbId + ", error=" + e.getMessage());
+	            // 예외 발생해도 movieList에 영향 X
+	        }
+	    }
+
+	        return movieList;
+		
+	}
+	
+	
+	// 영화 차지된 좌석 정보 가져오기
+	 public List<String> getReservedSeats(int tmdbId, int theaterId, String screeningTime) {
+	        return movieMapper.findReservedSeats(tmdbId, theaterId, screeningTime);
+	    }
 }

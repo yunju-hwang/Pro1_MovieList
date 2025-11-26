@@ -32,6 +32,7 @@
 		<result property="releaseDate" column="release_date" />
     	<result property="overview" column="overview" />
    		<result property="runtime" column="runtime" />
+   		<result property="popularity" column="popularity"/>
 		<result property="isFavorite" column="is_favorite"/>
    		
    		
@@ -78,6 +79,7 @@
 			m.release_date,
 			m.overview,
 			m.runtime,
+			m.popularity,
 			g.genre_name AS genre_name
 			
 		FROM movies m
@@ -156,5 +158,30 @@
   	DELETE FROM user_favorites
   	WHERE user_id = #{userId} AND tmdb_id = #{tmdbId}
   </delete>
+  
+  <!-- 찜 반영 (movies popularity) -->
+  <update id="updateMoviePopularity">
+  	UPDATE movies
+    SET popularity = #{popularity}
+    WHERE tmdb_id = #{tmdbId}
+  </update>
+  
+  <select id="getAllTheaters" resultType="com.itwillbs.domain.TheatersVO">
+    SELECT theater_id AS theaterId, name, location
+    FROM theaters
+    ORDER BY name ASC
+</select>
+
+
+	<!-- 차지된 좌석 정보 가져오기 -->
+  <select id="findReservedSeats" resultType="string">
+	    SELECT rs.seat_code
+	    FROM reservation_seats rs
+	    JOIN reservations r ON rs.reservation_id = r.id
+	    WHERE r.tmdb_id = #{tmdbId} 
+	      AND r.theater_id = #{theaterId}
+	      AND r.screening_time = #{screeningTime}
+	      
+	</select>
   
 </mapper>
