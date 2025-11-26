@@ -160,3 +160,35 @@ html, body {
     color: white;
     margin-left: 10px;
 }
+
+/* 이름 에러 메시지 스타일 */
+#usernameError {
+    display: block;
+    min-height: 18px;
+    font-size: 14px;
+    font-weight: normal;
+    color: red; /* 기본적으로 빨간색 */
+    margin-top: 10px; /* 에러 메시지 간격을 띄워줍니다. */
+    white-space: nowrap; /* 에러 메시지 길이가 길어지지 않도록 처리 */
+}
+
+#usernameError.success {
+    color: black; /* 정상적인 이름이 입력되었을 때 색상을 검정색으로 변경 */
+}
+
+#usernameError.error {
+    color: red; /* 에러 메시지 색상 */
+}
+
+/* 이름 입력란 경계선 색상 수정 */
+#username {
+    border: 1px solid #ddd; /* 기본 경계선 색 */
+}
+
+#username:invalid {
+    border: 1px solid red; /* 유효하지 않은 값일 때 빨간색 경계선 */
+}
+
+#username:valid {
+    border: 1px solid black; /* 유효한 값일 때 검정색 경계선 */
+}

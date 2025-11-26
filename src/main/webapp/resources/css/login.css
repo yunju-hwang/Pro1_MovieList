@@ -2,11 +2,10 @@
 
 /* 전체 배경 */
 body {
-     background: #F7F7F7 ;
+    background: #F7F7F7 ;
     font-family: 'Noto Sans KR', sans-serif;
     margin: 0;
     padding: 0;
-    /* 🔥 flex 제거 → navbar가 내려오는 문제 해결 */
 }
 
 /* 로그인 박스 */
@@ -17,8 +16,6 @@ body {
     border-radius: 12px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
     text-align: center;
-
-    /* 🔥 화면 가운데 정렬은 margin으로 해결 */
     margin: 80px auto;
 }
 
@@ -66,16 +63,22 @@ body {
     margin-right: 5px;
 }
 
-/* 아이디 찾기 / 비밀번호 찾기 */
-.form-group a {
+/* --- 새로 추가된 한 줄 배치 --- */
+.form-group.form-row {
+    display: flex;
+    justify-content: space-between; /* 좌우 끝 배치 */
+    align-items: center; /* 체크박스와 링크 기준 맞춤 */
+    margin-bottom: 15px;
+}
+
+.form-group.form-row a {
     font-size: 13px;
     color: #444;
     text-decoration: none;
 }
 
-.form-group a:hover {
-    text-decoration: underline;
-}
+.form-group.form-row a:hover {
+    text-d
 
 /* 로그인 버튼 */
 .btn-primary {

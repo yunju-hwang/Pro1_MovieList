@@ -25,5 +25,7 @@ public interface MemberMapper {
 	MemberVO getMemberById(String user_id);
 
 	int checkUserIdExists(String user_id); // 회원가입 ID 중복체크 메서드
+
+	boolean checkPhoneExists(String phone); // 전화번호 중복체크 메서드
 	
 }
