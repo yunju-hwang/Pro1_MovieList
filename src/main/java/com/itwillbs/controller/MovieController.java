@@ -230,11 +230,27 @@ public class MovieController {
 		return "/reservation/seat";
 	}
 	
+	// 영화 차지된 자석 불러오기
+	@GetMapping("/reservation/seatReserved")
+	@ResponseBody
+	public List<String> getReservedSeats(
+			@RequestParam("tmdbId") int tmdbId,
+	        @RequestParam("theaterId") int theaterId,
+	        @RequestParam("screeningTime") String screeningTime
+	        ) {
+		
+		return movieService.getReservedSeats(tmdbId, theaterId, screeningTime);
+    }
+	
+	
+	
 	// 영화 예약하기 (결제)
 	@GetMapping("/reservation/payment")
 	public String resPayment() {
 		return "/reservation/payment";
 	}
+	
+	
 	
 	// 영화 예약 완료창
 	@GetMapping("/reservation/complete")

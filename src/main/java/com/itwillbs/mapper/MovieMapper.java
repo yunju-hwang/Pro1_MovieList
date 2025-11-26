@@ -58,4 +58,13 @@ public interface MovieMapper {
     
     // 영화관 값들 가져오기
     List<TheatersVO> getAllTheaters();
+    
+    // 차지된 좌석 정보 가져오기
+ // 특정 영화관/영화/시간에 이미 예약된 좌석 조회
+    List<String> findReservedSeats(
+        @Param("tmdbId") int tmdbId,
+        @Param("theaterId") int theaterId,
+        @Param("screeningTime") String screeningTime
+    );
+    
 }
