@@ -1,6 +1,7 @@
 package com.itwillbs.service;
 
 import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,22 @@ public class MypageService {
 	public MemberVO getMember(String user_id) {
 		return mypageMapper.getMember(user_id);
 	}
+	
+	public int updateMember(MemberVO member) {
+        return mypageMapper.updateMember(member);
+    }
+	
+	public int checkDuplicateNicknameForUpdate(MemberVO vo) {
+        return mypageMapper.checkDuplicateNicknameForUpdate(vo);
+    }
+	
+	public int checkDuplicateEmailForUpdate(MemberVO vo) {
+        return mypageMapper.checkDuplicateEmailForUpdate(vo);
+    }
+	
+	public int checkDuplicatePhoneForUpdate(MemberVO vo) {
+        return mypageMapper.checkDuplicatePhoneForUpdate(vo);
+    }
 
 	public List<UserFavoritesVO> getFavoriteList(String userId) {
 		
@@ -53,6 +70,44 @@ public class MypageService {
 	public List<TheatersVO> getTheaterList() {
 		return mypageMapper.selectTheaterList();
 	}
+	
+	// 📢 [수정] 메서드 이름 변경 및 isAjaxDelete 파라미터 추가
+	@Transactional
+	// 📢 [수정] isAjaxDelete 파라미터를 제거합니다. 이제 이 메서드는 '전체 갱신'만 담당합니다.
+	public void processTheaterUpdate(String userId, List<Integer> selectedTheaterIds) { 
+	    
+	    // CASE: "선호 영화관 저장" 버튼 클릭 (폼 제출 전체 갱신)
+	    
+	    // 1. 기존 선호 영화관 정보 전체 삭제
+	    mypageMapper.deleteUserTheaters(userId);
+
+	    // 2. 새로 받은 목록이 비어있지 않은 경우에만 INSERT 실행
+	    if (selectedTheaterIds != null && !selectedTheaterIds.isEmpty()) {
+	        // Mapper 호출: 사용자 ID와 새로운 영화관 ID 목록을 전달
+	        mypageMapper.insertUserTheaters(userId, selectedTheaterIds);
+	    }
+	    
+	    // 📢 [삭제] isAjaxDelete 관련 if-else 로직 전체를 삭제했습니다.
+	}
+		
+	    // 📢 [기존 메서드 삭제됨] saveUserTheaters는 Controller에서 processTheaterUpdate로 대체되었습니다.
+	
+	@Transactional
+	public void deleteOneTheater(String userId, int theaterIdToDelete) {
+	    // Mapper의 단일 삭제 메서드 직접 호출
+	    mypageMapper.deleteOneUserTheater(userId, theaterIdToDelete);
+	}
+		
+		public List<TheatersVO> searchTheatersByKeyword(String keyword) {
+		 return mypageMapper.searchTheatersByKeyword(keyword);
+		}
+		
+		public List<Integer> getSavedTheaterIds(String userId) {
+		 return mypageMapper.selectUserTheaterIds(userId);
+		}
+	
+	
+	
 
 	
 }

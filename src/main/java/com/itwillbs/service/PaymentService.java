@@ -2,6 +2,7 @@ package com.itwillbs.service;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -18,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.itwillbs.domain.PaymentsVO;
 import com.itwillbs.domain.ReservationPaymentVO;
+import com.itwillbs.domain.ReservationSeatsVO;
 import com.itwillbs.domain.ReservationsVO;
 import com.itwillbs.mapper.PaymentMapper;
 
@@ -109,6 +111,8 @@ public class PaymentService {
 		PaymentsVO payment = vo.getPayment();
 		ReservationsVO reservation = vo.getReservation();
 		
+
+		
 		// 1. 아임포트 토큰 발급
 	    String token = getToken();
 	    
@@ -121,11 +125,38 @@ public class PaymentService {
 			// 3-1. 예약 insert
 			reservation.setStatus("reserved");
 	        paymentMapper.insertReservation(reservation);
+	        int reservationId = reservation.getId();
+	        System.out.println(reservation.getSeat());
+	        String seatString = reservation.getSeat();
+	      
 	        
-	        // 3-2. 결제 테이블에 reservation_id 세팅 후 insert
+	     // 4. String 좌석 정보를 분리하여 reservation_seats에 개별 INSERT
+	        if (seatString != null && !seatString.trim().isEmpty()) {
+	            // 콤마(,)와 공백( )을 기준으로 문자열을 분리하여 배열/리스트로 만듭니다.
+	            // .trim()을 사용하여 앞뒤 공백을 제거하고, 빈 문자열("")이 생성되지 않도록 합니다.
+	            String[] seatArray = seatString.split(",\\s*"); 
+	            
+	            for(String seatCode : seatArray) {
+	                // 분리된 각 좌석 코드를 reservation_seats 테이블에 INSERT
+	                if (!seatCode.trim().isEmpty()) {
+	                    ReservationSeatsVO seat = new ReservationSeatsVO();
+	                    seat.setReservationId(reservationId);
+	                    seat.setSeatCode(seatCode.trim()); // 혹시 남아있을 수 있는 공백 제거
+	                    
+	                    paymentMapper.insertReservationSeat(seat);
+	                    System.out.println("좌석 INSERT: " + seatCode);
+	                }
+	            }
+	        }
+	        
+	        
+	        // 3-3. 결제 테이블에 reservation_id 세팅 후 insert
 	     	payment.setStatus("paid");
 	     	payment.setReservationId(reservation.getId());
 	     	paymentMapper.insertPayment(payment);
+	     	
+	     	
+	     	
             
 	        return "결제 완료 및 예약 성공";
 		}else {

@@ -22,5 +22,6 @@ public class ReviewsVO {
      
     // join 결과용
     private String title;
+    private String nickname;
     
 }

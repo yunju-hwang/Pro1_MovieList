@@ -72,7 +72,7 @@
 		</div>
 		
 		<!-- 모달 구조 -->
-		<div id="termsModal" class="modal">
+		<div id="termsModal" class="modal" style="display:none;">
 		    <div class="modal-content">
 		        <span class="close">&times;</span>
 		        <h2>[결제 및 개인정보 처리방침]</h2>

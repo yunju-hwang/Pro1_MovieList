@@ -21,4 +21,11 @@
             (#{userId}, #{tmdbId}, #{theaterId}, #{screeningTime}, NOW(), #{seat}, #{adultPeople},#{childPeople}, #{status})
 	</insert>
 	
+	<!-- 3) 좌석 정보 insert -->
+	<insert id="insertReservationSeat" parameterType="com.itwillbs.domain.ReservationSeatsVO">
+	    INSERT INTO reservation_seats (reservation_id, seat_code)
+	    VALUES (#{reservationId}, #{seatCode})
+	</insert>
+	
+	
 </mapper>

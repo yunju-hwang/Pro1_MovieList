@@ -171,5 +171,17 @@
     FROM theaters
     ORDER BY name ASC
 </select>
+
+
+	<!-- 차지된 좌석 정보 가져오기 -->
+  <select id="findReservedSeats" resultType="string">
+	    SELECT rs.seat_code
+	    FROM reservation_seats rs
+	    JOIN reservations r ON rs.reservation_id = r.id
+	    WHERE r.tmdb_id = #{tmdbId} 
+	      AND r.theater_id = #{theaterId}
+	      AND r.screening_time = #{screeningTime}
+	      
+	</select>
   
 </mapper>
