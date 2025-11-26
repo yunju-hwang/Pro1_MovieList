@@ -74,11 +74,12 @@ public class ReviewController {
 	@GetMapping("/movies/review_list")
 	@ResponseBody
 	public Map<String, Object> getReviewList(@RequestParam int tmdbId,
+							@RequestParam String userId,
 							@RequestParam(defaultValue = "1") int page,
 							@RequestParam(defaultValue = "10") int size
 	) {
 		System.out.println("tmdbId: " + tmdbId + ", page: " + page + ", size: " + size);
-		List<ReviewsVO> reviews = reviewService.getReviewListByTmdbId(tmdbId, page, size);
+		List<ReviewsVO> reviews = reviewService.getReviewListByTmdbId(tmdbId,userId, page, size);
 		int total = reviewService.getReviewCountByTmdbId(tmdbId);
 		
 		Map<String, Object> result = new HashMap<>();

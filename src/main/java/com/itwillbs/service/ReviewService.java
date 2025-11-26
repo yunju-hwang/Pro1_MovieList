@@ -23,11 +23,12 @@ public class ReviewService {
 	
 	
 	// tmdbId값에 맞는 리뷰 리스트 가져오기
-	public List<ReviewsVO> getReviewListByTmdbId(int tmdbId,int page, int size){
+	public List<ReviewsVO> getReviewListByTmdbId(int tmdbId, String userId, int page, int size){
 		int offset = (page - 1) * size;
 		
 		Map<String, Object> params = new HashMap<>();
 		params.put("tmdbId", tmdbId);
+		params.put("userId", userId); // 추가
 		params.put("size", size);
 		params.put("offset", offset);
 		
