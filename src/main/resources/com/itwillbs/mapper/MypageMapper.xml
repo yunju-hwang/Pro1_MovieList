@@ -28,7 +28,7 @@
             user_id = #{user_id}
     </select>
     
-    <select id="selectFavoriteListByUserId" parameterType="string" resultType="com.itwillbs.domain.UserFavoritesVO">
+ <select id="selectFavoriteListByUserId" parameterType="string" resultType="com.itwillbs.domain.UserFavoritesVO">
     SELECT 
         f.id,
         f.user_id AS userId,  
@@ -67,24 +67,53 @@
 
 
 <select id="selectTheaterList" resultType="com.itwillbs.domain.TheatersVO">
-    SELECT
-    theater_id AS theaterId,
-    name, 
-    location
-    FROM
-    theaters
+        SELECT 
+            theater_id AS theaterId,  name,
+            location
+            FROM 
+            theaters
+        ORDER BY
+            theaterId
+    </select>
+    
+    <select id="selectUserTheaterIds" resultType="int">
+        SELECT theater_id 
+        FROM user_theaters
+        WHERE user_id = #{userId}
+    </select>
+    
+    <delete id="deleteUserTheaters">
+        DELETE FROM user_theaters
+        WHERE user_id = #{userId}
+    </delete>
+    
+    <delete id="deleteOneUserTheater">
+        DELETE FROM user_theaters
+        WHERE user_id = #{userId} 
+          AND theater_id = #{theaterId}
+    </delete>
+
+    <insert id="insertUserTheaters">
+        INSERT INTO user_theaters (user_id, theater_id)
+        VALUES
+        <foreach item="theaterId" collection="theaterIds" separator=",">
+            (#{userId}, #{theaterId})
+        </foreach>
+    </insert>
+    
+    <select id="searchTheatersByKeyword" resultType="com.itwillbs.domain.TheatersVO">
+    SELECT 
+        theater_id AS theaterId, 
+        name, 
+        location
+    FROM 
+        theaters
+    WHERE 
+        name LIKE CONCAT('%', #{keyword}, '%') 
+        OR location LIKE CONCAT('%', #{keyword}, '%')
     ORDER BY
-    theater_id ASC
-</select>
-
-
-    
+        name
+    LIMIT 10 </select>
     
 
-
-
-
-
-
-    
 </mapper>

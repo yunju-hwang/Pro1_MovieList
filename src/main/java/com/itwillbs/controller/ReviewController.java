@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,7 +21,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itwillbs.domain.AiReviewRequestVO;
-import com.itwillbs.domain.MovieVO;
 import com.itwillbs.domain.ReviewsVO;
 import com.itwillbs.service.ChatGptService;
 import com.itwillbs.service.MovieService;
@@ -73,9 +73,23 @@ public class ReviewController {
 	// 영화 상세 페이지에서 리뷰 목록 불러오기
 	@GetMapping("/movies/review_list")
 	@ResponseBody
-	public List<ReviewsVO> getReviewList(@RequestParam int tmdbId) {
-		System.out.println(tmdbId);
-		return reviewService.getReviewListByTmdbId(tmdbId);
+	public Map<String, Object> getReviewList(@RequestParam int tmdbId,
+							@RequestParam(defaultValue = "1") int page,
+							@RequestParam(defaultValue = "10") int size
+	) {
+		System.out.println("tmdbId: " + tmdbId + ", page: " + page + ", size: " + size);
+		List<ReviewsVO> reviews = reviewService.getReviewListByTmdbId(tmdbId, page, size);
+		int total = reviewService.getReviewCountByTmdbId(tmdbId);
+		
+		Map<String, Object> result = new HashMap<>();
+	    result.put("reviews", reviews);
+	    result.put("total", total);
+	    result.put("page", page);
+        result.put("size", size);
+
+	    return result;
+
+		
 	}
 		
 		
@@ -93,6 +107,67 @@ public class ReviewController {
 	@ResponseBody
 	public List<ReviewsVO> getReviewsByUser(@RequestParam String userId) {
 	    return reviewService.getReviewsByUser(userId);
+	}
+	
+	
+	// 리뷰 수정
+	@PostMapping("/movies/review_update")
+	@ResponseBody
+	public Map<String, Object> updateReview(
+			@RequestParam int reviewId, 
+			@RequestParam String content,
+			@RequestParam int rating){
+		Map<String, Object> result = new HashMap<>();
+		
+
+	    try {
+	        ReviewsVO review = new ReviewsVO();
+	        review.setId(reviewId);
+	        review.setContent(content);
+	        review.setRating(rating);
+
+	        int updateCount = reviewService.updateReview(review);
+
+	        if(updateCount > 0) {
+	            result.put("success", true);
+	            result.put("message", "리뷰가 수정되었습니다.");
+	        } else {
+	            result.put("success", false);
+	            result.put("message", "리뷰 수정 실패: 리뷰가 존재하지 않거나 권한이 없습니다.");
+	        }
+
+	    } catch(Exception e) {
+	        e.printStackTrace();
+	        result.put("success", false);
+	        result.put("message", "리뷰 수정 중 오류 발생");
+	    }
+
+	    return result;
+		
+	}
+	
+	
+	// 리뷰 삭제
+	@PostMapping("/movies/review_delete")
+	@ResponseBody
+	public Map<String, Object> deleteReview(@RequestParam("reviewId")int reviewId, @RequestParam String userId){
+	
+		Map<String, Object> result = new HashMap<>();
+		
+		try {
+	        boolean success = reviewService.deleteReview(reviewId, userId);
+	        result.put("success", success);
+
+	        if (!success) {
+	            result.put("message", "삭제 권한이 없거나 삭제 실패");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        result.put("success", false);
+	        result.put("message", "서버 오류 발생");
+	    }
+		
+		return result;
 	}
 
 	

@@ -230,6 +230,75 @@ body{
     background-color: #e63535;
 }
 
+
+.edit-review {
+    background: #fff0f0;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.edit-review textarea {
+    height: 80px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ffcccc;
+}
+
+.edit-review .edit-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.edit-review button {
+
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.save-review-btn {
+    background-color: #ff3d3d;
+    color: #fff;
+}
+
+.save-review-btn:hover { background-color: #e63535; }
+
+.cancel-review-btn {
+	margin-left: 20px;
+	
+    background-color: #ccc;
+    color: #444;
+}
+
+.cancel-review-btn:hover { background-color: #aaa; }
+
+
+/* 수정 버튼 */
+.edit-review-btn {
+	margin-top: 15px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: none;
+    background-color: #ff3d3d;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.edit-review-btn:hover {
+    background-color: #e63535;
+    transform: scale(1.05);
+}
+
 .star-rating .star {
     font-size: 24px;
     margin-right: 5px;
@@ -293,6 +362,76 @@ body{
 .star {
     transition: color 0.2s;
 }
+
+/* ---------------- 삭제 버튼 ---------------- */
+.delete-review-btn {
+    background-color:  #ff3d3d;  /* 요청하신 색 */
+    color: #fff;
+    border: none;               /* 테두리 제거 */
+    border-radius: 20px;        /* 둥근 모서리 */
+    padding: 6px 16px;          /* 버튼 크기 */
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    margin-left: 10px;          /* 수정 버튼과 간격 */
+}
+
+.delete-review-btn:hover {
+    background-color: #e60000;  /* hover 시 색 강조 */
+    transform: scale(1.05);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.delete-review-btn:active {
+    transform: scale(0.95);
+}
+
+/* 📌 페이징 버튼 기본 스타일 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    gap: 5px; /* 버튼 간격 */
+    flex-wrap: wrap; /* 화면 좁으면 줄 바꿈 */
+}
+
+.pagination button {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+    background-color: #f0f0f0;
+    border-color: #999;
+}
+
+.pagination button:disabled {
+    background-color: #cd0000;
+    color: #fff;
+    border-color: #cd0000;
+    cursor: default;
+}
+
+/* 이전/다음 버튼 구분 */
+.pagination button:first-child,
+.pagination button:last-child {
+    font-weight: bold;
+}
+
+/* 모바일 대응 */
+@media (max-width: 480px) {
+    .pagination button {
+        padding: 5px 8px;
+        font-size: 12px;
+    }
+}
+
 
 
 
