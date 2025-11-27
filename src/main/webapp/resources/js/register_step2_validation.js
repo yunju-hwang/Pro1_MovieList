@@ -1,6 +1,5 @@
 $(function () {
-
-// --------------------------
+    // --------------------------
     // 생년월일 오늘까지만 선택 가능
     // --------------------------
     let today = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
@@ -48,20 +47,23 @@ $(function () {
         $('#user_idChecked').val('false');
     });
 
+     // --------------------------
+    // 아이디 중복 확인
     // --------------------------
-    // 아이디 중복 확인 버튼 클릭
-    // --------------------------
-    $('#check-btn').on('click', function() {
+    $('#check-btn').click(function() {
         let userId = $('#user_id').val().trim();
         let idRegex = /^(?=.*[a-z])(?=.*[0-9])[a-z0-9]{6,12}$/;
 
-        if (userId.length === 0) {
+        if(userId.length === 0){
             alert("아이디를 입력하세요.");
+            $('#userIdError').text("아이디를 입력하세요.");
             $('#user_id').focus();
             return;
         }
-        if (!idRegex.test(userId)) {
-            alert("아이디는 6~12자리 소문자와 숫자를 포함해야 합니다.");
+
+        if(!idRegex.test(userId)){
+            alert("아이디 형식이 올바르지 않습니다.\n영문 소문자와 숫자를 포함한 6~12자리로 입력하세요.");
+            $('#userIdError').text("영문 소문자와 숫자를 포함한 6~12자리로 입력하세요.");
             $('#user_id').focus();
             return;
         }
@@ -72,16 +74,19 @@ $(function () {
             data: { user_id: userId },
             dataType: "json",
             success: function(result) {
-                if (result.exists) {
+                if(result.exists){
                     alert("이미 사용 중인 아이디입니다.");
+                    $('#userIdError').text("이미 사용 중인 아이디입니다.");
                     $('#user_idChecked').val('false');
+                    $('#user_id').focus();
                 } else {
                     alert("사용 가능한 아이디입니다.");
+                    $('#userIdError').text("");
                     $('#user_idChecked').val('true');
                 }
             },
-            error: function(xhr, status, error) {
-                console.error("아이디 중복 확인 오류: ", error);
+            error: function(xhr, status, error){
+                alert("요청 중 오류가 발생했습니다: " + error);
                 $('#user_idChecked').val('false');
             }
         });
@@ -124,67 +129,26 @@ $(function () {
     });
 
     // --------------------------
-    // 전화번호 입력 포맷팅
+    // 전화번호 유효성 검사
     // --------------------------
-    $('#phone').on('input', function () {
-        let raw = $(this).val().replace(/[^0-9]/g, "");
-        if (raw.length > 11) raw = raw.substring(0, 11);
-
-        let formatted = raw;
-        if (raw.length >= 4 && raw.length <= 7) {
-            formatted = raw.substring(0, 3) + "-" + raw.substring(3);
-        } else if (raw.length >= 8) {
-            formatted = raw.substring(0, 3) + "-" + raw.substring(3, 7) + "-" + raw.substring(7);
+    $('#middle, #end').on('input', function() {
+        let middle = $('#middle').val().trim();
+        let end = $('#end').val().trim();
+        
+        // 중간번호 유효성 검사
+        if (!/^\d{3,4}$/.test(middle)) {
+            $('#middle').addClass('invalid'); // 빨간색 경계선 추가
+        } else {
+            $('#middle').removeClass('invalid'); // 유효성 검사 통과 시 클래스 제거
         }
-        $(this).val(formatted);
-        $('#phoneError').text("");
-        $('#phoneChecked').val('false');
+
+        // 끝번호 유효성 검사
+        if (!/^\d{3,4}$/.test(end)) {
+            $('#end').addClass('invalid'); // 빨간색 경계선 추가
+        } else {
+            $('#end').removeClass('invalid'); // 유효성 검사 통과 시 클래스 제거
+        }
     });
-
-    $('#phone').on('blur', function() {
-        checkPhoneDuplicate(function() {});
-    });
-
-    function checkPhoneDuplicate(callback) {
-        let phone = $('#phone').val().trim();
-        if (phone.length === 0) {
-            $('#phoneError').text("전화번호를 입력하세요.");
-            $('#phoneChecked').val('false');
-            callback(false);
-            return;
-        }
-
-        let phoneRegex = /^010-\d{4}-\d{4}$/;
-        if (!phoneRegex.test(phone)) {
-            $('#phoneError').text("전화번호 형식이 올바르지 않습니다. 예: 010-0000-0000");
-            $('#phoneChecked').val('false');
-            callback(false);
-            return;
-        }
-
-        $.ajax({
-            method: "GET",
-            url: contextPath + "/register/phoneCheck",
-            data: { phone: phone },
-            dataType: "json",
-            success: function(result) {
-                if (result.exists) {
-                    $('#phoneError').text("이미 사용 중인 전화번호입니다.");
-                    $('#phoneChecked').val('false');
-                    callback(false);
-                } else {
-                    $('#phoneError').text("");
-                    $('#phoneChecked').val('true');
-                    callback(true);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error("전화번호 중복 확인 오류: ", error);
-                $('#phoneChecked').val('false');
-                callback(false);
-            }
-        });
-    }
 
     // --------------------------
     // 폼 제출 시 유효성 체크
@@ -192,6 +156,7 @@ $(function () {
     $('.join-form').submit(function (e) {
         e.preventDefault();
 
+        // 이름 유효성 검사
         let username = $('#username').val().trim();
         let nameRegex = /^[가-힣a-zA-Z]{2,35}$/;  
         if (username.length === 0 || !nameRegex.test(username)) {
@@ -200,6 +165,7 @@ $(function () {
             return false;
         }
 
+        // 아이디 유효성 검사
         let userId = $('#user_id').val().trim();
         let idRegex = /^(?=.*[a-z])(?=.*[0-9])[a-z0-9]{6,12}$/;
         if (userId.length === 0 || !idRegex.test(userId) || $('#user_idChecked').val() !== 'true') {
@@ -208,6 +174,7 @@ $(function () {
             return false;
         }
 
+        // 비밀번호 유효성 검사
         let password = $('#password').val();
         let passwordRegex = /^(?=.*[a-z])(?=.*[0-9])[a-z0-9]{6,12}$/;
         if (!passwordRegex.test(password) || password !== $('#passwordCheck').val()) {
@@ -216,6 +183,7 @@ $(function () {
             return false;
         }
 
+        // 별명 유효성 검사
         let nickname = $('#nickname').val().trim();
         if (nickname.length === 0) {
             alert("별명을 입력하세요.");
@@ -223,6 +191,7 @@ $(function () {
             return false;
         }
 
+        // 이메일 유효성 검사
         let email = $('#email').val().trim();
         let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
@@ -231,13 +200,14 @@ $(function () {
             return false;
         }
 
-		let genderChecked = $('input[name="gender"]:checked').length;
-if (genderChecked === 0) {
-    alert("성별을 선택해주세요.");
-    return false;
-}
-		
+        // 성별 선택 유효성 검사
+        let genderChecked = $('input[name="gender"]:checked').length;
+        if (genderChecked === 0) {
+            alert("성별을 선택해주세요.");
+            return false;
+        }
 
+        // 생년월일 유효성 검사
         let birthDate = $('#birthDate').val().trim();
         if (birthDate.length === 0) {
             alert("생년월일을 입력하세요.");
@@ -245,6 +215,16 @@ if (genderChecked === 0) {
             return false;
         }
 
+        // 전화번호 유효성 검사
+        let middle = $('#middle').val().trim();
+        let end = $('#end').val().trim();
+        if (!/^\d{3,4}$/.test(middle) || !/^\d{3,4}$/.test(end)) {
+            alert("전화번호를 확인하세요. 중간번호와 끝번호는 각각 3~4자리 숫자여야 합니다.");
+            $('#middle').focus();
+            return false;
+        }
+
+        // 전화번호 확인 상태 체크
         let phoneChecked = $('#phoneChecked').val();
         if (phoneChecked !== 'true') {
             alert("전화번호를 확인하세요.");
@@ -252,6 +232,12 @@ if (genderChecked === 0) {
             return false;
         }
 
+        // 전화번호 구성
+        let areaCode = $('#areaCode').val(); // 지역번호
+        let phone = areaCode + '-' + middle + '-' + end; // 전화번호 구성
+        $('#phoneInput').val(phone); // hidden input에 전화번호 설정
+
+        // 모든 유효성 검사가 통과하면 폼 제출
         this.submit();
     });
 });

@@ -192,3 +192,81 @@ html, body {
 #username:valid {
     border: 1px solid black; /* 유효한 값일 때 검정색 경계선 */
 }
+
+/* 이메일 선택 드롭 */
+
+.email-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;  /* 입력칸 간의 간격을 조정 */
+}
+
+.email-row input[type="text"] {
+    padding: 10px;
+    border-radius: 5px;
+    background: #f6f6f8;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.email-row select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background: #f6f6f8;
+    font-size: 14px;
+}
+
+.email-row span {
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+.email-row input[type="text"]:disabled {
+    background-color: #f6f6f8;
+    color: #777;
+}
+
+/* 전화번호 입력 전체 컨테이너 */
+.phone-row {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 입력칸 간의 간격 */
+}
+
+/* 지역번호 드롭다운 스타일 */
+#areaCodeSelect {
+    width: 100px; /* 드롭다운의 폭 조정 */
+    height: 40px; /* 드롭다운의 높이 조정 */
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background: #f6f6f8;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+/* 중간번호와 끝번호 입력칸 스타일 */
+.phone-row input[type="text"] {
+    width: 100px;
+    height: 40px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #f6f6f8;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+/* 숨김 처리용 */
+.hidden {
+    display: none;
+}
+
+/* 전화번호 입력칸 스타일 (필요시 추가) */
+.phone-row input {
+    /* 공통 스타일을 적용할 수 있습니다 */
+}
+
+.invalid {
+    border: 1px solid red; /* 빨간색 경계선 */
+}

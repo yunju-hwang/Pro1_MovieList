@@ -191,6 +191,8 @@ public class MemberController {
     	
     	System.out.println("MemberController loginPro()");
 		System.out.println("memberVO : " + memberVO);
+		
+		
 //쿠키 저장  시작------------------------------------------------------------------------------
 		// 체크했으면 => 쿠키값 저장
 		if(memberVO.getIdSave() != null) {
