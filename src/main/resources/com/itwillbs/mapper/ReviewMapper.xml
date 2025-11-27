@@ -23,7 +23,7 @@
 	    FROM reviews r
 	    JOIN users u ON r.user_id = u.user_id   <!-- user_id로 조인 -->
 	    WHERE r.tmdb_id = #{tmdbId}
-	    ORDER BY r.created_at DESC
+	    ORDER BY CASE WHEN r.user_id = #{userId} THEN 0 ELSE 1 END, r.created_at DESC
 	    LIMIT #{size} OFFSET #{offset}
 	</select>
 	
