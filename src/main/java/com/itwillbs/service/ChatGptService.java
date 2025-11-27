@@ -29,7 +29,7 @@ public class ChatGptService {
 	// GPT에게 질문하기
 	public String askGPT(String prompt) {	
 		RestTemplate rest = new RestTemplate();
-		
+		System.out.println(apiKey);
         
 		// 요청 헤더 설정
 		HttpHeaders headers = new HttpHeaders();

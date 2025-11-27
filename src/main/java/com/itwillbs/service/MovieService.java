@@ -304,4 +304,10 @@ public class MovieService {
 	        return movieList;
 		
 	}
+	
+	
+	// 영화 차지된 좌석 정보 가져오기
+	 public List<String> getReservedSeats(int tmdbId, int theaterId, String screeningTime) {
+	        return movieMapper.findReservedSeats(tmdbId, theaterId, screeningTime);
+	    }
 }

@@ -117,13 +117,13 @@ document.addEventListener("DOMContentLoaded", () => {
             // ✅ 리뷰 리스트 불러오기
             let currentPage = 1;
             const pageSize = 10;
-
+			const userId = localStorage.getItem("userId");
             function loadReviewList(page = 1) {
                 currentPage = page;
                 const reviewListDiv = document.querySelector(".review-list");
                 reviewListDiv.innerHTML = "리뷰 불러오는 중...";
 
-                fetch(`${ctx}/movies/review_list?tmdbId=${tmdbId}&page=${page}&size=${pageSize}`)
+                fetch(`${ctx}/movies/review_list?tmdbId=${tmdbId}&userId=${userId}&page=${page}&size=${pageSize}`)
                     .then(res => res.json())
                     .then(data => {
                         const reviews = data.reviews || [];

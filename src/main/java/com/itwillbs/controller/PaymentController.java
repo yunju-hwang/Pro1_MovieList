@@ -33,7 +33,7 @@ public class PaymentController {
     // ------2) ️결제 완료 후 검증 & DB 저장
     @PostMapping("/verify")
     public ResponseEntity<Map<String,Object>> verifyPayment(@RequestBody ReservationPaymentVO vo ) {
-        System.out.println("verify");
+        System.out.println(vo);
         Map<String,Object> response = new HashMap<>();
     	String result = paymentService.processPayment(vo);
         if (result.contains("성공")) {

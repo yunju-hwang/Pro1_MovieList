@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const date = localStorage.getItem("selectedDate");
     const time = localStorage.getItem("selectedTime");
     const theaterId = parseInt(localStorage.getItem("selectedTheaterId"));
+    
+    
+    
+    
     // 백엔드에 전달해 주는 용도 (tmdb id)
     const tmdbId = localStorage.getItem("tmdbId");
    // screeningTime 만들기
@@ -96,8 +100,8 @@ document.addEventListener("DOMContentLoaded", () => {
         	
         	// 3. 결제 성공 (백엔드 검증 요청)
             if (rsp.success) {
-               
-                
+               const seats = JSON.parse(sessionStorage.getItem("selectedSeats") || "[]");
+                console.log(seats);
                 const payload = {
                 	reservation: {
                 		userId: localStorage.getItem("userId"),
@@ -113,11 +117,14 @@ document.addEventListener("DOMContentLoaded", () => {
 			            impUid: rsp.imp_uid,
 			            amount: totalPrice,
 			            paymentMethodId: paymentMethodId // 결제 수단 ID
-                	}
+                	},
                 
+                	
                 
                 };
-
+				console.log(seats);
+				console.log(JSON.stringify(payload));
+				
                 // 서버로 결제정보 전달 (검증용)
                 fetch(`${contextPath}/payment/verify`, {
                     method: "POST",

@@ -10,7 +10,7 @@
             username,
             email,
             gender,
-            birth_date AS birthDate,   phone,
+            birth_date AS birthDate,   phone, nickname,
             profile_image AS profileImage, -- 비밀번호, 권한, 생성일, 마지막 로그인 등 UI에 직접 표시되지 않는 정보는 제외
             
             -- UI에서 참조하는 더미 데이터는 0 또는 NULL로 처리하여 SQL 오류를 방지
@@ -27,6 +27,49 @@
         WHERE
             user_id = #{user_id}
     </select>
+    
+    <update id="updateMember" parameterType="com.itwillbs.domain.MemberVO">
+    UPDATE users
+    SET
+        nickname = #{nickname},
+        email = #{email},
+        gender = #{gender},
+        birth_date = #{birthDate},
+        phone = #{phone},
+        profile_image = #{profileImage}
+    WHERE
+        user_id = #{user_id}
+</update>
+
+<select id="checkDuplicateNicknameForUpdate" resultType="int">
+    SELECT 
+        COUNT(*) 
+    FROM 
+        users 
+    WHERE 
+        nickname = #{nickname} 
+        AND user_id != #{user_id}
+</select>
+
+<select id="checkDuplicateEmailForUpdate" resultType="int">
+    SELECT 
+        COUNT(*) 
+    FROM 
+        users 
+    WHERE 
+        email = #{email} 
+        AND user_id != #{user_id}
+</select>
+
+<select id="checkDuplicatePhoneForUpdate" resultType="int">
+    SELECT 
+        COUNT(*) 
+    FROM 
+        users 
+    WHERE 
+        phone = #{phone} 
+        AND user_id != #{user_id}
+</select>
     
  <select id="selectFavoriteListByUserId" parameterType="string" resultType="com.itwillbs.domain.UserFavoritesVO">
     SELECT 
@@ -87,18 +130,33 @@
         WHERE user_id = #{userId}
     </delete>
     
+    <delete id="deleteOneUserTheater">
+        DELETE FROM user_theaters
+        WHERE user_id = #{userId} 
+          AND theater_id = #{theaterId}
+    </delete>
+
     <insert id="insertUserTheaters">
-        <if test="theaterIds != null and !theaterIds.isEmpty()">
-            INSERT INTO user_theaters (theater_id, user_id)
-            VALUES
-            <foreach collection="theaterIds" item="theaterId" separator=",">
-                (
-                    #{theaterId}, 
-                    #{userId} 
-                )
-            </foreach>
-        </if>
+        INSERT INTO user_theaters (user_id, theater_id)
+        VALUES
+        <foreach item="theaterId" collection="theaterIds" separator=",">
+            (#{userId}, #{theaterId})
+        </foreach>
     </insert>
+    
+    <select id="searchTheatersByKeyword" resultType="com.itwillbs.domain.TheatersVO">
+    SELECT 
+        theater_id AS theaterId, 
+        name, 
+        location
+    FROM 
+        theaters
+    WHERE 
+        name LIKE CONCAT('%', #{keyword}, '%') 
+        OR location LIKE CONCAT('%', #{keyword}, '%')
+    ORDER BY
+        name
+    LIMIT 10 </select>
     
 
 </mapper>
