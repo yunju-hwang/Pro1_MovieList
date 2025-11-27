@@ -152,6 +152,15 @@ public class MovieController {
 		
 	}
 	
+	// 영화 감독/배우 정보 들고오기
+	@GetMapping("/movies/{tmdbId}/credits")
+	@ResponseBody
+	public Map<String, Object> getMovieCredits(@PathVariable int tmdbId){
+		return movieService.getMovieCredits(tmdbId);
+	}
+	
+	
+	
 	// 영화 찜하기
     @PostMapping("/movies/favorite/{tmdbId}")
     @ResponseBody
@@ -257,6 +266,10 @@ public class MovieController {
 	public String resComplete() {
 		return "/reservation/complete";
 	}
+	
+	
+	
+	
 	
 	
 	
