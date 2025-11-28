@@ -11,30 +11,49 @@
 <link rel="stylesheet" href="<c:url value='/resources/css/inquiry_detail.css?after' />">
 </head>
 <body>
-<div class="container">
-    
-<h2>문의 상세</h2>
 
-<div class="question_box">
-    <p><strong>제목</strong> : ${inq.title}</p>
-    <p><strong>내용</strong> : ${inq.content}</p>
-    <p class="created_date">작성일: ${createdDate}</p>
-</div>
+<div class="detail-container">
 
-<div class="line"></div>
+    <!-- 헤더 영역 -->
+    <div class="header">
+        <img src="<c:url value='/resources/img/message.png'/>" class="title-icon">
+        <h2 class="title-text">문의 상세</h2>
+    </div>
 
-<c:choose>
-    <c:when test="${not empty inq.answerContent}">
-        <div class="answer_box">
-            <p class="answer_title">답변</p>
-            <p class="answer_content">${inq.answerContent}</p>
-            <p class="answer_date">답변일: ${answeredDate}</p>
+    <!-- 문의 내용 박스 -->
+    <div class="box question">
+        <div class="box-header">📝 문의내용</div>
+        <div class="box-body">
+            <p><strong>제목</strong> : ${inq.title}</p>
+            <p><strong>내용</strong> : ${inq.content}</p>
         </div>
-    </c:when>
-    <c:otherwise>
-        <p class="no_answer">아직 답변이 없습니다.</p>
-    </c:otherwise>
-</c:choose>
+        <p class="date">작성일 : ${createdDate}</p>
+    </div>
+
+    <!-- 구분선 -->
+    <div class="divider"></div>
+
+    <!-- 답변 영역 -->
+    <c:choose>
+        <c:when test="${not empty inq.answerContent}">
+            <div class="box answer">
+                <div class="box-header green">💬 답변완료</div>
+                <div class="box-body">
+                    <p>${inq.answerContent}</p>
+                </div>
+                <p class="date">답변일 : ${answeredDate}</p>
+            </div>
+        </c:when>
+
+        <c:otherwise>
+            <div class="empty-answer">
+                <img src="<c:url value='/resources/img/wait.png'/>" class="wait-icon">
+                <p>아직 답변이 등록되지 않았어요.<br>조금만 기다려주세요 😊</p>
+            </div>
+        </c:otherwise>
+    </c:choose>
+
 </div>
+
 </body>
 </html>

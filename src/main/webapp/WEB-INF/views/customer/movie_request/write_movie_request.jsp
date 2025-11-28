@@ -100,7 +100,7 @@
 	</div>
 
 <div class="btn-form">
-  <input type="submit" value="취소하기" class="no-sub">
+  <input type="submit" value="취소하기" class="no-sub" onclick="location.href='/movielist/customer/movie_request';">
   <input type="submit" value="요청하기" class="sub">
 </div>
 </form>

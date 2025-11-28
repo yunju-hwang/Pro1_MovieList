@@ -46,10 +46,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-	<div class="inquirey">
-	<p class="want"> 원하는 답변을 찾지 못하셨나요?</p>
-	<a href="/movielist/customer/write_inquiry" class="inq">1:1 문의하기 -></a>
-	</div>
+<div class="inquirey">
+    <p class="want">원하는 답변을 찾지 못하셨나요?</p>
+
+   <c:choose>
+    <c:when test="${not empty sessionScope.userId}">
+        <a href="/movielist/customer/write_inquiry" class="inq">1:1 문의하기 -></a>
+    </c:when>
+
+    <c:otherwise>
+        <a href="#" class="inq" onclick="alert('로그인이 필요한 서비스입니다.');  return false;">
+            1:1 문의하기 ->
+        </a>
+    </c:otherwise>
+</c:choose>
+</div>
 
 </body>
 </html>

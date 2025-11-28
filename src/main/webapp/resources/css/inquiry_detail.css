@@ -1,98 +1,94 @@
 @charset "UTF-8";
 
 body {
-    background: #f7f7f7;
     margin: 0;
     padding: 0;
-    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    background: #f5f5f7;
+    font-family: "Noto Sans KR", sans-serif;
 }
 
-.container {
-    width: 70%;
-    margin: 40px auto;
-    background: white;
-    border-radius: 12px;
-    padding: 40px 50px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    border: 1px solid #e5e5e5;
+/* 전체 컨테이너 */
+.detail-container {
+    width: 750px;
+    margin: 60px auto;
+    padding-bottom: 50px;
 }
 
-/* 제목 */
-h2 {
-    font-size: 22px;
+/* 헤더 */
+.header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     margin-bottom: 25px;
-    font-weight: 600;
 }
 
-/* 공통 텍스트 */
-.container p {
+.title-icon {
+    width: 45px;
+}
+
+.title-text {
+    font-size: 32px;
+    font-weight: 700;
+    color: #222;
+}
+
+/* 공통 박스 스타일 */
+.box {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+    margin-bottom: 25px;
+}
+
+.box-header {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #444;
+}
+
+.box-header.green {
+    color: #0a8a36;
+}
+
+/* 내용 */
+.box-body p {
     font-size: 16px;
-    margin: 8px 0;
     line-height: 1.6;
-    color: #333;
+    margin: 10px 0;
+}
+
+.date {
+    font-size: 14px;
+    text-align: right;
+    color: #777;
+    margin-top: 10px;
 }
 
 /* 구분선 */
-.line {
-    width: 100%;
-    height: 1px;
-    background: #eaeaea;
-    margin: 25px 0;
+.divider {
+    border-top: 1.3px solid #ddd;
+    margin: 30px 0;
 }
 
-/* 질문 박스 (네이버 스타일 — 깔끔 & 얇은 테두리) */
-.question_box {
-    padding: 20px 25px;
-    border: 1px solid #e6e6e6;
-    background: #fafafa;
-    border-radius: 10px;
-    margin-bottom: 40px;
+/* 답변 없음 디자인 */
+.empty-answer {
+    text-align: center;
+    padding: 40px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.07);
 }
 
+.wait-icon {
+    width: 70px;
+    opacity: 0.7;
+    margin-bottom: 15px;
+}
 
-
-/* 답변 제목 */
-.answer_title {
-    font-weight: 600;
-    margin-bottom: 10px;
+.empty-answer p {
     font-size: 17px;
-    color: #1a73e8;  /* 파란색 포인트 */
-}
-
-/* 답변 내용 */
-.answer_content {
-    font-size: 15px;
-    margin-bottom: 12px;
-    color: #333;
-}
-
-.answer_box {
-    background: #f4faff;
-    border: 1px solid #cfe4ff;
-    border-radius: 10px;
-    padding: 20px 25px;
-    margin-top: 30px;
-	min-height:300px;
-    position: relative; /* 중요! absolute 기준점 */
-    padding-bottom: 50px; /* 답변일 공간 확보 */
-}
-
-.answer_date {
-    position: absolute;
-    right: 20px;   /* 박스 안 우측 여백 */
-    bottom: 15px;  /* 박스 안 아래 여백 */
-    
-    font-size: 14px;
-    color: #777;
-}
-
-/* 아무 답변 없을 때 */
-.no_answer {
-    margin-top: 10px;
-    padding: 15px;
-    background: #fafafa;
-    border: 1px solid #e6e6e6;
-    border-radius: 8px;
     color: #666;
-    font-size: 15px;
+    line-height: 1.5;
 }

@@ -82,9 +82,10 @@ public class CustomerController {
 	
 
 	@GetMapping("/customer/faqs")
-	public String faqs(Model model) {
+	public String faqs(Model model, HttpSession session) {
 	    List<FaqsVO> list = customerService.faqs();
 
+	    String userId = (String) session.getAttribute("user_id");
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	    List<Map<String, Object>> displayList = new ArrayList<>();
 
@@ -140,11 +141,9 @@ public class CustomerController {
 	@GetMapping("/customer/write_inquiry")
 	public String write_inquiry() {
 
-
-
-
-		return "/customer/inquiries/write_inquiry";
+	    return "/customer/inquiries/write_inquiry"; 
 	}
+	
 
 
 

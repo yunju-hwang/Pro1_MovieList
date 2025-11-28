@@ -10,9 +10,21 @@
 
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="<c:url value='/resources/css/movie_request_detail' />">
+<link rel="stylesheet" href="<c:url value='/resources/css/movie_request_detail.css' />">
 </head>
 <body>
+<div class="container">
+	<h2>영화 요청 상세</h2>
+	
+
+
+
+
+
+
+
+
+</div>
 
 
 
