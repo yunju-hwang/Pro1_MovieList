@@ -240,6 +240,16 @@ public class MovieService {
         }
     }
 
+    
+    // ---- 영화 감독, 배우 정보 가져오기
+    public Map<String, Object> getMovieCredits(int tmdbId){
+    	String url = "https://api.themoviedb.org/3/movie/" + tmdbId + "/credits?api_key="+tmdbApiKey+"&language=ko-KR";
+    	
+    	RestTemplate rest = new RestTemplate();
+    	Map<String, Object> response = rest.getForObject(url, Map.class);
+    	
+    	return response;
+    }
 	
 	// 영화 찜하기 
 	public boolean toggleFavorite(String userId, int tmdbId) {
