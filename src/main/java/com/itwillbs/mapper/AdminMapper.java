@@ -1,6 +1,7 @@
 package com.itwillbs.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -55,9 +56,11 @@ public InquiriesVO getInquiryDetail(int id);
 // 영화 요청
 public List<MovieRequestVO> AdminRequestList();
 
-public int updateMovieRequests(@Param("id") int id, @Param("status") String status);
+public void updateMovieRequests(Map<String, Object> params);
 
-public int deleteMovieRequests(int id);
+public void deleteMovieRequests(Map<String, Object> params);
+
+public MovieRequestVO getMovieRequestDetail(int id);
 
 // 리뷰 관리
 public List<ReviewsAdminVO> AdminReviewsList();
