@@ -60,7 +60,7 @@
 						<c:if test="${inquiry.status eq 'pending'}">
 							<a href="<c:url value='/admin/inquiries/answerForm?id=${inquiry.id}' />" class="action-btn pending">답변하기</a>
 						</c:if><c:if test="${inquiry.status eq 'answered'}">
-							<a href="<c:url value='/admin/inquiries/answerForm?id=${inquiry.id}' />" class="action-btn answered-link">내용 보기</a>
+							<a href="<c:url value='/admin/inquiries/answerForm?id=${inquiry.id}' />" class="action-btn answered-link">내용보기</a>
 						</c:if>
 					</td>
 				</tr>
