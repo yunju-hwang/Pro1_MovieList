@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
 
+import com.itwillbs.domain.FaqsVO;
 import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MovieRequestVO;
 import com.itwillbs.domain.NoticesVO;
@@ -71,14 +72,21 @@ public class CustomerService {
 
 	}
 
-	public List<NoticesVO> notices(String id) {
-		return customerMapper.notices(id);
+    public List<NoticesVO> notices() {
+        return customerMapper.notices();
+    }
+
+    public NoticesVO notice_detail(int id) {
+        return customerMapper.notice_detail(id);
+    }
+
+	public List<FaqsVO> faqs() {
+		return customerMapper.faqs();
 	}
 
-	public int notice_count(String id) {
 
-		return customerMapper.notice_count(id);
-	}
+
+
 
 
 

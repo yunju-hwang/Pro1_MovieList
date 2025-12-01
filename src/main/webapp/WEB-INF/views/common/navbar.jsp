@@ -23,8 +23,28 @@
             <ul class="dropdown-menu">
                 <li><a href="<c:url value='/customer/notices' />">공지사항</a></li>
                 <li><a href="<c:url value='/customer/faqs' />">FAQ</a></li>
-                <li><a href="<c:url value='/customer/inquiries' />">1:1 문의</a></li>
-                <li><a href="<c:url value='/customer/movie_request' />">영화 등록 요청</a></li>
+                <li><c:choose>
+                    <c:when test="${not empty sessionScope.loginUser and sessionScope.loginUser.role eq 'admin'}">
+                        <a href="<c:url value='/admin/inquiries'/>">1:1 문의 관리</a>
+                    </c:when>
+                    <c:when test="${not empty sessionScope.loginUser}">
+                        <a href="<c:url value='/customer/inquiries'/>">1:1 문의 등록</a>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="javascript:void(0);" onclick="alert('로그인이 필요한 서비스입니다.');">1:1 문의</a>
+                    </c:otherwise>
+                </c:choose></li>
+                <li><c:choose>
+                    <c:when test="${not empty sessionScope.loginUser and sessionScope.loginUser.role eq 'admin'}">
+                        <a href="<c:url value='/admin/movie_requests'/>">영화 요청 관리</a>
+                    </c:when>
+                    <c:when test="${not empty sessionScope.loginUser}">
+                        <a href="<c:url value='/customer/movie_request'/>">영화 등록 요청</a>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="javascript:void(0);" onclick="alert('로그인이 필요한 서비스입니다.');">영화 등록 요청</a>
+                    </c:otherwise>
+                </c:choose></li>
             </ul>
         </li>
 

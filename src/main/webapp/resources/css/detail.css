@@ -1,13 +1,13 @@
-body{
-	margin: 0;
-	padding: 0;
+body {
+    margin: 0;
+    padding: 0;
 }
 
 /* 전체 페이지 가운데 정렬 */
 #movie-detail {
     display: flex;
     flex-direction: column;
-    align-items: center; /* 가로 가운데 정렬 */
+    align-items: center;
     padding: 20px 0;
 }
 
@@ -21,7 +21,7 @@ body{
     background-color: #fff;
     padding: 30px;
     border-radius: 15px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* 왼쪽 포스터 박스 */
@@ -37,7 +37,7 @@ body{
 .poster {
     width: 100%;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* 하트 버튼 */
@@ -126,7 +126,7 @@ body{
     background: #fff;
     padding: 30px 35px;
     border-radius: 15px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     margin-bottom: 50px;
     display: flex;
     flex-direction: column;
@@ -155,14 +155,14 @@ body{
     background: #fff5f5;
     padding: 20px 25px;
     border-radius: 15px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
     text-align: left;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .review-item:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
 .review-item strong {
@@ -193,7 +193,6 @@ body{
     background: #fff;
     padding: 20px 25px;
     border-radius: 15px;
-   
 }
 
 .my-review textarea {
@@ -230,7 +229,7 @@ body{
     background-color: #e63535;
 }
 
-
+/* 수정 리뷰 */
 .edit-review {
     background: #fff0f0;
     padding: 15px 20px;
@@ -255,7 +254,6 @@ body{
 }
 
 .edit-review button {
-
     padding: 6px 16px;
     border-radius: 20px;
     font-weight: 600;
@@ -269,21 +267,23 @@ body{
     color: #fff;
 }
 
-.save-review-btn:hover { background-color: #e63535; }
+.save-review-btn:hover {
+    background-color: #e63535;
+}
 
 .cancel-review-btn {
-	margin-left: 20px;
-	
+    margin-left: 20px;
     background-color: #ccc;
     color: #444;
 }
 
-.cancel-review-btn:hover { background-color: #aaa; }
-
+.cancel-review-btn:hover {
+    background-color: #aaa;
+}
 
 /* 수정 버튼 */
 .edit-review-btn {
-	margin-top: 15px;
+    margin-top: 15px;
     padding: 6px 16px;
     border-radius: 20px;
     border: none;
@@ -299,86 +299,35 @@ body{
     transform: scale(1.05);
 }
 
+/* 별점 */
 .star-rating .star {
     font-size: 24px;
     margin-right: 5px;
     transition: color 0.2s;
-    cursor: pointer; /* 마우스 올리면 손가락 모양 */
+    cursor: pointer;
 }
 
-.star-rating .star:hover {
-    color: #FFD700; /* hover 시 금색으로 강조 */
-}
-.star {
-    font-size: 24px;
-    margin-right: 5px;
-    color: #ccc;
-    cursor: pointer;
-    transition: color 0.2s;
-}
+.star-rating .star:hover,
 .star.filled {
     color: #FFD700 !important;
-    content: '★'; /* 필요시 */
-}
-.star:hover {
-    color: #FFD700 !important;
-}
-/* 리뷰 작성 영역 */
-.my-review {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
 }
 
-.my-review textarea {
-    width: 100%;
-    height: 90px;
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px solid #ddd;
-    resize: none;
-}
-
-.my-review button {
-    align-self: flex-start;
-    padding: 10px 25px;
-    border: none;
-    border-radius: 25px;
+/* 삭제 버튼 */
+.delete-review-btn {
     background-color: #ff3d3d;
     color: #fff;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.my-review button:hover {
-    background-color: #e63535;
-}
-
-.star-rating {
-    margin-bottom: 10px;
-}
-.star {
-    transition: color 0.2s;
-}
-
-/* ---------------- 삭제 버튼 ---------------- */
-.delete-review-btn {
-    background-color:  #ff3d3d;  /* 요청하신 색 */
-    color: #fff;
-    border: none;               /* 테두리 제거 */
-    border-radius: 20px;        /* 둥근 모서리 */
-    padding: 6px 16px;          /* 버튼 크기 */
+    border: none;
+    border-radius: 20px;
+    padding: 6px 16px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
-    margin-left: 10px;          /* 수정 버튼과 간격 */
+    margin-left: 10px;
 }
 
 .delete-review-btn:hover {
-    background-color: #e60000;  /* hover 시 색 강조 */
+    background-color: #e60000;
     transform: scale(1.05);
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
@@ -387,13 +336,13 @@ body{
     transform: scale(0.95);
 }
 
-/* 📌 페이징 버튼 기본 스타일 */
+/* 페이징 버튼 */
 .pagination {
     display: flex;
     justify-content: center;
     margin: 20px 0;
-    gap: 5px; /* 버튼 간격 */
-    flex-wrap: wrap; /* 화면 좁으면 줄 바꿈 */
+    gap: 5px;
+    flex-wrap: wrap;
 }
 
 .pagination button {
@@ -424,6 +373,99 @@ body{
     font-weight: bold;
 }
 
+/* 감독 & 출연진 섹션 */
+.credit-section {
+    width: 100%;
+    overflow-x: hidden; /* 기본 오버플로우 제거 */
+    max-width: 1000px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+}
+
+.credit-section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #222;
+    border-left: 5px solid #ff3d3d;
+    padding-left: 15px;
+    margin-bottom: 20px;
+}
+
+.credit-section p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+/* 출연진 가로 스크롤 */
+.cast-list {
+   display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    flex-wrap: nowrap; /* 한 줄로 정렬 */
+    padding-bottom: 10px;
+    margin-top: 10px;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    box-sizing: border-box;
+    
+    
+}
+
+/* 스크롤바 스타일 */
+.cast-list::-webkit-scrollbar {
+    height: 8px;
+}
+
+.cast-list::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 4px;
+}
+
+/* 출연진 카드 */
+.cast-card {
+    flex: 0 0 auto;  /* 콘텐츠 기반 너비, 크기 고정 */
+    width: 100px;    /* 카드 너비 통일 */
+    text-align: center;
+}
+
+/* 이미지 크기 통일 (정사각형) */
+.cast-card img {
+    width: 100%;
+    height: 100px;          /* 높이 고정 */
+    object-fit: cover;      /* 이미지 비율 유지하며 잘림 가능 */
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    margin-bottom: 5px;
+}
+
+/* 이름과 역할 */
+.cast-card p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.cast-card p.role {
+    font-size: 12px;
+    color: #555;
+}
+
+/* 모바일 대응 */
+@media (max-width: 800px) {
+    .cast-card {
+        width: 80px;
+    }
+    .cast-card img {
+        height: 80px;
+    }
+}
+
+
+
 /* 모바일 대응 */
 @media (max-width: 480px) {
     .pagination button {
@@ -432,16 +474,14 @@ body{
     }
 }
 
-
-
-
 /* 반응형 */
 @media (max-width: 800px) {
     .detail-container {
         flex-direction: column;
         align-items: center;
     }
-    .left-box, .right-box {
+    .left-box,
+    .right-box {
         width: 100%;
         min-width: auto;
     }

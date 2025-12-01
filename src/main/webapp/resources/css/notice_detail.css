@@ -1,44 +1,102 @@
-@charset "UTF-8";
-
-body{
-	background-color: #f7f7f7;
-	height: 1300px;
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
-.notice_detail{
-	background-color: white;
-	width:50%;
-	height:900PX;
-	margin: 100px auto;
-	border-radius: 30px;
-	padding-top:20px;
-	padding-left: 30px;
-	box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+/* 전체 컨테이너를 최소 화면 높이로 설정 */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.back {
+    text-decoration: none; /* 밑줄 제거 */
+    color: #333;           /* 원하는 글자색 */
+    font-weight: 500;      /* 필요시 글자 굵기 */
+    display: inline-flex;  /* 이미지와 텍스트 정렬용 */
+    align-items: center;   /* 이미지와 텍스트 수직 정렬 */
+    cursor: pointer;       /* 마우스 올렸을 때 포인터 */
 }
 
-.name{
-	text-align: center;
+.back .right-arrow {
+    width: 20px;           /* 이미지 크기 조정 */
+    height: 20px;
+    margin-right: 8px;     /* 텍스트와 이미지 간격 */
 }
 
-.not {
-  width: 60px;
-  height: 30px;
-  background: #B158FF;
-  color: white;
-  border-radius: 10px;
-  text-align: center;
-  margin-top: 10px;
+/* 내용 영역을 flex로 확장 */
+.notice-container {
+    flex: 1; /* 푸터를 제외한 나머지 공간 차지 */
+    width: 70%;
+    max-width: 900px;
+    margin: 60px auto;
+    background: #fff;
+    padding: 50px 40px 60px 40px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-radius: 20px;
+    position: relative;
 }
 
-.main{
-	font-size: 1.5em;
-	color:gray;
-	margin-top: 70px;
-	margin-left: 30px;
+/* footer 고정 */
+footer {
+    background-color: #222;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
 }
-.ma{
-	margin:0px; padding: 0px;
+
+/* 작은 장식 라인 추가 */
+.notice-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 6px;
+    background: linear-gradient(90deg, #6a11cb, #2575fc); /* 그라데이션 */
+    border-radius: 3px;
+    margin: 20px 0 0 20px;
 }
-.na{
-	margin-bottom: 0px;
+
+/* 제목 */
+.notice-container h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: #1a1a1a;
+    font-weight: 800;
+}
+
+/* 날짜 */
+.notice-container h4 {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 35px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+/* 내용 박스 */
+.content-box {
+    font-size: 17px;
+    line-height: 1.9;
+    color: #444;
+    word-break: break-word;
+    padding: 30px;
+    background: #fdfdfd;
+    border-radius: 15px;
+    border: 1px solid #e5e5e5;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.03);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .notice-container {
+        width: 90%;
+        padding: 35px 25px 45px 25px;
+    }
+
+    .content-box {
+        padding: 20px;
+    }
 }
