@@ -33,6 +33,25 @@ public class MemberController {
     public String registerStep1() {
         return "/user/register_step1";
     }
+    
+    
+    // 이용약관 보기
+    @GetMapping("/terms/service")
+    public String viewTermsService() {
+    	return "user/terms_of_service"; // /WEB-INF/views/terms_of_service.jsp
+    }
+
+    // 개인정보 처리방침 보기
+    @GetMapping("/terms/privacy")
+    public String viewPrivacyPolicy() {
+    	 return "user/privacy_policy"; // /WEB-INF/views/privacy_policy.jsp
+    }
+
+    // 마케팅 정보 수신 동의 보기
+    @GetMapping("/terms/marketing")
+    public String viewMarketingConsent() {
+    	  return "user/marketing_consent"; // /WEB-INF/views/marketing_consent.jsp
+    }
 
     @PostMapping("/register/step2")
     public String step1Pro(HttpServletRequest request, HttpSession session, Model model) {
@@ -109,8 +128,8 @@ public class MemberController {
     }
 
     @PostMapping("/register/step3Pro")
-    public String step3Pro(HttpServletRequest request, HttpSession session) {
-        // 세션에서 값 가져오기
+    public String step3Pro(HttpServletRequest request, HttpSession session, Model model) {
+        // 1. 세션에서 값 가져오기
         MemberVO memberVO = new MemberVO();
         memberVO.setUser_id((String) session.getAttribute("user_id"));
         memberVO.setPassword((String) session.getAttribute("password"));
@@ -122,27 +141,25 @@ public class MemberController {
 
         // 생년월일 처리
         String birthDateStr = (String) session.getAttribute("birthDate");
-        if(birthDateStr != null && !birthDateStr.isEmpty()) {
+        if (birthDateStr != null && !birthDateStr.isEmpty()) {
             memberVO.setBirthDate(LocalDate.parse(birthDateStr));
         }
 
-        // ✅ 1단계 약관 boolean 처리
+        // 약관 처리
         memberVO.setTermsAgree(Boolean.TRUE.equals(session.getAttribute("termsAgree")));
         memberVO.setPrivacyAgree(Boolean.TRUE.equals(session.getAttribute("privacyAgree")));
         memberVO.setMarketingAgree(Boolean.TRUE.equals(session.getAttribute("marketingAgree")));
 
         memberVO.setRole("user");
-        System.out.println("세션 " + session.getAttribute("termsAgree"));
-        System.out.println("=====" + memberVO);
-        
-        // DB에 회원 정보 저장
+
+        // DB 저장
         memberService.insertMember(memberVO);
 
-        // 선호 장르 처리
+        // 선호 장르 저장
         String[] genres = request.getParameterValues("genre");
-        if(genres != null && genres.length > 0) {
+        if (genres != null && genres.length > 0) {
             List<UserGenresVO> userGenresList = new ArrayList<>();
-            for(String genreId : genres) {
+            for (String genreId : genres) {
                 UserGenresVO vo = new UserGenresVO();
                 vo.setUserId(memberVO.getUser_id());
                 vo.setGenreId(Integer.parseInt(genreId));
@@ -151,7 +168,14 @@ public class MemberController {
             memberService.insertGenresList(userGenresList);
         }
 
-        return "redirect:/login";
+        // ✅ JSP에서 모달 띄우기 위해 Model에 속성 전달
+        model.addAttribute("signupSuccess", true);
+
+        // redirect하지 않고 JSP 그대로 포워딩
+        List<GenresVO> genresVOList = memberService.getGenres();
+        model.addAttribute("genresVOList", genresVOList);
+
+        return "/user/register_step3"; 
     }
 
     // ID 중복 체크
@@ -160,6 +184,14 @@ public class MemberController {
     public boolean idCheck(@RequestParam String user_id) {
         return memberService.checkUserIdExists(user_id);
     }
+    
+    // 이메일 중복 체크
+    @ResponseBody
+    @GetMapping("/register/emailCheck")
+    public boolean emailCheck(@RequestParam String email) {
+        return memberService.checkEmailExists(email);
+    }
+    
 
     // 전화번호 중복 체크
     @ResponseBody

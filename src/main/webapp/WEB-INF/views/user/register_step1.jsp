@@ -18,15 +18,16 @@
             </div>
             <div class="checkbox-group sub-checks">
                 <label> <input type="checkbox" name="agree_terms" value="agree_terms" required /> [필수] 이용약관 동의 </label>
-                <a href="#" class="view-link">보기</a>
+                <a href="${pageContext.request.contextPath}/terms/service">보기</a>
+
             </div>
             <div class="checkbox-group sub-checks">
                 <label> <input type="checkbox" name="agree_privacy" value="agree_privacy" required /> [필수] 개인정보 처리방침 동의 </label>
-                <a href="#" class="view-link">보기</a>
+                <a href="${pageContext.request.contextPath}/terms/privacy">보기</a>
             </div>
             <div class="checkbox-group sub-checks">
                 <label> <input type="checkbox" name="agree_marketing" value="agree_marketing" /> [선택] 마케팅 정보 수신 동의 </label>
-                <a href="#" class="view-link">보기</a>
+               <a href="${pageContext.request.contextPath}/terms/marketing">보기</a>
             </div>
             <div class="buttons">
                 <button type="button" onclick="history.back()">취소</button>

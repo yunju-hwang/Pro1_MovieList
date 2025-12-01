@@ -9,7 +9,7 @@
     <title>선호 장르 선택</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/register_step3.css" />
 </head>
-<body>
+<body data-signup-success="${signupSuccess}">
 <div class="genre-container">
     <form class="genre-form" action="${pageContext.request.contextPath}/register/step3Pro" method="post">
         <h2>선호하는 영화 장르를 선택해주세요</h2>
@@ -29,9 +29,16 @@
             <button type="submit" class="next-btn">가입 완료</button>
         </div>
     </form>
-</div>
+		<!-- 회원가입 완료 모달 -->
+		<div id="successModal" class="modal-overlay" style="display: none;">
+			<div class="modal-content">
+				<h2>회원가입 완료</h2>
+				<p>회원가입이 완료되었습니다!</p>
+				<button id="modalConfirmBtn">확인</button>
+			</div>
+		</div>
+	</div>
 
 <script src="${pageContext.request.contextPath}/resources/js/register_step3_genresChecked.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/register_step3_genresMinSelect.js"></script>
 </body>
 </html>

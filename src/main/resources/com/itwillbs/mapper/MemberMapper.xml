@@ -25,6 +25,11 @@
 	<select id="checkPhoneExists" resultType="boolean">
 		SELECT EXISTS(SELECT 1 FROM users WHERE phone = #{phone})
 	</select>
+	
+	<!-- 이메일 중복 체크 -->
+	<select id="checkEmailExists" parameterType="String" resultType="boolean">
+	    SELECT EXISTS(SELECT 1 FROM users WHERE email = #{email})
+	</select>
 
 
 	<insert id="insertMember">

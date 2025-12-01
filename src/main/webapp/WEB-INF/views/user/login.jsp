@@ -94,6 +94,12 @@
      
 </div>
 
+<c:if test="${not empty successMessage}">
+    <script>
+        alert("${successMessage}");
+    </script>
+</c:if>
+
 <script src="${pageContext.request.contextPath}/resources/js/login_findId.js"></script>
 
 </body>

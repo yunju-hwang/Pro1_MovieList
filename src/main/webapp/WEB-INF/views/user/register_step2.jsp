@@ -16,10 +16,7 @@
 </script>
 <script
 	src="${pageContext.request.contextPath}/resources/js/register_step2_validation.js"></script>
-<script
-	src="${pageContext.request.contextPath}/resources/js/register_step2_emaildrop.js"></script>
-<script
-	src="${pageContext.request.contextPath}/resources/js/register_step2_phone.js"></script>
+
 
 </head>
 <body>
@@ -51,10 +48,9 @@
 
 			<label>별명 *</label> <input type="text" id="nickname" name="nickname"
 				placeholder="별명을 입력하세요" value="${nickname != null ? nickname : ''}">
-
-
-
-			<label>이메일 *</label>
+			<span id="nicknameError"
+				style="color: red; display: block; min-height: 18px;"></span> <label>이메일
+				*</label>
 			<div class="email-row">
 				<!-- 이메일 아이디 입력 필드 -->
 				<input type="text" id="emailId" name="emailId" placeholder="이메일 아이디"
@@ -78,8 +74,11 @@
 				<input type="hidden" id="email" name="email">
 			</div>
 
-
-			<label>성별 *</label>
+			<!-- 이메일 오류 메시지 -->
+			<span id="emailError"
+				style="color: red; display: block; min-height: 18px;"></span> <input
+				type="hidden" id="emailChecked" value="false"> <label>성별
+				*</label>
 			<div class="gender-row">
 				<label><input type="radio" name="gender" value="m"
 					${gender == 'm' ? 'checked' : ''}>남성</label> <label><input
@@ -87,45 +86,54 @@
 					${gender == 'f' ? 'checked' : ''}>여성</label>
 			</div>
 
-			<label>생년월일 *</label> <input type="date" id="birthDate"
-				name="birthDate" value="${birthDate != null ? birthDate : ''}">
+			<!-- 성별 오류 메시지 -->
+			<span id="genderError" class="error-message"></span> <label>생년월일
+				*</label> <input type="date" id="birthDate" name="birthDate"
+				value="${birthDate != null ? birthDate : ''}">
 
-			<label>전화번호 *</label>
-<div class="phone-row">
-    <div class="area-code-container">
-        <!-- 지역번호 드롭다운 -->
-        <select id="areaCodeSelect" name="areaCode">
-            <option value="010">010 (휴대폰)</option>
-            <option value="02">02 (서울)</option>
-            <option value="031">031 (경기)</option>
-            <option value="032">032 (인천)</option>
-            <option value="033">033 (강원)</option>
-            <option value="041">041 (충남)</option>
-            <option value="042">042 (대전)</option>
-            <option value="043">043 (충북)</option>
-            <option value="044">044 (세종)</option>
-            <option value="051">051 (부산)</option>
-            <option value="052">052 (울산)</option>
-            <option value="053">053 (대구)</option>
-            <option value="054">054 (경북)</option>
-            <option value="055">055 (경남)</option>
-            <option value="061">061 (전남)</option>
-            <option value="062">062 (광주)</option>
-            <option value="063">063 (전북)</option>
-            <option value="064">064 (제주)</option>
-        </select>
-    </div>
+			<!-- 생년월일 오류 메시지 -->
+			<span id="birthDateError" class="error-message"></span> <label>전화번호
+				*</label>
+			<div class="phone-row">
+				<div class="area-code-container">
+					<!-- 지역번호 드롭다운 -->
+					<select id="areaCodeSelect" name="areaCode">
+						<option value="010">010</option>
+						<option value="02">02</option>
+						<option value="031">031</option>
+						<option value="032">032</option>
+						<option value="033">033</option>
+						<option value="041">041</option>
+						<option value="042">042</option>
+						<option value="043">043</option>
+						<option value="044">044</option>
+						<option value="051">051</option>
+						<option value="052">052</option>
+						<option value="053">053</option>
+						<option value="054">054</option>
+						<option value="055">055</option>
+						<option value="061">061</option>
+						<option value="062">062</option>
+						<option value="063">063</option>
+						<option value="064">064</option>
+					</select>
+				</div>
 
-    <span>-</span>
+				<span>-</span>
 
-    <!-- 중간번호와 끝번호 입력칸 -->
-    <input type="text" id="middle" name="middle" placeholder="0000" maxlength="4">
-    <span>-</span>
-    <input type="text" id="end" name="end" placeholder="0000" maxlength="4">
-</div>
+				<!-- 중간번호와 끝번호 입력칸 -->
+				<input type="text" id="middle" name="middle" placeholder="0000"
+					maxlength="4"> <span>-</span> <input type="text" id="end"
+					name="end" placeholder="0000" maxlength="4">
+			</div>
 
 			<!-- 최종 DB로 넘어가는 phone 필드 -->
 			<input type="hidden" id="phone" name="phone">
+
+			<!-- 전화번호 중복 체크 결과 표시 -->
+			<span id="phoneError"
+				style="color: red; display: block; min-height: 18px;"></span> <input
+				type="hidden" id="phoneChecked" value="false">
 
 
 
@@ -137,15 +145,15 @@
 
 			<!--         세션값 확인용 커밋전에 지우기 -->
 			<!-- 약관 동의 정보 표시 (세션 값 사용) -->
-			<div class="agree-info">
-				<p>약관 동의:</p>
-				<ul>
-					<li>이용약관 동의: ${termsAgree != null ? termsAgree : "미동의"}</li>
+			<!-- 			<div class="agree-info"> -->
+			<!-- 				<p>약관 동의:</p> -->
+			<!-- 				<ul> -->
+			<%-- 					<li>이용약관 동의: ${termsAgree != null ? termsAgree : "미동의"}</li> --%>
 
-					<li>개인정보 처리방침 동의: ${privacyAgree != null ? privacyAgree : "미동의"}</li>
-					<li>마케팅 정보 수신 동의: ${marketingAgree != null ? marketingAgree : "미동의"}</li>
-				</ul>
-			</div>
+			<%-- 					<li>개인정보 처리방침 동의: ${privacyAgree != null ? privacyAgree : "미동의"}</li> --%>
+			<%-- 					<li>마케팅 정보 수신 동의: ${marketingAgree != null ? marketingAgree : "미동의"}</li> --%>
+			<!-- 				</ul> -->
+			<!-- 			</div> -->
 
 
 
