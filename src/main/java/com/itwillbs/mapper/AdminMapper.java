@@ -36,7 +36,7 @@ public int getMovie_RequestsCount();
 
 
 //영화관리
-public List<MovieVO> AdminMovieList();
+public List<MovieVO> AdminMovieList(Map<String, Object> params);
 
 public int deleteMovie(int tmdbId);
 
@@ -54,7 +54,7 @@ public void answerInquiry(@Param("id") int id, @Param("answerContent") String an
 public InquiriesVO getInquiryDetail(int id);
 
 // 영화 요청
-public List<MovieRequestVO> AdminRequestList();
+public List<MovieRequestVO> AdminRequestList(Map<String, Object> params);
 
 public void updateMovieRequests(Map<String, Object> params);
 

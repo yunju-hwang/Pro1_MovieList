@@ -55,8 +55,8 @@ public class AdminService {
     }
     
 //    영화 관리
-    public List<MovieVO> AdminMovieList(){
-    	return adminMapper.AdminMovieList();
+    public List<MovieVO> AdminMovieList(Map<String, Object> params){
+    	return adminMapper.AdminMovieList(params);
     }
     
     
@@ -88,8 +88,8 @@ public class AdminService {
     }
     
 // 영화 요청
-    public List<MovieRequestVO> AdminRequestList(){
-    	return adminMapper.AdminRequestList();
+    public List<MovieRequestVO> AdminRequestList(Map<String, Object> params){
+    	return adminMapper.AdminRequestList(params);
     }
     public void updateMovieRequests(String[] idArray, String status) {
         // 1. Map 객체 생성

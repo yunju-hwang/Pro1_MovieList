@@ -5,10 +5,9 @@
 	<table class="user-table">
 		<thead>
 			<tr>
-				<th>등급</th>
+				<th>번호</th>
 				<th>사용자 ID</th>
 				<th>가입일</th>
-				<th>최근 접속일</th>
 				<th>리뷰 건수</th>
 				<th>예매 건수</th>
 				<th>문의 건수</th>
@@ -17,12 +16,11 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="users" items="${adminuserList}">
+			<c:forEach var="users" items="${adminuserList}" varStatus="status">
 				<tr>
-					<td>${users.role}</td>
+					<td>${status.count}</td>
 					<td>${users.user_id}</td>
 					<td>${users.createdAt}</td>
-					<td>${users.lastLogin}</td>
 					<td>${users.reviewCount}</td>
 					<td>${users.reservationCount}</td>
 					<td>${users.inquiryCount}</td>

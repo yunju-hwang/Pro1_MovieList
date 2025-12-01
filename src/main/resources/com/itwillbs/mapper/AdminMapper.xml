@@ -61,8 +61,6 @@
 		m.runtime,
 		m.popularity,
 		r_stats.rating,
-		r_stats.positiveReviewCount,
-		r_stats.negativeReviewCount,
 
 		GROUP_CONCAT(g.genre_name SEPARATOR ', ')
 		AS genres2
@@ -74,12 +72,8 @@
 		SELECT
 		r.tmdb_id,
 		ROUND(AVG(r.rating),
-		1) AS rating,
-		<!-- 3점은 표기안함 -->
-		SUM(CASE WHEN r.rating &gt;= 4 THEN 1 ELSE 0 END) AS
-		positiveReviewCount,
-		SUM(CASE WHEN r.rating &lt;= 2 THEN 1 ELSE 0 END)
-		AS negativeReviewCount
+		1) AS rating
+		
 		FROM reviews r
 		GROUP BY r.tmdb_id
 		) r_stats ON
@@ -89,15 +83,24 @@
 		mg.tmdb_id
 		LEFT JOIN genres g ON mg.genre_id = g.genre_id
 
-		GROUP BY
+<where>
+    <if test="keyword != null and keyword != ''">
+        m.title LIKE CONCAT('%', #{keyword}, '%')
+    </if>
+</where>
+    	GROUP BY
 		m.tmdb_id, m.title, m.release_date, m.runtime, m.poster_path,
 		m.overview,
 		m.popularity,
-		r_stats.rating, r_stats.positiveReviewCount,
-		r_stats.negativeReviewCount
+		r_stats.rating
+    <if test="orderBy != null and orderBy != ''">
+        ORDER BY ${orderBy}, m.tmdb_id DESC
+    </if>
+    <if test="orderBy == null or orderBy == ''">
+        ORDER BY m.release_date DESC, m.tmdb_id DESC
+    </if>
+</select>
 
-		ORDER BY m.tmdb_id DESC
-	</select>
 
 	<!-- 영화 관리 삭제 -->
 	<delete id="deleteMovie">
@@ -211,10 +214,31 @@
 		status,
 		created_at AS createdAt,
 		processed_at AS processedAt
-
 		FROM movie_request
-		ORDER BY created_at DESC, id DESC;
-	</select>
+		
+		<where>
+        <if test="searchType != null and keyword != null and keyword != ''">
+            <choose>
+                <when test="searchType == 'title'">
+                    title LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+                  <when test="searchType == 'content'">
+                    content LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+                <when test="searchType == 'userId'">
+                    user_id LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+            </choose>
+        </if>
+    </where>
+    
+    <if test="orderBy != null and orderBy != ''">
+        ORDER BY ${orderBy}, id DESC
+    </if>
+    <if test="orderBy == null or orderBy == ''">
+        ORDER BY created_at DESC, id DESC
+    </if>
+</select>
 
 <update id="updateMovieRequests">
         UPDATE movie_request

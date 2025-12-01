@@ -65,16 +65,44 @@ public class AdminController {
 
 	// 영화 관리
 	@GetMapping("/movie")
-	public String movie(HttpSession session, Model model) {
+	public String movie(HttpSession session, Model model,
+			@RequestParam(value = "sortCriteria", defaultValue = "releaseDate") String sortCriteria,
+		    @RequestParam(value = "keyword", required = false) String keyword          
+		) {
 		dashboardStats(model);
 		String userID = (String) session.getAttribute("user_id");
 		String role = (String) session.getAttribute("role");
 		if (userID == null || !"admin".equals(role)) {
 			return "redirect:/login";
 		}
+		Map<String, Object> params = new HashMap<>();
+		String orderByClause = "m.release_date DESC";
+
+	    if (sortCriteria.equals("releaseDate")) {
+	        orderByClause = "m.release_date DESC";
+	    } else if (sortCriteria.equals("popularity")) {
+	        orderByClause = "m.popularity DESC"; 
+	    } else if (sortCriteria.equals("runtime")) {
+	        orderByClause = "m.runtime DESC";
+	    } else {
+	        orderByClause = "m.release_date DESC";
+	    }
+	    params.put("orderBy", orderByClause);
+
+	    if (keyword != null && !keyword.trim().isEmpty()) {
+	        params.put("keyword", keyword.trim());
+	    }
 		
-		List<MovieVO> adminmovieList = adminService.AdminMovieList();
+		List<MovieVO> adminmovieList = adminService.AdminMovieList(params);
+		
+		
 		model.addAttribute("adminmovieList", adminmovieList);
+	    
+	    // ⭐ 현재 검색 및 정렬 상태를 JSP에 다시 전달해서 UI 상태를 유지합니다.
+	    model.addAttribute("currentSortCriteria", sortCriteria);
+	    model.addAttribute("currentKeyword", keyword);
+	    model.addAttribute("currentSearchType", "title");
+		
 		return "/admin/movie";
 	}
 
@@ -160,17 +188,55 @@ public class AdminController {
 
 	// 영화 요청
 	@GetMapping("/movie_requests")
-	public String movieRequests(HttpSession session, Model model) {
+	public String movieRequests(HttpSession session, Model model,
+			@RequestParam(value = "sortCriteria", defaultValue = "id") String sortCriteria, // 정렬 기준 (기본값: id)
+			@RequestParam(value = "searchType", required = false) String searchType,     // 검색 조건 (제목/작성자/ID)
+		    @RequestParam(value = "keyword", required = false) String keyword             // 검색어
+		) {
+		
 		dashboardStats(model);
+		
 		String userID = (String) session.getAttribute("user_id");
 		String role = (String) session.getAttribute("role");
 		if (userID == null || !"admin".equals(role)) {
 			return "redirect:/login";
 		}
-		List<MovieRequestVO> adminRequestList = adminService.AdminRequestList();
-		model.addAttribute("adminRequestList", adminRequestList);
+		
+		Map<String, Object> params = new HashMap<>();
+		String orderByClause = "id DESC";
+		
 
-		return "/admin/movie_requests";
+		
+		// JSP에서 'default'를 선택하면 그대로 id DESC가 유지되도록 조건 처리
+	    if (sortCriteria.equals("createdAt")) {
+	        orderByClause = "createdAt DESC"; // 작성일 순
+	    } else if (sortCriteria.equals("processedAt")) {
+	        orderByClause = "processedAt DESC"; // 처리일 순
+	    } else { // 'id' 또는 'default'일 경우
+	        orderByClause = "id DESC"; // 번호순 (최신 번호가 위로)
+	    }
+	    params.put("orderBy", orderByClause);
+
+	    // 4. 검색 조건 설정 (DB 쿼리 WHERE 절을 위해)
+	    // 검색 타입과 검색어가 모두 존재하고, 검색어가 비어있지 않을 때만 조건 추가
+	    if (searchType != null && keyword != null && !keyword.trim().isEmpty()) {
+	        params.put("searchType", searchType); // 예: "title"
+	        params.put("keyword", keyword.trim()); // 예: "검색어"
+	    }
+
+	    // 5. Service Layer 호출 (AdminRequestList를 수정해야 함)
+	    // 이 메서드는 이제 파라미터(params)를 받아서 동적으로 쿼리를 만들어야 해.
+		List<MovieRequestVO> adminRequestList = adminService.AdminRequestList(params);
+	    
+	    // 6. Model에 데이터 및 현재 상태를 담기
+	    model.addAttribute("adminRequestList", adminRequestList);
+	    
+	    // ⭐ 현재 검색 및 정렬 상태를 JSP에 다시 전달해서 UI 상태를 유지합니다.
+	    model.addAttribute("currentSortCriteria", sortCriteria);
+	    model.addAttribute("currentSearchType", searchType);
+	    model.addAttribute("currentKeyword", keyword);
+
+	    return "/admin/movie_requests";
 	}
 
 	@PostMapping("/movie_requests/update")
