@@ -118,6 +118,7 @@ public class MovieController {
 	@GetMapping("/movies/search/detail/{id}")
 	public String searchMovieDetail(@PathVariable("id") int tmdbId, Model model) {
 		Map<String, Object> movie = movieService.getSearchMovieDetail(tmdbId);
+		Map<String, Object> credits = movieService.getMovieCredits(tmdbId); // 여기서 출연진 가져오기
 		
 		// 안전하게 문자열 처리
 	    String title = (String) movie.get("title");
@@ -147,6 +148,14 @@ public class MovieController {
 	    model.addAttribute("runtimeText", runtimeText);
 	    model.addAttribute("genresText", genresText);
 	    model.addAttribute("popularity", popularity);
+	    
+	    // 출연진 (credits에서 cast, crew 등)
+	    model.addAttribute("credits", credits);
+	    
+	    // 추천 영화
+	    List<Map<String, Object>> recommendations = movieService.getRecommendations(tmdbId);
+	    model.addAttribute("recommendations", recommendations);
+	   
 	    
 		return "movies/searchDetail";
 		
