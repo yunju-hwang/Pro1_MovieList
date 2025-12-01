@@ -2,6 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/navbar.jsp" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,15 +14,12 @@
 <body>
 <div id="movie-detail">
     <div class="detail-container">
-        <!-- 왼쪽 박스: 포스터 + 찜하기 버튼 -->
+
+        <!-- 왼쪽 박스 (포스터만 표시) -->
         <div class="left-box">
             <div class="poster-wrapper">
                 <img class="poster" src="https://image.tmdb.org/t/p/w400${posterPath}" alt="${title}">
-                <button class="wish-btn" id="wishBtn">
-                    <span class="heart-icon" id="heartIcon">♡</span>
-                </button>
             </div>
-           
         </div>
 
         <!-- 오른쪽 박스: 영화 정보 -->
@@ -33,87 +32,58 @@
             <p><strong>장르:</strong> ${genresText}</p>
             <p class="overview"><strong>개요:</strong> ${overview}</p>
         </div>
+
     </div>
-
-    <!-- 리뷰 영역 -->
-    <div class="review-section">
-        <h2>리뷰</h2>
-        <div class="review-list">
-            
-        </div>
-
-        <div class="my-review">
-            <div class="star-rating" id="starRating">
-               
+    <!-- 출연진 영역 -->
+	<div class="credit-section">
+    <h2>출연진</h2>
+    <div class="cast-list">
+        <c:forEach var="actor" items="${credits.cast}">
+            <div class="cast-card">
+                <img 
+                    src="<c:choose>
+                             <c:when test='${not empty actor.profile_path}'>
+                                 https://image.tmdb.org/t/p/w500${actor.profile_path}
+                             </c:when>
+                             <c:otherwise>
+                                 ${pageContext.request.contextPath}/resources/img/no_img_people.png
+                             </c:otherwise>
+                         </c:choose>" 
+                    alt="${actor.name != null ? actor.name : '이름 없음'}"
+                />
+                <p>${actor.name != null ? actor.name : "이름 없음"}</p>
+                <c:if test="${not empty actor.role}">
+                    <p class="role">(${actor.role})</p>
+                </c:if>
             </div>
-            <textarea placeholder="리뷰를 작성해주세요"></textarea>
-            <button class="submit-review" id="submitReview">등록</button>
-        </div>
+        </c:forEach>
     </div>
 </div>
 
-<!-- 필요한 JS는 별도 파일로 -->
-<script>
-    // 찜하기 버튼
-    const heartIcon = document.getElementById("heartIcon");
-    document.getElementById("wishBtn").addEventListener("click", () => {
-        heartIcon.classList.toggle("active");
-        heartIcon.textContent = heartIcon.classList.contains("active") ? '❤️' : '♡';
-    });
+
+    
+    <!-- 추천 영화 섹션 -->
+	<div class="recommend-section">
+        <h2>추천 영화</h2>
+        <div class="recommend-list">
+            <c:forEach var="rec" items="${recommendations}">
+                <div class="recommend-card">
+                    <a href="${pageContext.request.contextPath}/movies/search/detail/${rec.id}">
+                        <img src="https://image.tmdb.org/t/p/w200${rec.poster_path}" alt="${rec.title}" />
+                        <p>${rec.title}</p>
+                    </a>
+                </div>
+            </c:forEach>
+            <c:if test="${fn:length(recommendations) == 0}">
+                <p>추천 영화가 없습니다.</p>
+            </c:if>
+        </div>
+    </div>
 
 
-    // 별점 JS (기본)
-    const starContainer = document.getElementById("starRating");
-    starContainer.innerHTML = "";
-    const stars = [];
-    let selectedRating = 0;
 
-    for(let i=1; i<=5; i++){
-        const star = document.createElement("span");
-        star.textContent = '☆';
-        star.style.fontSize = '24px';
-        star.style.color = '#ccc';
-        star.style.cursor = 'pointer';
-        star.style.transition = 'color 0.2s';
-        star.dataset.value = i;
-        starContainer.appendChild(star);
-        stars.push(star);
+</div>
 
-        // hover
-        star.addEventListener("mouseover", () => fillStarsHover(i));
-        star.addEventListener("mouseout", () => fillStars(selectedRating));
-
-        // click
-        star.addEventListener("click", () => {
-            selectedRating = i;
-            fillStars(selectedRating);
-        });
-    }
-
-    function fillStars(rating){
-        stars.forEach((star, idx) => {
-            star.style.color = idx < rating ? '#FFD700' : '#ccc';
-            star.textContent = idx < rating ? '★' : '☆';
-        });
-    }
-
-    function fillStarsHover(rating){
-        stars.forEach((star, idx) => {
-            star.style.color = idx < rating ? '#FFD700' : '#ccc';
-            star.textContent = idx < rating ? '★' : '☆';
-        });
-    }
-
-    // 리뷰 등록 버튼
-    document.getElementById("submitReview").addEventListener("click", () => {
-        const reviewText = document.querySelector(".my-review textarea").value.trim();
-        const sessionUser = ${sessionScope.user != null};
-        if (!sessionUser) { alert("로그인이 필요한 서비스입니다"); return; }
-        if (!reviewText || selectedRating === 0) { alert("리뷰 내용과 별점을 모두 입력해주세요"); return; }
-        alert(`별점: ${selectedRating}, 리뷰: ${reviewText}`);
-        // TODO: AJAX로 서버에 리뷰 등록
-    });
-</script>
-
+<!-- 찜/리뷰 기능이 없으므로 JS 필요 없음 -->
 </body>
 </html>
