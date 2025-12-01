@@ -34,33 +34,33 @@
         </div>
 
     </div>
-
     <!-- 출연진 영역 -->
-    <div class="credit-section">
-        <h2>출연진</h2>
-        <div class="cast-list">
-            <c:forEach var="actor" items="${credits.cast}">
-                <div class="cast-card">
-                    <img 
-                        src="<c:choose>
-                                <c:when test='${not empty actor.profile_path}'>
-                                    https://image.tmdb.org/t/p/w500${actor.profile_path}
-                                </c:when>
-                                <c:otherwise>
-                                    ${pageContext.request.contextPath}/resources/img/no_img_people.png
-                                </c:otherwise>
-                             </c:choose>" 
-                        alt="${actor.name != null ? actor.name : '이름 없음'}"
-                    />
-                    <p>${actor.name != null ? actor.name : "이름 없음"}</p>
-                    <c:if test="${not empty actor.role}">
-                        <p class="role">(${actor.role})</p>
-                    </c:if>
-                </div>
-            </c:forEach>
-        </div>
+	<div class="credit-section">
+    <h2>출연진</h2>
+    <div class="cast-list">
+        <c:forEach var="actor" items="${credits.cast}">
+            <div class="cast-card">
+                <img 
+                    src="<c:choose>
+                             <c:when test='${not empty actor.profile_path}'>
+                                 https://image.tmdb.org/t/p/w500${actor.profile_path}
+                             </c:when>
+                             <c:otherwise>
+                                 ${pageContext.request.contextPath}/resources/img/no_img_people.png
+                             </c:otherwise>
+                         </c:choose>" 
+                    alt="${actor.name != null ? actor.name : '이름 없음'}"
+                />
+                <p>${actor.name != null ? actor.name : "이름 없음"}</p>
+                <c:if test="${not empty actor.role}">
+                    <p class="role">(${actor.role})</p>
+                </c:if>
+            </div>
+        </c:forEach>
     </div>
-    
+</div>
+
+
     
     <!-- 추천 영화 섹션 -->
 	<div class="recommend-section">

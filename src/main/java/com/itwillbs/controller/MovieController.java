@@ -152,11 +152,12 @@ public class MovieController {
 	    // 출연진 (credits에서 cast, crew 등)
 	    model.addAttribute("credits", credits);
 	    
+
 	    // 추천 영화
 	    List<Map<String, Object>> recommendations = movieService.getRecommendations(tmdbId);
 	    model.addAttribute("recommendations", recommendations);
 	   
-	    
+
 		return "movies/searchDetail";
 		
 	}
