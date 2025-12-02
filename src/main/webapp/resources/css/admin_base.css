@@ -18,6 +18,17 @@ body {
 	flex-grow: 1;
 }
 
+.content-title a{
+	text-decoration: none; 
+	color: #333;
+	font-weight: 500;
+}
+
+.content-title a:hover{
+	color: #dc3545; 
+	text-decoration: none;
+} 
+
 .dashboard-container {
 	max-width: 1200px;
 	margin: 20px auto;

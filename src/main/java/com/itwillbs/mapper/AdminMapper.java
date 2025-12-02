@@ -41,12 +41,12 @@ public List<MovieVO> AdminMovieList(Map<String, Object> params);
 public int deleteMovie(int tmdbId);
 
 //사용자 관리
-public List<MemberVO> AdminUserList();
+public List<MemberVO> AdminUserList(Map<String, Object> params);
 
 public int deleteUsers(String user_id);
 
 //1:1문의
-public List<InquiriesVO> AdminInquiriesList();
+public List<InquiriesVO> AdminInquiriesList(Map<String, Object> params);
 
 
 public void answerInquiry(@Param("id") int id, @Param("answerContent") String answerContent);
@@ -63,17 +63,17 @@ public void deleteMovieRequests(Map<String, Object> params);
 public MovieRequestVO getMovieRequestDetail(int id);
 
 // 리뷰 관리
-public List<ReviewsAdminVO> AdminReviewsList();
+public List<ReviewsAdminVO> AdminReviewsList(Map<String, Object> params);
 
 public int deleteReviews(int id);
 
 // 예매 관리
-public List<ReservationsVO> AdminReservationsList();
+public List<ReservationsVO> AdminReservationsList(Map<String, Object> params);
 
 public void AdminReservationsRefund(int id);
 
 // FAQS
-public List<FaqsVO> AdminFaqsList();
+public List<FaqsVO> AdminFaqsList(Map<String, Object> params);
 
 public int AdminFaqsWrite(FaqsVO faqs);
 
@@ -85,7 +85,7 @@ public int AdminFaqsDelete(int id);
 
 
 // 공지사항
-public List<NoticesVO> AdminNoticesList();
+public List<NoticesVO> AdminNoticesList(Map<String, Object> params);
 
 public int AdminNoticesWrite(NoticesVO notices);
 

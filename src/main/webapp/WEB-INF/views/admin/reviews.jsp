@@ -2,6 +2,28 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="dashboard.jsp"%>
+<div class="table-header">
+    <div class="search-wrap">
+        <form action="<c:url value='/admin/reviews' />" method="get" id="searchForm">
+            <select name="searchType" id="searchType" class="form-select search-select">
+                <option value="title" ${currentSearchType eq 'title' ? 'selected' : ''}>제목</option>
+                <option value="userId" ${currentSearchType eq 'userId' ? 'selected' : ''}>작성자</option>
+                <option value="content" ${currentSearchType eq 'content' ? 'selected' : ''}>내용</option>
+                </select>
+            <input type="text" name="keyword" id="keyword" class="form-control search-input" placeholder="제목을 입력해 주세요" value="${currentKeyword}">
+            <button type="submit" class="btn btn-primary search-btn">검색</button>
+           
+             <select name="sortCriteria" id="sortCriteria" class="form-select sort-select" onchange="submitSort()">
+            <option value="default">-- 정렬 기준 --</option>
+            <option value="createdAt" ${currentSortCriteria eq 'createdAt' ? 'selected' : ''}>작성일순</option>
+    		<option value="rating" ${currentSortCriteria eq 'rating' ? 'selected' : ''}>평점순</option>
+                </select>
+            
+        </form>
+    </div>
+</div>
+
+
 <div class="table-section">
 	<table class="review-table">
 		<thead>
@@ -47,4 +69,5 @@
 		</tbody>
 	</table>
 </div>
+<script src="<c:url value='/resources/js/admin_search.js' />"></script>
 <%@ include file="end.jsp"%>

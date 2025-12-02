@@ -72,34 +72,38 @@
 		SELECT
 		r.tmdb_id,
 		ROUND(AVG(r.rating),
-		1) AS rating
-		
+		1) AS
+		rating
+
 		FROM reviews r
 		GROUP BY r.tmdb_id
 		) r_stats ON
-		m.tmdb_id = r_stats.tmdb_id
+		m.tmdb_id =
+		r_stats.tmdb_id
 
 		LEFT JOIN movie_genres mg ON m.tmdb_id =
 		mg.tmdb_id
-		LEFT JOIN genres g ON mg.genre_id = g.genre_id
+		LEFT
+		JOIN genres g
+		ON mg.genre_id = g.genre_id
 
-<where>
-    <if test="keyword != null and keyword != ''">
-        m.title LIKE CONCAT('%', #{keyword}, '%')
-    </if>
-</where>
-    	GROUP BY
+		<where>
+			<if test="keyword != null and keyword != ''">
+				m.title LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+		</where>
+		GROUP BY
 		m.tmdb_id, m.title, m.release_date, m.runtime, m.poster_path,
 		m.overview,
 		m.popularity,
 		r_stats.rating
-    <if test="orderBy != null and orderBy != ''">
-        ORDER BY ${orderBy}, m.tmdb_id DESC
-    </if>
-    <if test="orderBy == null or orderBy == ''">
-        ORDER BY m.release_date DESC, m.tmdb_id DESC
-    </if>
-</select>
+		<if test="orderBy != null and orderBy != ''">
+			ORDER BY ${orderBy}, m.tmdb_id DESC
+		</if>
+		<if test="orderBy == null or orderBy == ''">
+			ORDER BY m.release_date DESC, m.tmdb_id DESC
+		</if>
+	</select>
 
 
 	<!-- 영화 관리 삭제 -->
@@ -119,7 +123,8 @@
 		u.username,
 		u.email,
 		u.phone,
-		<!-- created_at AS createdAt, -->
+		u.created_at AS
+		createdAt,
 		<!-- last_login AS lastLogin, -->
 		COUNT(DISTINCT r.id) AS reviewCount,
 		COUNT(DISTINCT res.id) AS
@@ -139,12 +144,25 @@
 		movie_request mreq ON u.user_id = mreq.user_id
 
 
-		WHERE u.role != 'admin'
-
-		GROUP BY u.user_id, u.role, u.username, u.email, u.phone
-
-		ORDER BY
-		u.user_id DESC
+		<where>
+			u.role != 'admin'
+			<if test="keyword != null and keyword != ''">
+				AND u.user_id LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+		</where>
+		GROUP BY
+		u.user_id,
+		u.role,
+		u.username,
+		u.email,
+		u.phone,
+		u.created_at
+		<if test="orderBy != null and orderBy != ''">
+			ORDER BY ${orderBy}, u.user_id DESC
+		</if>
+		<if test="orderBy == null or orderBy == ''">
+			ORDER BY u.created_at DESC, u.user_id DESC
+		</if>
 	</select>
 
 	<!-- 사용자 관리 삭제 -->
@@ -169,8 +187,28 @@
 		FROM inquiries i
 		LEFT JOIN
 		users u ON i.user_id = u.user_id
-		ORDER BY i.created_at DESC, i.id DESC;
+		<where>
+			<if
+				test="searchType != null and keyword != null and keyword != ''">
+				<choose>
+					<when test="searchType == 'title'">
+						i.title LIKE CONCAT('%', #{keyword}, '%')
+					</when>
+					<when test="searchType == 'userId'">
+						i.user_id LIKE CONCAT('%', #{keyword}, '%')
+					</when>
+				</choose>
+			</if>
+		</where>
+
+		<if test="orderBy != null and orderBy != ''">
+			ORDER BY ${orderBy}, i.id DESC
+		</if>
+		<if test="orderBy == null or orderBy == ''">
+			ORDER BY i.created_at DESC, i.id DESC
+		</if>
 	</select>
+
 
 	<update id="answerInquiry">
 		UPDATE inquiries
@@ -215,60 +253,67 @@
 		created_at AS createdAt,
 		processed_at AS processedAt
 		FROM movie_request
-		
+
 		<where>
-        <if test="searchType != null and keyword != null and keyword != ''">
-            <choose>
-                <when test="searchType == 'title'">
-                    title LIKE CONCAT('%', #{keyword}, '%')
-                </when>
-                  <when test="searchType == 'content'">
-                    content LIKE CONCAT('%', #{keyword}, '%')
-                </when>
-                <when test="searchType == 'userId'">
-                    user_id LIKE CONCAT('%', #{keyword}, '%')
-                </when>
-            </choose>
-        </if>
-    </where>
-    
-    <if test="orderBy != null and orderBy != ''">
-        ORDER BY ${orderBy}, id DESC
-    </if>
-    <if test="orderBy == null or orderBy == ''">
-        ORDER BY created_at DESC, id DESC
-    </if>
-</select>
+			<if
+				test="searchType != null and keyword != null and keyword != ''">
+				<choose>
+					<when test="searchType == 'title'">
+						title LIKE CONCAT('%', #{keyword}, '%')
+					</when>
+					<when test="searchType == 'content'">
+						content LIKE CONCAT('%', #{keyword}, '%')
+					</when>
+					<when test="searchType == 'userId'">
+						user_id LIKE CONCAT('%', #{keyword}, '%')
+					</when>
+				</choose>
+			</if>
+		</where>
 
-<update id="updateMovieRequests">
-        UPDATE movie_request
-        SET status = #{status},
-        processed_at = NOW()
-        WHERE id IN
-        <foreach item="id" collection="ids" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </update>
+		<if test="orderBy != null and orderBy != ''">
+			ORDER BY ${orderBy}, id DESC
+		</if>
+		<if test="orderBy == null or orderBy == ''">
+			ORDER BY created_at DESC, id DESC
+		</if>
+	</select>
 
-    <delete id="deleteMovieRequests">
-        DELETE FROM movie_request
-        WHERE id IN
-        <foreach item="id" collection="ids" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
+	<update id="updateMovieRequests">
+		UPDATE movie_request
+		SET status = #{status},
+		processed_at = NOW()
+		WHERE
+		id IN
+		<foreach item="id" collection="ids" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</update>
 
-<select id="getMovieRequestDetail" resultType="com.itwillbs.domain.MovieRequestVO">
-    SELECT id, 
-    user_id as userId, 
-    title,
-    content, 
-    created_at as createdAt, 
-    status, 
-    processed_at as processedAt
-    FROM movie_request
-    WHERE id = #{id}
-</select>
+	<delete id="deleteMovieRequests">
+		DELETE FROM movie_request
+		WHERE id IN
+		<foreach item="id" collection="ids" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="getMovieRequestDetail"
+		resultType="com.itwillbs.domain.MovieRequestVO">
+		SELECT id,
+		user_id as userId,
+		title,
+		content,
+		created_at as
+		createdAt,
+		status,
+		processed_at as processedAt
+		FROM movie_request
+		WHERE id
+		= #{id}
+	</select>
 
 
 
@@ -286,9 +331,30 @@
 
 		FROM reviews r
 		LEFT JOIN movies m ON r.tmdb_id = m.tmdb_id
-		ORDER BY r.created_at DESC, r.id DESC;
-	</select>
 
+		<where>
+			<if
+				test="searchType != null and keyword != null and keyword != ''">
+				<choose>
+					<when test="searchType == 'title'">
+						m.title LIKE CONCAT('%', #{keyword}, '%')
+					</when>
+					<when test="searchType == 'userId'">
+						r.user_id LIKE CONCAT('%', #{keyword}, '%')
+					</when>
+					<when test="searchType == 'content'">
+						r.content LIKE CONCAT('%', #{keyword}, '%')
+					</when>
+				</choose>
+			</if>
+		</where>
+		<if test="orderBy != null and orderBy != ''">
+			ORDER BY ${orderBy}, id DESC
+		</if>
+		<if test="orderBy == null or orderBy == ''">
+			ORDER BY created_at DESC, id DESC
+		</if>
+	</select>
 
 	<delete id="deleteReviews">
 		DELETE FROM reviews
@@ -302,13 +368,16 @@
 		r.id,
 		r.user_id AS userId,
 		r.tmdb_id AS tmdbId,
-		r.theater_id AS theaterId,
+		r.theater_id AS
+		theaterId,
 		r.screening_time AS screeningTime,
-		r.reservation_date AS reservationDate,
+		r.reservation_date AS
+		reservationDate,
 		r.seat,
 		r.adult_people AS
 		adultPeople,
-		r.child_people AS childPeople,
+		r.child_people AS
+		childPeople,
 		r.status,
 		m.title AS
 		movieTitle,
@@ -320,12 +389,44 @@
 
 		LEFT JOIN movies m ON r.tmdb_id
 		= m.tmdb_id
-		LEFT JOIN payments p ON r.id =
+		LEFT JOIN payments p ON r.id
+		=
 		p.reservation_id
 		LEFT JOIN
 		theaters t ON r.theater_id = t.theater_id
-
-		ORDER BY r.id DESC;
+		<where>
+			<if
+				test="searchType != null and keyword != null and keyword != ''">
+				<choose>
+					<when test="searchType == 'id'">
+						r.id LIKE CONCAT('%', #{keyword}, '%')
+					</when>
+					<when test="searchType == 'movieTitle'">
+						m.title LIKE CONCAT('%', #{keyword}, '%')
+					</when>
+					<when test="searchType == 'userId'">
+						r.user_id LIKE CONCAT('%', #{keyword}, '%')
+					</when>
+					<when test="searchType == 'theaterName'">
+						CONCAT(t.name, ' (', t.location, ')')
+						 LIKE CONCAT('%', #{keyword}, '%')
+					</when>
+					<when test="searchType == 'screeningTime'">
+						r.screening_time LIKE CONCAT('%', #{keyword}, '%')
+					</when>
+					<when test="searchType == 'reservationDate'">
+						r.reservation_date LIKE CONCAT('%', #{keyword},
+						'%')
+					</when>
+				</choose>
+			</if>
+		</where>
+		<if test="orderBy != null and orderBy != ''">
+			ORDER BY ${orderBy}, r.id DESC
+		</if>
+		<if test="orderBy == null or orderBy == ''">
+			ORDER BY r.reservation_date DESC, r.id DESC
+		</if>
 	</select>
 
 	<update id="AdminReservationsRefund">
@@ -346,7 +447,28 @@
 		created_at as createdAt,
 		category
 		from faqs
-		order by id desc;
+		<where>
+			<if
+				test="searchType != null and keyword != null and keyword != ''">
+				<choose>
+					<when test="searchType == 'category'">
+						category LIKE CONCAT('%', #{keyword}, '%')
+					</when>
+					<when test="searchType == 'question'">
+						question LIKE CONCAT('%', #{keyword}, '%')
+					</when>
+					<when test="searchType == 'createdAt'">
+						created_at LIKE CONCAT('%', #{keyword}, '%')
+					</when>
+				</choose>
+			</if>
+		</where>
+		<if test="orderBy != null and orderBy != ''">
+			ORDER BY ${orderBy}, id DESC
+		</if>
+		<if test="orderBy == null or orderBy == ''">
+			ORDER BY created_at DESC, id DESC
+		</if>
 	</select>
 
 	<select id="getFaqsDetail"
@@ -400,7 +522,17 @@
 		content,
 		created_at as createdAt
 		from notices
-		order by id desc;
+		<where>
+			<if test="keyword != null and keyword != ''">
+				title LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+		</where>
+		<if test="orderBy != null and orderBy != ''">
+			ORDER BY ${orderBy}, id DESC
+		</if>
+		<if test="orderBy == null or orderBy == ''">
+			ORDER BY created_at DESC, id DESC
+		</if>
 	</select>
 
 	<select id="getNoticesDetail"

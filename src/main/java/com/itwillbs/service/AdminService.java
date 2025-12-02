@@ -65,8 +65,8 @@ public class AdminService {
 	}
 
 //    사용자 관리
-    public List<MemberVO> AdminUserList(){
-    	return adminMapper.AdminUserList();
+    public List<MemberVO> AdminUserList(Map<String, Object> params){
+    	return adminMapper.AdminUserList(params);
     }
     
     public int deleteUsers(String user_id) {
@@ -74,8 +74,8 @@ public class AdminService {
 	}
     
 //   1:1문의 
-    public List<InquiriesVO> AdminInquiriesList() {
-		return adminMapper.AdminInquiriesList();
+    public List<InquiriesVO> AdminInquiriesList(Map<String, Object> params) {
+		return adminMapper.AdminInquiriesList(params);
 	}
 
     public void answerInquiry(int id, String answerContent) {
@@ -120,8 +120,8 @@ public class AdminService {
     
     
  // 리뷰 관리
-    public List<ReviewsAdminVO> AdminReviewsList(){
-    	return adminMapper.AdminReviewsList();
+    public List<ReviewsAdminVO> AdminReviewsList(Map<String, Object> params){
+    	return adminMapper.AdminReviewsList(params);
     }
     
     public int deleteReviews(int id) {
@@ -129,8 +129,8 @@ public class AdminService {
     }
     
 // 예매 관리
-    public List<ReservationsVO> AdminReservationsList(){
-    	return adminMapper.AdminReservationsList();
+    public List<ReservationsVO> AdminReservationsList(Map<String, Object> params){
+    	return adminMapper.AdminReservationsList(params);
     }
     
     public void AdminReservationsRefund(int id) {
@@ -138,8 +138,8 @@ public class AdminService {
     }
     
     // FAQS
-    public List<FaqsVO> AdminFaqsList(){
-    	return adminMapper.AdminFaqsList();
+    public List<FaqsVO> AdminFaqsList(Map<String, Object> params){
+    	return adminMapper.AdminFaqsList(params);
     }
     
     public int AdminFaqsWrite(FaqsVO faqs) {
@@ -159,8 +159,8 @@ public class AdminService {
     }
     
     // 공지사항
-    public List<NoticesVO> AdminNoticesList(){
-    	return adminMapper.AdminNoticesList();
+    public List<NoticesVO> AdminNoticesList(Map<String, Object> params){
+    	return adminMapper.AdminNoticesList(params);
     }
     
     public int AdminNoticesWrite(NoticesVO notices) {

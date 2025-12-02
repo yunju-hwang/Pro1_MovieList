@@ -120,20 +120,50 @@ public class AdminController {
 
 	// 사용자 관리
 	@GetMapping("/users")
-	public String users(HttpSession session, Model model) {
+	public String users(HttpSession session, Model model,
+			@RequestParam(value = "sortCriteria", defaultValue = "createdAt") String sortCriteria,
+		    @RequestParam(value = "keyword", required = false) String keyword  
+		    ) {
 		dashboardStats(model);
 		String userID = (String) session.getAttribute("user_id");
 		String role = (String) session.getAttribute("role");
 		if (userID == null || !"admin".equals(role)) {
 			return "redirect:/login";
 		}
-		List<MemberVO> adminuserList = adminService.AdminUserList();
-		model.addAttribute("adminuserList", adminuserList);
+		
+		Map<String, Object> params = new HashMap<>();
+		String orderByClause = "u.created_at ASC";
 
+	    if (sortCriteria.equals("createdAt")) {
+	        orderByClause = "u.created_at DESC";
+	    } else if (sortCriteria.equals("reviewCount")) {
+	        orderByClause = "reviewCount DESC"; 
+	    } else if (sortCriteria.equals("reservationCount")) {
+	        orderByClause = "reservationCount DESC";
+	    } else if (sortCriteria.equals("inquiryCount")) {
+	        orderByClause = "inquiryCount DESC";
+	    } else if (sortCriteria.equals("movieRequestCount")) {
+	        orderByClause = "movieRequestCount DESC";
+	    } else {
+	        orderByClause = "u.created_at DESC";
+	    }    
+	    params.put("orderBy", orderByClause);
+
+	    if (keyword != null && !keyword.trim().isEmpty()) {
+	        params.put("keyword", keyword.trim());
+	    }
+		List<MemberVO> adminuserList = adminService.AdminUserList(params);
+		model.addAttribute("adminuserList", adminuserList);
+	    model.addAttribute("currentSortCriteria", sortCriteria);
+	    model.addAttribute("currentKeyword", keyword);
+	    model.addAttribute("currentSearchType", "user_id");
+	    
+	    
 		return "/admin/users";
 
 	}
-
+	
+	
 	@PostMapping("/users/delete")
 	public String deleteUsers(HttpSession session, @RequestParam("user_id") String user_id) {
 		String userID = (String) session.getAttribute("user_id");
@@ -148,19 +178,44 @@ public class AdminController {
 
 	// 1:1 문의 관리
 	@GetMapping("/inquiries")
-	public String locationTerms(HttpSession session, Model model) {
+	public String locationTerms(HttpSession session, Model model,
+			@RequestParam(value = "sortCriteria", defaultValue = "createdAt") String sortCriteria,
+			@RequestParam(value = "searchType", required = false) String searchType,
+			@RequestParam(value = "keyword", required = false) String keyword  
+		    ) {
 		dashboardStats(model);
 		String userID = (String) session.getAttribute("user_id");
 		String role = (String) session.getAttribute("role");
 		if (userID == null || !"admin".equals(role)) {
 			return "redirect:/login";
 		}
-		List<InquiriesVO> adminInquiriesList = adminService.AdminInquiriesList();
+		
+		Map<String, Object> params = new HashMap<>();
+		String orderByClause = "i.created_at desc";
+
+	    if (sortCriteria.equals("createdAt")) {
+	        orderByClause = "i.created_at DESC";
+	    } else if (sortCriteria.equals("answeredAt")) {
+	        orderByClause = "i.answered_at DESC"; 
+	    } else {
+	        orderByClause = "i.created_at DESC";
+	    }    
+	    params.put("orderBy", orderByClause);
+
+	    if (keyword != null && !keyword.trim().isEmpty()) {
+	    	params.put("searchType", searchType);
+	        params.put("keyword", keyword.trim());
+	    }
+		
+		List<InquiriesVO> adminInquiriesList = adminService.AdminInquiriesList(params);
 		model.addAttribute("adminInquiriesList", adminInquiriesList);
+	    model.addAttribute("currentSortCriteria", sortCriteria);
+	    model.addAttribute("currentSearchType", searchType);
+	    model.addAttribute("currentKeyword", keyword);
 
 		return "/admin/inquiries";
 	}
-
+	
 	@PostMapping("/inquiries/answer")
 	public String answerInquiry(HttpSession session, @RequestParam("id") int id, @RequestParam("answerContent") String answerContent) {
 		String userID = (String) session.getAttribute("user_id");
@@ -332,19 +387,43 @@ public class AdminController {
 		
 	// 리뷰 관리
 	@GetMapping("/reviews")
-	public String reviews(HttpSession session, Model model) {
+	public String reviews(HttpSession session, Model model,
+			@RequestParam(value = "sortCriteria", defaultValue = "createdAt") String sortCriteria,
+			@RequestParam(value = "searchType", required = false) String searchType,
+			@RequestParam(value = "keyword", required = false) String keyword  
+		    ) {
 		dashboardStats(model);
 		String userID = (String) session.getAttribute("user_id");
 		String role = (String) session.getAttribute("role");
 		if (userID == null || !"admin".equals(role)) {
 			return "redirect:/login";
 		}
-		List<ReviewsAdminVO> adminReviewsList = adminService.AdminReviewsList();
+		
+		Map<String, Object> params = new HashMap<>();
+		String orderByClause = "r.created_at desc";
+
+	    if (sortCriteria.equals("createdAt")) {
+	        orderByClause = "r.created_at DESC";
+	    } else if (sortCriteria.equals("rating")) {
+	        orderByClause = "r.rating DESC"; 
+	    } else {
+	        orderByClause = "r.created_at DESC";
+	    }    
+	    params.put("orderBy", orderByClause);
+
+	    if (keyword != null && !keyword.trim().isEmpty()) {
+	    	params.put("searchType", searchType);
+	        params.put("keyword", keyword.trim());
+	    }
+
+		List<ReviewsAdminVO> adminReviewsList = adminService.AdminReviewsList(params);
 		model.addAttribute("adminReviewsList", adminReviewsList);
-
+	    model.addAttribute("currentSortCriteria", sortCriteria);
+	    model.addAttribute("currentSearchType", searchType);
+	    model.addAttribute("currentKeyword", keyword);
 		return "/admin/reviews";
-	}
-
+}
+	
 	@PostMapping("/reviews/delete")
 	public String deletereviews(HttpSession session, @RequestParam("id") int id) {
 		String userID = (String) session.getAttribute("user_id");
@@ -359,19 +438,49 @@ public class AdminController {
 
 	// 예매 관리
 	@GetMapping("/reservations")
-	public String reservations(HttpSession session, Model model) {
+	public String reservations(HttpSession session, Model model,
+			@RequestParam(value = "sortCriteria", defaultValue = "id") String sortCriteria,
+			@RequestParam(value = "searchType", required = false) String searchType,
+			@RequestParam(value = "keyword", required = false) String keyword  
+			) {
 		dashboardStats(model);
 		String userID = (String) session.getAttribute("user_id");
 		String role = (String) session.getAttribute("role");
 		if (userID == null || !"admin".equals(role)) {
 			return "redirect:/login";
 		}
-		List<ReservationsVO> adminReservationsList = adminService.AdminReservationsList();
+		
+		Map<String, Object> params = new HashMap<>();
+		String orderByClause = "r.id desc";
+
+	    if (sortCriteria.equals("screeningTime")) {
+	        orderByClause = "r.screening_time ASC";
+	    } else if (sortCriteria.equals("reservationDate")) {
+	        orderByClause = "r.reservation_date DESC"; 
+	    } else if (sortCriteria.equals("finalAmount")) {
+	        orderByClause = "p.amount DESC"; 
+	    } else if (sortCriteria.equals("status")) {
+	        orderByClause = "r.status ASC"; 
+	    } else {
+	        orderByClause = "r.id DESC";
+	    }    
+	    params.put("orderBy", orderByClause);
+
+	    if (keyword != null && !keyword.trim().isEmpty()) {
+	    	params.put("searchType", searchType);
+	        params.put("keyword", keyword.trim());
+	    }
+		
+		List<ReservationsVO> adminReservationsList = adminService.AdminReservationsList(params);
 		model.addAttribute("adminReservationsList", adminReservationsList);
+	    model.addAttribute("currentSortCriteria", sortCriteria);
+	    model.addAttribute("currentSearchType", searchType);
+	    model.addAttribute("currentKeyword", keyword);
 
 		return "/admin/reservations";
 	}
-
+		
+		
 	@PostMapping("/reservations/refund")
 	public String reservationsRefund(HttpSession session, @RequestParam("id") int id) {
 		String userID = (String) session.getAttribute("user_id");
@@ -386,18 +495,43 @@ public class AdminController {
 
 	// FAQ 관리
 	@GetMapping("/faqs")
-	public String faqs(HttpSession session, Model model) {
+	public String faqs(HttpSession session, Model model,
+			@RequestParam(value = "sortCriteria", defaultValue = "id") String sortCriteria,
+			@RequestParam(value = "searchType", required = false) String searchType,
+			@RequestParam(value = "keyword", required = false) String keyword  
+			) {
 		String userID = (String) session.getAttribute("user_id");
 		String role = (String) session.getAttribute("role");
 		if (userID == null || !"admin".equals(role)) {
 			return "redirect:/login";
 		}
-		List<FaqsVO> adminFaqsList = adminService.AdminFaqsList();
+		
+		Map<String, Object> params = new HashMap<>();
+		String orderByClause = "id desc";
+
+	    if (sortCriteria.equals("category")) {
+	        orderByClause = "category DESC";
+	    } else if (sortCriteria.equals("createdAt")) {
+	        orderByClause = "created_at DESC"; 
+	    } else {
+	        orderByClause = "id DESC";
+	    }    
+	    params.put("orderBy", orderByClause);
+
+	    if (keyword != null && !keyword.trim().isEmpty()) {
+	    	params.put("searchType", searchType);
+	        params.put("keyword", keyword.trim());
+	    }
+	    
+		List<FaqsVO> adminFaqsList = adminService.AdminFaqsList(params);
 		model.addAttribute("adminFaqsList", adminFaqsList);
+	    model.addAttribute("currentSortCriteria", sortCriteria);
+	    model.addAttribute("currentSearchType", searchType);
+	    model.addAttribute("currentKeyword", keyword);
 
 		return "/admin/faqs";
 	}
-
+		
 	@GetMapping("/faqs/write")
 	public String faqWrite(HttpSession session) {
 		String userID = (String) session.getAttribute("user_id");
@@ -459,18 +593,37 @@ public class AdminController {
 
 	// 공지사항 관리
 	@GetMapping("/notices")
-	public String notice(HttpSession session, Model model) {
+	public String notice(HttpSession session, Model model,
+			@RequestParam(value = "sortCriteria", defaultValue = "createdAt") String sortCriteria,
+		    @RequestParam(value = "keyword", required = false) String keyword  
+		    ) {
 		String userID = (String) session.getAttribute("user_id");
 		String role = (String) session.getAttribute("role");
 		if (userID == null || !"admin".equals(role)) {
 			return "redirect:/login";
 		}
-		List<NoticesVO> adminNoticesList = adminService.AdminNoticesList();
-		model.addAttribute("adminNoticesList", adminNoticesList);
+		
+		Map<String, Object> params = new HashMap<>();
+		String orderByClause = "created_at ASC";
 
+	    if (sortCriteria.equals("createdAt")) {
+	        orderByClause = "created_at DESC";
+	    } 
+	    params.put("orderBy", orderByClause);
+
+	    if (keyword != null && !keyword.trim().isEmpty()) {
+	        params.put("keyword", keyword.trim());
+	    }
+		
+		List<NoticesVO> adminNoticesList = adminService.AdminNoticesList(params);
+		model.addAttribute("adminNoticesList", adminNoticesList);
+		model.addAttribute("currentSortCriteria", sortCriteria);
+	    model.addAttribute("currentKeyword", keyword);
+	    model.addAttribute("currentSearchType", "createdAt");
+	    
 		return "/admin/notices";
 	}
-
+	
 	@GetMapping("/notices/write")
 	public String noticeWrite(HttpSession session) {
 		String userID = (String) session.getAttribute("user_id");
