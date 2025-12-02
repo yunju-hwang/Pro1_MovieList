@@ -26,9 +26,13 @@ public class KakaoController {
 	public String kakaoCallback(@RequestParam("code")String code, HttpSession session) {
 		//1. access token 발급
 		String accessToken = kakaoService.getAccessToken(code);
+		System.out.println(code);
 		
 		//2. 사용자 정보 조회
 		KakaoUserVO user = kakaoService.getUserInfo(accessToken);
+		System.out.println(accessToken);
+		
+		System.out.println(user);
 		
 		//3. db 로그인/회원가입
 		MemberVO loginUser = kakaoService.loginOrSignup(user);

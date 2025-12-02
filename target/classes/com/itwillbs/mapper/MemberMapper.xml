@@ -49,8 +49,8 @@
 
     <!-- (2) 카카오 신규 회원 생성 -->
     <insert id="insertkakaoMember" parameterType="com.itwillbs.domain.MemberVO">
-        INSERT INTO users (user_id, password, kakao_id, email, nickname, username, role)
-        VALUES (#{user_id},#{password}, #{kakaoId}, #{email}, #{nickname}, #{username}, #{role})
+        INSERT INTO users (user_id, password, kakao_id, email, nickname, username, role, profile_image)
+        VALUES (#{user_id},#{password}, #{kakaoId}, #{email}, #{nickname}, #{username}, #{role}, #{profileImage})
     </insert>
 
 
