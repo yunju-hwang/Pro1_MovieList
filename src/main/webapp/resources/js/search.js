@@ -49,6 +49,8 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     };
 
-    searchForm.addEventListener("submit", e => { e.preventDefault(); searchMovies(); });
+    searchForm.addEventListener("submit", e => { e.preventDefault(); 
+    searchMovies(); 
+    });
     searchBtn.addEventListener("click", searchMovies);
 });

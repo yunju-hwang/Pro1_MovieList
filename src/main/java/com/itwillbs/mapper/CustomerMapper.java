@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.itwillbs.domain.FaqsVO;
 import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MovieRequestVO;
 import com.itwillbs.domain.NoticesVO;
@@ -27,15 +28,18 @@ public interface CustomerMapper {
 	void inquiry_delete(int id);
 
 
-	    InquiriesVO inquiry_detail(int id);
+	InquiriesVO inquiry_detail(int id);
 
 	List<MovieRequestVO> movie_request(String userId);
 
 	void insert_movie_request(MovieRequestVO movieRequestVO);
 
-	List<NoticesVO> notices(String id);
+    List<NoticesVO> notices();   // 전체 공지 목록
+    NoticesVO notice_detail(int id);    // 공지 상세
 
-	int notice_count(String id);
+    List<FaqsVO> faqs();
+
+
 
 
 
