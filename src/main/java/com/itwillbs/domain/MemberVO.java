@@ -24,6 +24,7 @@ public class MemberVO {
 	private String phone; // 전화번호
 	private String profileImage; // 프로필 사진 경로 저장
 	private String nickname; //id값
+	private Long kakaoId; // kakao 추가
 	
 	
 	private LocalDate createdAt;      // 가입일 (DB에 created_at이 있다면)
