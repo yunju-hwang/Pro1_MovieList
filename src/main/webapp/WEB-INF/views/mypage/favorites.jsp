@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/navbar.jsp"%>
 <!DOCTYPE html>
 <html>
@@ -236,11 +237,6 @@ body {
 	color: #555;
 	margin-bottom: 15px;
 	line-height: 1.4;
-	height: 90px; /* 2줄 정도의 높이 */
-	overflow: hidden;
-	display: -webkit-box;
-	-webkit-line-clamp: 5; /* 5줄까지만 표시 */
-	-webkit-box-orient: vertical;
 }
 
 .action-button {
@@ -271,6 +267,24 @@ body {
 	padding-top: 10px;
 	border-top: 1px solid #eee;
 }
+.movie-link-wrapper {
+	/* 링크의 밑줄 제거 */
+	text-decoration: none; 
+	/* 내부 텍스트가 링크의 색상을 상속받지 않도록 검은색 계열로 설정 */
+	color: inherit; 
+}
+.movie-link-wrapper h3 {
+    text-decoration: none;
+    color: #333; /* 기본 색상 유지 */
+}
+.movie-link-wrapper:hover {
+    text-decoration: none;
+}
+.movie-link-wrapper .movie-info,
+.movie-link-wrapper .movie-description {
+    text-decoration: none;
+    color: inherit; /* 부모로부터 색상 상속 (555 또는 777 색상 유지) */
+}
 </style>
 </head>
 <body>
@@ -280,20 +294,15 @@ body {
 
 	<div class="header-nav">
 		<ul>
-			<li><a href="/movielist/mypage/reservations"><i
-					class="fa-solid fa-calendar-check"></i> 예매 내역</a></li>
-			<li class="active"><a href="/movielist/mypage/favorites"><i
-					class="fa-regular fa-heart"></i> 관심 목록</a></li>
-			<li><a href="/movielist/mypage/profile"><i
-					class="fa-regular fa-user"></i> 회원 정보</a></li>
-			<li><a href="/movielist/mypage/theaters"><i
-					class="fa-solid fa-map-pin"></i> 선호 영화관</a></li>
-			<li><a href="/movielist/mypage/inquiries"><i
-					class="fa-regular fa-clipboard"></i> 문의 내역</a></li>
-			<li><a href="/movielist/mypage/movierequest"><i
-					class="fa-solid fa-film"></i> 영화 요청</a></li>
+			<li><a href="/movielist/mypage/reservations"><i class="fa-solid fa-calendar-check"></i> 예매 내역</a></li>
+			<li class="active"><a href="/movielist/mypage/favorites"><i class="fa-regular fa-heart"></i> 관심 목록</a></li>
+			<li><a href="/movielist/mypage/profile"><i class="fa-regular fa-user"></i> 회원 정보</a></li>
+			<li><a href="/movielist/mypage/theaters"><i class="fa-solid fa-map-pin"></i> 선호 영화관</a></li>
+			<li><a href="/movielist/mypage/inquiries"><i class="fa-regular fa-clipboard"></i> 문의 내역</a></li>
+			<li><a href="/movielist/mypage/movierequest"><i class="fa-solid fa-film"></i> 영화 요청</a></li>
 		</ul>
 	</div>
+	
 	<div class="container">
 		<div class="content-box">
 			<h1>관심 영화</h1>
@@ -305,54 +314,72 @@ body {
 				<c:choose>
 					<c:when test="${not empty favoriteList}">
 						<c:forEach var="movie" items="${favoriteList}">
-							<div class="movie-card"> <div class="poster">
-									<img class="movie-poster"
-										src="https://image.tmdb.org/t/p/w300${movie.poster_path}"
-										alt="${movie.movie_title} 포스터" />
-								</div>
-								
-								<div class="card-content">
-									<div class="title">
-										<h3>${movie.movie_title}</h3>
 
-										<button class="favorite-btn btn-unfavorite"
-											data-tmdb-id="${movie.tmdbId}">
-											<i class="fa-solid fa-heart"></i>
-										</button>
+							<c:url var="detailUrl" value="/movies/detailPage">
+								<c:param name="tmdbId" value="${movie.tmdbId}" />
+							</c:url>
+
+							<%-- 2. 생성된 URL로 카드 전체를 감싸서 링크 적용 --%>
+							<a href="${detailUrl}" class="movie-link-wrapper">
+								<div class="movie-card">
+									<div class="poster">
+										<img class="movie-poster"
+											src="https://image.tmdb.org/t/p/w300${movie.poster_path}"
+											alt="${movie.movie_title} 포스터" />
 									</div>
 
-									<div class="movie-info">${movie.release_date}</div>
+										<div class="card-content">
+											<div class="title">
+												<h3>${movie.movie_title}</h3>
 
-									<div class="movie-info genres-container">
-										<%-- 현재 영화의 장르 목록을 genresMap에서 가져옴 --%>
-										<c:set var="currentGenres" value="${genresMap[movie.tmdbId]}" />
+												<button type="button" class="favorite-btn btn-unfavorite"
+													data-tmdb-id="${movie.tmdbId}">
+													<i class="fa-solid fa-heart"></i>
+												</button>
+											</div>
 
-										<c:choose>
-											<c:when test="${not empty currentGenres}">
-												<%-- 장르가 있을 경우, 태그를 순회하며 출력 --%>
-												<c:forEach var="genreName" items="${currentGenres}"
-													varStatus="loop">
-													<span class="genre-tag">${genreName}</span>
-													<c:if test="${!loop.last}">
-													</c:if>
-												</c:forEach>
-											</c:when>
-											<c:otherwise>
-												<%-- 장르 정보가 없을 경우 --%>
-												<span class="genre-tag">장르 정보 없음</span>
-											</c:otherwise>
-										</c:choose>
+											<div class="movie-info">${movie.release_date}</div>
+
+											<div class="movie-info genres-container">
+												<%-- 현재 영화의 장르 목록을 genresMap에서 가져옴 --%>
+												<c:set var="currentGenres"
+													value="${genresMap[movie.tmdbId]}" />
+
+												<c:choose>
+													<c:when test="${not empty currentGenres}">
+														<%-- 장르가 있을 경우, 태그를 순회하며 출력 --%>
+														<c:forEach var="genreName" items="${currentGenres}"
+															varStatus="loop">
+															<span class="genre-tag">${genreName}</span>
+															<c:if test="${!loop.last}">
+															</c:if>
+														</c:forEach>
+													</c:when>
+													<c:otherwise>
+														<%-- 장르 정보가 없을 경우 --%>
+														<span class="genre-tag">장르 정보 없음</span>
+													</c:otherwise>
+												</c:choose>
+											</div>
+
+											<div class="movie-description">
+											<c:choose>
+                                            <c:when test="${fn:length(movie.overview) > 100}">
+                                              ${fn:substring(movie.overview, 0, 100)}...
+                                            </c:when> 
+                                            <c:otherwise>
+                                              ${movie.overview}
+                                            </c:otherwise>
+                                            </c:choose>
+											</div>
+										</div>
+
 									</div>
-
-									<div class="movie-description">${movie.overview}</div>
-								</div>
-                                
-                                </div> </c:forEach>
+						</c:forEach>
 					</c:when>
-					<c:otherwise>
+					<c:otherwise>  
 						<%-- 관심 영화가 없을 때 표시할 내용 --%>
-						<div
-							style="width: 100%; text-align: center; padding: 50px; color: #888; border: 1px dashed #ddd; border-radius: 4px;">
+						<div style="width: 100%; text-align: center; padding: 50px; color: #888; border: 1px dashed #ddd; border-radius: 4px;">
 							<i class="fa-regular fa-heart fa-2x" style="margin-bottom: 10px;"></i>
 							<p>관심 영화 목록이 비어있습니다. 좋아하는 영화를 추가해 보세요!</p>
 						</div>
@@ -360,48 +387,46 @@ body {
 				</c:choose>
 
 			</div>
-			
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script>
-		$(document).ready(
-				function() {
-					// 관심 영화 삭제 버튼 클릭 이벤트
-					$('.btn-unfavorite').click(
-							function(e) {
-								e.preventDefault(); // 기본 폼 전송 방지 (필요하다면)
 
-								// 버튼에서 tmdb-id 값 가져오기
-								var tmdbId = $(this).data('tmdb-id');
+			<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+			<script>
+				$(document).ready(
+								function() {
+									// 관심 영화 삭제 버튼 클릭 이벤트
+									$('.btn-unfavorite')
+											.click(
+													function(e) {
+														e.preventDefault();
+														
+														e.stopPropagation(); // 기본 폼 전송 방지 (필요하다면)
 
-								if (!confirm("관심 영화 목록에서 삭제하시겠습니까?")) {
-									return; // 사용자가 취소하면 아무것도 안 함
-								}
+														// 버튼에서 tmdb-id 값 가져오기
+														var tmdbId = $(this).data('tmdb-id');
 
-								// AJAX DELETE 요청
-								$.ajax({
-									url : '/movielist/mypage/favorites/'
-											+ tmdbId, // Controller에 정의한 URL
-									type : 'DELETE', // HTTP DELETE 메서드 사용
-									success : function(response) {
-										alert("삭제되었습니다.");
-										// 삭제 성공 시, 현재 페이지를 새로고침하여 목록을 업데이트
-										// 새로고침하면 DB에 정보가 없으므로 화면에서 사라집니다. (원래 목표 달성)
-										location.reload();
-									},
-									error : function(xhr) {
-										// 실패 시 에러 메시지 표시
-										var errorMessage = xhr.responseText
-												|| "삭제 중 오류가 발생했습니다.";
-										alert("삭제 실패: " + errorMessage);
-									}
+														if (!confirm("관심 영화 목록에서 삭제하시겠습니까?")) {
+															return; // 사용자가 취소하면 아무것도 안 함
+														}
+
+														// AJAX DELETE 요청
+														$
+																.ajax({
+																	url : '/movielist/mypage/favorites/' + tmdbId, // Controller에 정의한 URL
+																	type : 'DELETE', // HTTP DELETE 메서드 사용
+																	success : function(response) {
+																		alert("삭제되었습니다.");
+																		// 삭제 성공 시, 현재 페이지를 새로고침하여 목록을 업데이트
+																		// 새로고침하면 DB에 정보가 없으므로 화면에서 사라집니다. (원래 목표 달성)
+																		location.reload();
+																	},
+																	error : function(xhr) {
+																		// 실패 시 에러 메시지 표시
+																		var errorMessage = xhr.responseText
+																				|| "삭제 중 오류가 발생했습니다.";
+																		alert("삭제 실패: " + errorMessage);
+																	}
+																});
+													});
 								});
-							});
-				});
-	</script>
-
-
-
-
-
+			</script>
 </body>
 </html>

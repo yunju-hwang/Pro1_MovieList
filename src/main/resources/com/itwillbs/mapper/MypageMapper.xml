@@ -4,159 +4,181 @@
 
 <mapper namespace="com.itwillbs.mapper.MypageMapper">
 
-    <select id="getMember" resultType="com.itwillbs.domain.MemberVO">
-        SELECT
-            user_id,
-            username,
-            email,
-            gender,
-            birth_date AS birthDate,   phone, nickname,
-            profile_image AS profileImage, -- 비밀번호, 권한, 생성일, 마지막 로그인 등 UI에 직접 표시되지 않는 정보는 제외
-            
-            -- UI에서 참조하는 더미 데이터는 0 또는 NULL로 처리하여 SQL 오류를 방지
-            NULL AS password, 
-            NULL AS role,
-            NULL AS createdAt,
-            NULL AS lastLogin,
-            0 AS reviewCount,
-            0 AS reservationCount,
-            0 AS inquiryCount,
-            0 AS movieRequestCount
-        FROM
-            users
-        WHERE
-            user_id = #{user_id}
-    </select>
-    
-    <update id="updateMember" parameterType="com.itwillbs.domain.MemberVO">
-    UPDATE users
-    SET
-        nickname = #{nickname},
-        email = #{email},
-        gender = #{gender},
-        birth_date = #{birthDate},
-        phone = #{phone},
-        profile_image = #{profileImage}
-    WHERE
-        user_id = #{user_id}
-</update>
+	<select id="getMember" resultType="com.itwillbs.domain.MemberVO">
+		SELECT
+		user_id,
+		username,
+		email,
+		gender,
+		birth_date AS birthDate,
+		phone,
+		nickname,
+		profile_image AS profileImage,
+		password
+		FROM
+		users
+		WHERE
+		user_id = #{user_id}
+	</select>
 
-<select id="checkDuplicateNicknameForUpdate" resultType="int">
-    SELECT 
-        COUNT(*) 
-    FROM 
-        users 
-    WHERE 
-        nickname = #{nickname} 
-        AND user_id != #{user_id}
-</select>
+	<update id="updateMember"
+		parameterType="com.itwillbs.domain.MemberVO">
+		UPDATE users
+		<set>
+			nickname = #{nickname},
+			email = #{email},
+			gender = #{gender},
+			birth_date = #{birthDate},
+			phone = #{phone},
+			profile_image =
+			#{profileImage},
 
-<select id="checkDuplicateEmailForUpdate" resultType="int">
-    SELECT 
-        COUNT(*) 
-    FROM 
-        users 
-    WHERE 
-        email = #{email} 
-        AND user_id != #{user_id}
-</select>
+			<if test="password != null">
+				password = #{password}
+			</if>
+		</set>
+		WHERE user_id = #{user_id}
+	</update>
 
-<select id="checkDuplicatePhoneForUpdate" resultType="int">
-    SELECT 
-        COUNT(*) 
-    FROM 
-        users 
-    WHERE 
-        phone = #{phone} 
-        AND user_id != #{user_id}
-</select>
-    
- <select id="selectFavoriteListByUserId" parameterType="string" resultType="com.itwillbs.domain.UserFavoritesVO">
-    SELECT 
-        f.id,
-        f.user_id AS userId,  
-        f.tmdb_id AS tmdbId,  
-        
-        m.title AS movie_title,          m.poster_path AS poster_path,
-        m.release_date AS release_date,
-        m.overview AS overview,          m.runtime AS runtime,            m.popularity AS popularity       
-    FROM 
-        user_favorites f
-    JOIN 
-        movies m ON f.tmdb_id = m.tmdb_id
-    WHERE 
-        f.user_id = #{userId}
-    ORDER BY
-        f.id DESC
-</select>
+	<update id="updatePassword">
+		UPDATE users
+		SET password = #{password}
+		WHERE user_id = #{userId}
+	</update>
 
-<delete id="deleteFavoriteMovie">
-    DELETE FROM 
-        user_favorites
-    WHERE
-        user_id = #{userId}
-    AND
-        tmdb_id = #{tmdbId}
+	<select id="checkDuplicateNicknameForUpdate" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		users
+		WHERE
+		nickname = #{nickname}
+		AND user_id != #{user_id}
+	</select>
+
+	<select id="checkDuplicateEmailForUpdate" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		users
+		WHERE
+		email = #{email}
+		AND user_id != #{user_id}
+	</select>
+
+	<select id="checkDuplicatePhoneForUpdate" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		users
+		WHERE
+		phone = #{phone}
+		AND user_id != #{user_id}
+	</select>
+
+	<delete id="deleteMember" parameterType="string">
+    DELETE FROM users
+    WHERE user_id = #{userId}
 </delete>
 
-<select id="selectGenreNamesByTmdbId" resultType="string" parameterType="int">
-    SELECT
-        g.genre_name  FROM
-        movie_genres mg  JOIN
-        genres g ON mg.genre_id = g.genre_id  WHERE
-        mg.tmdb_id = #{tmdbId} 
-</select>
+	<select id="selectFavoriteListByUserId" parameterType="string"
+		resultType="com.itwillbs.domain.UserFavoritesVO">
+		SELECT
+		f.id,
+		f.user_id AS userId,
+		f.tmdb_id AS tmdbId,
+
+		m.title
+		AS movie_title, m.poster_path AS poster_path,
+		m.release_date AS
+		release_date,
+		m.overview AS overview, m.runtime AS runtime,
+		m.popularity AS popularity
+		FROM
+		user_favorites f
+		JOIN
+		movies m ON
+		f.tmdb_id = m.tmdb_id
+		WHERE
+		f.user_id = #{userId}
+		ORDER BY
+		f.id DESC
+	</select>
+
+	<delete id="deleteFavoriteMovie">
+		DELETE FROM
+		user_favorites
+		WHERE
+		user_id = #{userId}
+		AND
+		tmdb_id = #{tmdbId}
+	</delete>
+
+	<select id="selectGenreNamesByTmdbId" resultType="string"
+		parameterType="int">
+		SELECT
+		g.genre_name FROM
+		movie_genres mg JOIN
+		genres g ON
+		mg.genre_id = g.genre_id WHERE
+		mg.tmdb_id = #{tmdbId}
+	</select>
 
 
 
-<select id="selectTheaterList" resultType="com.itwillbs.domain.TheatersVO">
-        SELECT 
-            theater_id AS theaterId,  name,
-            location
-            FROM 
-            theaters
-        ORDER BY
-            theaterId
-    </select>
-    
-    <select id="selectUserTheaterIds" resultType="int">
-        SELECT theater_id 
-        FROM user_theaters
-        WHERE user_id = #{userId}
-    </select>
-    
-    <delete id="deleteUserTheaters">
-        DELETE FROM user_theaters
-        WHERE user_id = #{userId}
-    </delete>
-    
-    <delete id="deleteOneUserTheater">
-        DELETE FROM user_theaters
-        WHERE user_id = #{userId} 
-          AND theater_id = #{theaterId}
-    </delete>
+	<select id="selectTheaterList"
+		resultType="com.itwillbs.domain.TheatersVO">
+		SELECT
+		theater_id AS theaterId, name,
+		location
+		FROM
+		theaters
+		ORDER BY
+		theaterId
+	</select>
 
-    <insert id="insertUserTheaters">
-        INSERT INTO user_theaters (user_id, theater_id)
-        VALUES
-        <foreach item="theaterId" collection="theaterIds" separator=",">
-            (#{userId}, #{theaterId})
-        </foreach>
-    </insert>
-    
-    <select id="searchTheatersByKeyword" resultType="com.itwillbs.domain.TheatersVO">
-    SELECT 
-        theater_id AS theaterId, 
-        name, 
-        location
-    FROM 
-        theaters
-    WHERE 
-        name LIKE CONCAT('%', #{keyword}, '%') 
-        OR location LIKE CONCAT('%', #{keyword}, '%')
-    ORDER BY
-        name
-    LIMIT 10 </select>
-    
+	<select id="selectUserTheaterIds" resultType="int">
+		SELECT theater_id
+		FROM user_theaters
+		WHERE user_id = #{userId}
+	</select>
+
+	<delete id="deleteUserTheaters">
+		DELETE FROM user_theaters
+		WHERE user_id = #{userId}
+	</delete>
+
+	<delete id="deleteOneUserTheater">
+		DELETE FROM user_theaters
+		WHERE user_id = #{userId}
+		AND theater_id = #{theaterId}
+	</delete>
+
+	<insert id="insertUserTheaters">
+		INSERT INTO user_theaters (user_id, theater_id)
+		VALUES
+		<foreach item="theaterId" collection="theaterIds"
+			separator=",">
+			(#{userId}, #{theaterId})
+		</foreach>
+	</insert>
+
+	<select id="searchTheatersByKeyword"
+		resultType="com.itwillbs.domain.TheatersVO">
+		SELECT
+		theater_id AS theaterId,
+		name,
+		location
+		FROM
+		theaters
+		WHERE
+		name LIKE CONCAT('%', #{keyword}, '%')
+		OR location LIKE
+		CONCAT('%', #{keyword}, '%')
+		ORDER BY
+		name
+		LIMIT 10
+	</select>
+
 
 </mapper>
