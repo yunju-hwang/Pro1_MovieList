@@ -29,6 +29,11 @@ public class MypageService {
         return mypageMapper.updateMember(member);
     }
 	
+	public int updatePassword(String userId, String encryptedPassword) {
+	    // Mapper로 사용자 ID와 암호화된 비밀번호를 전달합니다.
+	    return mypageMapper.updatePassword(userId, encryptedPassword);
+	}
+	
 	public int checkDuplicateNicknameForUpdate(MemberVO vo) {
         return mypageMapper.checkDuplicateNicknameForUpdate(vo);
     }
@@ -40,6 +45,16 @@ public class MypageService {
 	public int checkDuplicatePhoneForUpdate(MemberVO vo) {
         return mypageMapper.checkDuplicatePhoneForUpdate(vo);
     }
+	
+	@Transactional
+	public boolean deleteMember(String userId) {
+	    // Mapper를 호출하여 DB DELETE 구문을 실행합니다.
+	    // DELETE 구문은 성공 시 1을 반환합니다.
+	    int result = mypageMapper.deleteMember(userId);
+
+	    // 삭제된 행의 수가 1 이상이면 true 반환
+	    return result > 0;
+	}
 
 	public List<UserFavoritesVO> getFavoriteList(String userId) {
 		

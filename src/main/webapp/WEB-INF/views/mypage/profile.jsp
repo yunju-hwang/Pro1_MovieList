@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/navbar.jsp"%>
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -136,11 +137,7 @@ body {
 	font-size: 15px;
 	box-sizing: border-box;
 	background-color: #fff;
-	 
-	 
-	height
-	:
-	40px; /* 폼 요소 높이 통일 */
+	height: 40px; /* 폼 요소 높이 통일 */
 }
 
 /* 아이디와 같은 수정 불가 필드 스타일 */
@@ -319,6 +316,91 @@ body {
 	margin-bottom: 20px;
 }
 
+/* 모달 오버레이 (배경을 어둡게 처리하고 전체 화면을 덮음) */
+.modal-overlay {
+	/* 🔑 필수: 화면에 고정하고 전체를 덮습니다. */
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	/* 🔑 필수: 배경을 반투명하게 만듭니다. */
+	background-color: rgba(0, 0, 0, 0.6);
+	/* 🔑 필수: 다른 요소보다 항상 위에 있도록 설정합니다. */
+	z-index: 1000;
+	/* 내용을 중앙에 배치하기 위한 flex 설정 */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.modal-content {
+	background-color: #ffffff;
+	padding: 30px;
+	border-radius: 8px;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+	width: 100%;
+	max-width: 400px; /* 모달 크기 제한 */
+	transform: translateY(-50px); /* 약간 위에서 내려오는 효과 (선택 사항) */
+	transition: transform 0.3s ease-out;
+}
+
+/* 모달 내부 버튼 스타일 (메인 저장 버튼과 구분) */
+.modal-content .btn-primary, .modal-content .btn-secondary {
+	padding: 10px 15px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 15px;
+	margin-top: 15px;
+	width: 48%; /* 버튼 2개가 가로로 나란히 오도록 */
+}
+
+#passwordConfirmModal .btn-primary {
+	width: 100%;
+	margin-right: 0;
+}
+
+.modal-content .btn-primary {
+	background-color: #cd0000;
+	color: white;
+	margin-right: 4%; /* 버튼 사이 간격 */
+}
+
+.modal-content .btn-secondary {
+	background-color: #6c757d;
+	color: white;
+}
+
+.modal-content .btn-primary:hover {
+	background-color: #a00000;
+}
+
+.modal-content .btn-secondary:hover {
+	background-color: #5a6268;
+}
+
+/* 모달 제목 */
+.modal-content h2 {
+	text-align: center;
+	margin-bottom: 25px;
+	color: #333;
+	font-size: 20px;
+}
+
+#passwordChangeModal .modal-content .btn-primary, #passwordChangeModal .modal-content .btn-secondary
+	{
+	width: 100%; /* 너비를 100%로 설정하여 입력 필드와 동일한 폭을 가지게 함 */
+	margin-top: 10px; /* 버튼 간 세로 간격 조정 */
+	margin-right: 0; /* 우측 마진 제거 */
+}
+
+/* 첫 번째 버튼 (변경 내용 적용)의 불필요한 마진 제거 */
+#passwordChangeModal .modal-content .btn-primary {
+	/* 기본 .modal-content .btn-primary에 4% margin-right가 적용되어 있으므로 덮어씁니다. */
+	margin-right: 0;
+}
+
 /* ========================================================== */
 /* 🟢 [재추가] 단일 이메일 입력 필드 스타일 및 드롭다운 아이콘 제거 */
 /* ========================================================== */
@@ -335,21 +417,14 @@ body {
 	/* datalist를 사용하면 일부 브라우저에서 드롭다운 아이콘이 생길 수 있으므로 이를 제거합니다. */
 	-webkit-appearance: none; /* Chrome, Safari */
 	-moz-appearance: none;
-	 
-	  /* Firefox */
-	appearance
-	:
-	none;
-	 
-	 
-	 
+	appearance: none;
 	 
 	  /* Standard */
 }
 
 /* Internet Explorer의 드롭다운 버튼 제거 */
-#memberFullEmailInput::-ms-expand {    display:none;
-	
+#memberFullEmailInput::-ms-expand {
+	display: none;
 }
 </style>
 </head>
@@ -372,23 +447,27 @@ body {
 		</ul>
 	</div>
 
+	<div id="passwordConfirmModal" class="modal-overlay"
+		style="display: none;">
+		<div class="modal-content">
+			<h3>회원 정보 수정을 위해 비밀번호를 입력해주세요.</h3>
+
+			<div class="form-group">
+				<label for="currentPasswordInput">현재 비밀번호</label> <input
+					type="password" id="currentPasswordInput"
+					placeholder="현재 비밀번호를 입력하세요" required>
+				<p id="currentPasswordError" class="error-message"
+					style="color: red;"></p>
+			</div>
+
+			<button type="button" id="submitCurrentPasswordBtn"
+				class="btn btn-primary">확인</button>
+		</div>
+	</div>
+
 	<div class="container">
-		<div class="content-box">
+		<div class="content-box" id="profileContentBox" style="display: none;">
 			<h1>회원 정보 수정</h1>
-
-			<!--         <div class="message-container"> -->
-			<%--             <c:if test="${not empty msg}"> --%>
-			<!--                 <div class="alert alert-success" role="alert"> -->
-			<%--                     <i class="fa-solid fa-check-circle"></i> ${msg} --%>
-			<!--                 </div> -->
-			<%--             </c:if> --%>
-
-			<%--             <c:if test="${not empty errorMsg}"> --%>
-			<!--                 <div class="alert alert-danger" role="alert"> -->
-			<%--                     <i class="fa-solid fa-triangle-exclamation"></i> ${errorMsg} --%>
-			<!--                 </div> -->
-			<%--             </c:if> --%>
-			<!--         </div> -->
 
 
 			<div class="profile-section">
@@ -431,8 +510,10 @@ body {
 
 				<div class="form-group">
 					<label>비밀번호 <span class="required">*</span></label> <input
-						type="password" readonly>
-					<p class="help-text">비밀번호는 보안을 위해 별도의 변경 절차를 거칩니다.</p>
+						type="password" value="********" readonly>
+
+					<p class="help-text">비밀번호는 변경 버튼을 통해 수정할 수 있습니다.</p>
+
 					<div class="password-group">
 						<button type="button" class="btn-password-change"
 							onclick="openPasswordChangeModal()">
@@ -440,6 +521,31 @@ body {
 						</button>
 					</div>
 				</div>
+
+				<div id="passwordChangeModal" class="modal-overlay"
+					style="display: none;">
+					<div class="modal-content">
+						<h2>새 비밀번호 변경</h2>
+
+						<div class="form-group">
+							<label for="modalNewPassword">새 비밀번호</label> <input
+								type="password" id="modalNewPassword" placeholder="새 비밀번호 입력">
+							<p id="passwordError" class="error-message" style="color: red;"></p>
+						</div>
+
+						<div class="form-group">
+							<label for="modalConfirmPassword">새 비밀번호 확인</label> <input
+								type="password" id="modalConfirmPassword"
+								placeholder="새 비밀번호 확인">
+						</div>
+
+						<button type="button" id="applyPasswordBtn"
+							class="btn btn-primary">변경 내용 적용</button>
+						<button type="button" onclick="closePasswordChangeModal()"
+							class="btn btn-secondary">취소</button>
+					</div>
+				</div>
+
 
 				<%-- 🟢 [재추가] 단일 이메일 입력 필드에 datalist 속성 및 제안 목록 추가 --%>
 				<div class="form-group">
@@ -493,33 +599,34 @@ body {
 				<button type="submit" class="submit-button">저장</button>
 			</form>
 
-			<button type="button" class="btn-withdrawal"
-				onclick="openWithdrawalConfirm()">회원 탈퇴</button>
+			<button type="button" class="btn-withdrawal" onclick="confirmWithdrawal()">회원 탈퇴</button>
 
 		</div>
 	</div>
 
-	<script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
 	
 	// 🟢 Controller에서 전달된 메시지 변수를 JavaScript로 가져옵니다.
-    // (RedirectAttributes를 통해 넘어온 값이 여기에 삽입됩니다.)
-    var successMsg = "${msg}";
-    var errorMsg = "${errorMsg}";
+    var successMsg = "${msg}";
+    var errorMsg = "${errorMsg}";
 
-    window.onload = function() {
-        // 1. 오류 메시지 (errorMsg)가 있을 경우
-        if (errorMsg && errorMsg.trim() !== '') {
-            // 중복 오류 메시지를 알림으로 띄웁니다.
-            alert(errorMsg);
-        } 
-        // 2. 성공 메시지 (msg)가 있을 경우
-        else if (successMsg && successMsg.trim() !== '') {
-            // 회원 정보 수정 성공 메시지를 알림으로 띄웁니다.
-            alert(successMsg);
-        }
-    };
+    window.onload = function() {
+        
+        openPasswordConfirmModal();
+        
+        if (errorMsg && errorMsg.trim() !== '') {
+            closePasswordConfirmModal();
+            alert(errorMsg);
+        } 
+        else if (successMsg && successMsg.trim() !== '') {
+            closePasswordConfirmModal();
+            alert(successMsg);
+        }
+    };
+
         // ==========================================================
-        // JS 헬퍼 함수
+        // JS 헬퍼 함수 (유지)
         // ==========================================================
         function displayError(elementId, message) {
             const errorElement = document.getElementById(elementId + 'Error');
@@ -537,69 +644,54 @@ body {
         }
         
         // ==========================================================
-        // 🟢 [재추가] 이메일 자동 완성 도메인 목록 및 로직
+        // 🟢 이메일 자동 완성 로직 (유지)
         // ==========================================================
-		// 자주 사용되는 도메인 목록
 		const DOMAINS = [
 			'naver.com', 'hanmail.net', 'daum.net', 'nate.com', 'gmail.com',
 			'hotmail.com', 'outlook.com', 'yahoo.com'
 		];
 		
-		// JSP 변수에서 현재 이메일 도메인을 추출 (JS 변수에 저장)
-		// C:set을 이용해 JSTL 변수를 생성하지 않았으므로, loginMember.email에서 직접 추출합니다.
 		const currentEmail = "${loginMember.email}";
 		let currentDomain = '';
 		const atIndexInCurrent = currentEmail.indexOf('@');
 		if (atIndexInCurrent !== -1) {
 			currentDomain = currentEmail.substring(atIndexInCurrent + 1);
 			
-			// 현재 도메인이 기본 목록에 없으면 맨 앞에 추가하여 우선 제안합니다.
 			if (currentDomain !== '' && !DOMAINS.includes(currentDomain)) {
 				DOMAINS.unshift(currentDomain);
 			}
 		}
 
-		/**
-		 * 입력된 이메일 아이디를 바탕으로 자동 완성 제안 목록을 업데이트합니다.
-		 */
 		function updateSuggestions() {
 			const fullEmailInput = document.getElementById('memberFullEmailInput');
 			const datalist = document.getElementById('emailDomainSuggestions');
-			const inputValue = fullEmailInput.value.trim();
+			if (!fullEmailInput) return;
 
-			// @ 기호 이전의 아이디 부분 추출
+			const inputValue = fullEmailInput.value.trim();
 			let idPart = inputValue;
 			const atIndex = inputValue.indexOf('@');
 			
-			// @가 있으면 @ 앞부분만 사용 (예: admin@daum.net을 입력 중이면 'admin'만 사용)
 			if (atIndex !== -1) {
 				idPart = inputValue.substring(0, atIndex);
 			}
 
-			// datalist 초기화
-			datalist.innerHTML = '';
+			if (datalist) datalist.innerHTML = '';
 
-			// 아이디 부분이 없거나, @ 이후에 이미 도메인이 길게 입력되었으면 제안하지 않습니다.
 			if (idPart === '' || (atIndex !== -1 && inputValue.substring(atIndex + 1).length > 0 && !inputValue.includes('.'))) return;
 
 
-			// 미리 정의된 도메인 목록을 사용하여 새로운 option 태그 생성
 			DOMAINS.forEach(domain => {
-				// 현재 입력된 값에 @가 포함되어 있으면, 입력된 도메인 부분으로 시작하는 도메인만 제안
 				if (atIndex !== -1) {
 					const domainPart = inputValue.substring(atIndex + 1);
-					// 현재 입력된 도메인 부분으로 시작하는 도메인만 제안
 					if (!domain.startsWith(domainPart)) return;
 				}
 				
 				const option = document.createElement('option');
-				// '아이디@도메인' 형식으로 제안
 				option.value = idPart + '@' + domain;
-				datalist.appendChild(option);
+				if (datalist) datalist.appendChild(option);
 			});
 		}
         
-        // 🟢 [재추가] 페이지 로드 시 초기 제안 목록 생성 및 이벤트 등록
         document.addEventListener('DOMContentLoaded', function() {
 			updateSuggestions();
         });
@@ -610,57 +702,49 @@ body {
             const file = event.target.files[0];
             const preview = document.getElementById('profileImagePreview');
             const icon = document.getElementById('profileIcon');
-            // ... (기존 로직 유지)
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                    icon.style.display = 'none';
-                };
-                reader.readAsDataURL(file);
-            } else {
-                preview.src = '';
-                preview.style.display = 'none';
-                icon.style.display = 'block';
-            }
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (preview) preview.src = e.target.result;
+                    if (preview) preview.style.display = 'block';
+                    if (icon) icon.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                if (preview) preview.src = '';
+                if (preview) preview.style.display = 'none';
+                if (icon) icon.style.display = 'block';
+            }
         }
 
         // ==========================================================
-        // 🟢 [유지] 폼 유효성 검사 (validateForm)
+        // 🟢 폼 유효성 검사 (validateForm) - 유지
         // ==========================================================
         function validateForm() {
             clearErrors();    
             let isValid = true;
             
-            // DOM 요소 캐싱
             const nickname = document.getElementById('memberNickname');
             const birth = document.getElementById('memberBirth');
             const phone = document.getElementById('memberPhone');
             const genderSelected = document.querySelector('input[name="gender"]:checked');
-            
-            // 이메일 관련 DOM 요소 (단일 필드)
             const fullEmailInput = document.getElementById('memberFullEmailInput');
 			let fullEmail = fullEmailInput ? fullEmailInput.value.trim() : '';
 
-            // ----------------------------------------------------
-            // 0. 닉네임 검사
-            // ----------------------------------------------------
+            // 닉네임 검사
             if (!nickname || nickname.value.trim() === "") {
                 displayError('nickname', "닉네임을 입력해주세요.");
                 if (nickname) nickname.focus(); 
                 isValid = false;
             }
             
-            // ----------------------------------------------------
-            // 1. 이메일 검사 (단일 필드)
-            // ----------------------------------------------------
+            // 이메일 검사
             if (isValid && fullEmail === "") {
                 displayError('email', "이메일 주소를 입력해주세요.");
                 fullEmailInput.focus();
                 isValid = false;
             } else if (isValid) {
-                // 최종 형식 검사
                 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailPattern.test(fullEmail)) {
                     displayError('email', "유효한 이메일 형식(예: user@example.com)이 아닙니다.");
@@ -669,26 +753,20 @@ body {
                 }
             }
             
-            // ----------------------------------------------------
-            // 2. 성별 선택 검사
-            // ----------------------------------------------------
+            // 성별 선택 검사
             if (isValid && (!genderSelected || (genderSelected.value !== 'M' && genderSelected.value !== 'F'))) {
                 displayError('gender', "성별을 선택해주세요.");
                 isValid = false;
             }
             
-            // ----------------------------------------------------
-            // 3. 생년월일 검사
-            // ----------------------------------------------------
+            // 생년월일 검사
             if (isValid && birth.value.trim() === "") {
                 displayError('birth', "생년월일을 입력해주세요.");
                 birth.focus();
                 isValid = false;
             }
             
-            // ----------------------------------------------------
-            // 4. 전화번호 검사 및 형식 검사
-            // ----------------------------------------------------
+            // 전화번호 검사 및 형식 검사
             if (isValid && phone.value.trim() === "") {
                 displayError('phone', "전화번호는 필수 입력 항목입니다.");
                 phone.focus();
@@ -702,6 +780,7 @@ body {
                 }
             }
 
+
             if (isValid) {
                 return confirm("회원 정보를 수정하시겠습니까?");
             }
@@ -709,19 +788,193 @@ body {
             return false;
         }
         
-        // 비밀번호 변경 모달/팝업 호출 함수 (더미)
+        // ==========================================================
+        // 🟢 모달 관련 함수 (유지)
+        // ==========================================================
+function openPasswordConfirmModal() {
+    $('#passwordConfirmModal').show(); 
+    $('#profileContentBox').hide(); 
+    $('#currentPasswordInput').val(''); 
+    $('#currentPasswordError').text('');
+}
+
+function closePasswordConfirmModal() {
+    $('#passwordConfirmModal').hide(); 
+    $('#profileContentBox').show(); 
+}
+
         function openPasswordChangeModal() {
-            alert("비밀번호 변경을 위해 현재 비밀번호를 확인하는 팝업/모달이 곧 표시됩니다.");
+            $('#passwordChangeModal').show(); 
+            $('#modalNewPassword').val(''); 
+            $('#modalConfirmPassword').val(''); 
+            $('#passwordError').text('');
         }
+		
+		function closePasswordChangeModal() {
+			$('#passwordChangeModal').hide();
+		}
         
-        // 회원 탈퇴 확인 함수 (더미)
-        function openWithdrawalConfirm() {
-            if (confirm("정말로 회원 탈퇴를 하시겠습니까? 모든 정보가 삭제되며 복구할 수 없습니다.")) {
-                 alert("회원 탈퇴 처리를 위한 비밀번호 확인 창으로 이동합니다.");
-                 // window.location.href = "/mypage/withdrawalConfirm"; // 실제 탈퇴 확인 페이지로 이동
-            }
-        }
-        
-	</script>
+        // ==========================================================
+        // 🚨 [수정] 회원 탈퇴 확인 및 처리 함수 (함수명 변경 및 AJAX 로직 추가)
+        // ==========================================================
+		function confirmWithdrawal() {
+			// 1. 첫 번째 알림창: 사용자에게 최종 확인 요청
+		    if (confirm("정말로 회원 탈퇴를 하시겠습니까? 모든 정보가 삭제되며 복구할 수 없습니다.")) {
+		        
+		        // 사용자 계정 데이터를 서버에 보내 삭제 요청 (AJAX)
+		        $.ajax({
+		            // URL '/mypage/profile/withdrawal' 적용
+		            url: '<c:url value="/mypage/profile/withdrawal" />', 
+		            type: 'POST', 
+		            dataType: 'json', 
+		            success: function(response) {
+		                if (response.isSuccess) { 
+		                    // 2. 성공 알림창: 탈퇴 완료 메시지 표시
+		                    alert("탈퇴 완료 되었습니다.");
+		                    
+		                    // 3. 탈퇴 후 메인 페이지 또는 로그인 페이지로 리디렉션
+		                    window.location.href = '${contextPath}/main';
+		                } else {
+		                    alert(response.message || '탈퇴 처리 중 오류가 발생했습니다.');
+		                }
+		            },
+		            error: function() {
+		                alert('서버 통신 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+		            }
+		        });
+		    }
+		}
+
+        // ==========================================================
+        // 🟢 jQuery 이벤트 등록 및 AJAX 처리
+        // ==========================================================
+		$(document).ready(function() {
+			
+			// --- 0. [핵심 수정] 비밀번호 확인 모달에서 Enter 키 처리 (keydown 사용) ---
+			// 키가 눌리는 순간 폼 제출을 막고 확인 버튼을 클릭합니다.
+			$('#currentPasswordInput').on('keydown', function(e) {
+		        if (e.keyCode === 13 || e.key === 'Enter') {
+		            e.preventDefault(); // 기본 동작(폼 제출) 방지
+		            e.stopPropagation(); // 이벤트 전파 방지
+		            $('#submitCurrentPasswordBtn').click();
+					return false; // jQuery 이벤트 핸들러에서도 기본 동작 방지
+		        }
+		    });
+
+			// --- 1. [핵심 수정] 현재 비밀번호 확인 버튼 클릭 이벤트 (유지) ---
+			$('#submitCurrentPasswordBtn').click(function() {
+		        const currentPwd = $('#currentPasswordInput').val();
+		        $('#currentPasswordError').text('');
+
+		        if (currentPwd === '') {
+		            $('#currentPasswordError').text('현재 비밀번호를 입력해주세요.');
+		            return;
+		        }
+
+		        // AJAX 요청: 서버에 현재 비밀번호가 일치하는지 확인 요청
+		        $.ajax({
+		            url: '<c:url value="/mypage/profile/checkPassword" />',
+		            type: 'POST',
+		            data: { currentPassword: currentPwd },
+		            dataType: 'json',
+		            success: function(response) {
+		                if (response.isValid) { 
+		                    closePasswordConfirmModal();
+		                    alert("본인 확인이 완료되었습니다."); 
+		                } else {
+		                    $('#currentPasswordError').text(response.message || '비밀번호가 일치하지 않습니다.');
+		                    $('#currentPasswordInput').val('');
+		                }
+		            },
+		            error: function() {
+		            	$('#currentPasswordError').text('서버 통신 오류가 발생했습니다.');
+		            }
+		        });
+		    });
+			
+			// --- 2. [핵심 수정] 비밀번호 변경 모달에서 Enter 키 처리 (keydown 사용) ---
+			// 키가 눌리는 순간 폼 제출을 막고 변경 버튼을 클릭합니다.
+		    $('#modalNewPassword, #modalConfirmPassword').on('keydown', function(e) {
+		        if (e.keyCode === 13 || e.key === 'Enter') {
+		            e.preventDefault(); // 🚨 [핵심] 기본 동작(메인 폼 제출) 확실히 방지
+					e.stopPropagation(); // 이벤트 전파 방지
+		            $('#applyPasswordBtn').click();
+					return false; // jQuery 이벤트 핸들러에서도 기본 동작 방지
+		        }
+		    });
+
+			// --- 3. [변경 내용 적용] 버튼 클릭 이벤트 (유지) ---
+			$('#applyPasswordBtn').click(function() {
+				const newPwd = $('#modalNewPassword').val();
+				const confirmPwd = $('#modalConfirmPassword').val();
+				
+				const $errorDisplay = $('#passwordError');
+				$errorDisplay.text('');
+				
+				// 1. 유효성 검사
+				if (newPwd === '' || confirmPwd === '') {
+					$errorDisplay.text('새 비밀번호를 입력해주세요.');
+					return;
+				}
+				// 💡 [추가] 2. 최소/최대 글자 수 제한 (6~12글자)
+			    if (newPwd.length < 6 || newPwd.length > 12) { 
+			        $errorDisplay.text('비밀번호는 최소 6자, 최대 12자까지 입력할 수 있습니다.');
+			        return;
+			    }
+			    // 💡 [추가/수정] 3. 영문, 숫자를 필수로 혼용하고, 다른 문자는 허용하지 않음
+			    // 1) 영문/숫자 외 다른 문자가 있는지 확인
+			    const invalidCharPattern = /[^a-zA-Z0-9]/;
+			    if (invalidCharPattern.test(newPwd)) {
+			        $errorDisplay.text('비밀번호는 영문과 숫자만 포함해야 합니다.');
+			        return;
+			    }
+			    
+			    // 2) 영문이 포함되어 있는지 확인 (대문자 또는 소문자)
+			    const letterPattern = /[a-zA-Z]/;
+			    if (!letterPattern.test(newPwd)) {
+			        $errorDisplay.text('비밀번호는 최소 1개 이상의 영문이 포함되어야 합니다.');
+			        return;
+			    }
+
+			    // 3) 숫자가 포함되어 있는지 확인
+			    const numberPattern = /[0-9]/;
+			    if (!numberPattern.test(newPwd)) {
+			        $errorDisplay.text('비밀번호는 최소 1개 이상의 숫자가 포함되어야 합니다.');
+			        return;
+			    }
+		
+				if (newPwd !== confirmPwd) {
+					$errorDisplay.text('새 비밀번호와 일치하지 않습니다.');
+					return;
+				}
+				
+				// 2. 유효성 검사 통과: 새 비밀번호 업데이트 AJAX 요청
+				$.ajax({
+					url: '<c:url value="/mypage/profile/updatePassword" />', 
+					type: 'POST',
+					data: { newPassword: newPwd }, 
+					dataType: 'json',
+					success: function(response) {
+						if (response.isUpdated) { 
+							closePasswordChangeModal();
+							alert('비밀번호가 성공적으로 변경되었습니다!');
+							$('#modalNewPassword').val('');
+							$('#modalConfirmPassword').val('');
+						} else {
+							$errorDisplay.text(response.message || '비밀번호 변경 중 오류가 발생했습니다.');
+						}
+					},
+					error: function() {
+						$errorDisplay.text('서버 통신 오류가 발생했습니다. (변경 요청)');
+					}
+				});
+			});
+
+			// --- 4. 메인 폼 제출 시 (유지) ---
+			$('#updateForm').on('submit', function(e) {
+				// 이 핸들러는 다른 데이터 수정 처리를 위해 유지됩니다.
+			});
+		});
+</script>
 </body>
 </html>
