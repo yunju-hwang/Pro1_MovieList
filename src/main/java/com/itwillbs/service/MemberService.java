@@ -4,10 +4,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.itwillbs.domain.GenresVO;
+import com.itwillbs.domain.KakaoUserVO;
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.domain.UserGenresVO;
 import com.itwillbs.mapper.MemberMapper;
@@ -25,6 +25,7 @@ public class MemberService {
         // mapper에서 select 한 결과 반환
         return memberMapper.loginMember(member);
     }
+    
     
     public void insertMember(MemberVO memberVO) {
 		memberVO.setRole("user");

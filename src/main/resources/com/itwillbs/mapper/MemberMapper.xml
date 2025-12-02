@@ -54,7 +54,17 @@
 		VALUES
 		(#{userId}, #{genreId})
 	</insert>
+	
+    <!-- (1) 카카오 ID로 조회 -->
+    <select id="findBykakaoId" resultType="com.itwillbs.domain.MemberVO">
+        SELECT * FROM users WHERE kakao_id = #{kakaoId}
+    </select>
 
+    <!-- (2) 카카오 신규 회원 생성 -->
+    <insert id="insertkakaoMember" parameterType="com.itwillbs.domain.MemberVO">
+        INSERT INTO users (user_id, password, kakao_id, email, nickname, username, role)
+        VALUES (#{user_id},#{password}, #{kakaoId}, #{email}, #{nickname}, #{username}, #{role})
+    </insert>
 
 
 </mapper>
