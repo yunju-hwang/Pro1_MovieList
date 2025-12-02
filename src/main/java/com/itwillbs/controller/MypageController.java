@@ -3,9 +3,11 @@ package com.itwillbs.controller;
 import java.util.List;
 
 
+
 import java.io.File;
 import java.util.UUID;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -23,7 +25,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import com.google.gson.Gson;
 import com.itwillbs.domain.MemberVO;
@@ -91,6 +95,8 @@ public class MypageController {
 	}
 	
 	
+	
+	
 
 	// 마이페이지 -> 문의 목록
 	@GetMapping("/mypage/inquiries")
@@ -130,6 +136,52 @@ public class MypageController {
 
 	}
 	
+	@ResponseBody
+	@PostMapping("/mypage/profile/checkPassword")
+	public Map<String, Object> checkCurrentPassword(
+	        @RequestParam("currentPassword") String currentPassword,
+	        @SessionAttribute(value = "loginUser", required = false) MemberVO loginUser) { // loginUser 세션 사용
+		System.out.println("DEBUG: currentPassword: " + currentPassword);
+		if (loginUser != null) {
+		    System.out.println("DEBUG: loginUser ID: " + loginUser.getUser_id());
+		    System.out.println("DEBUG: loginUser Type: " + loginUser.getClass().getName());
+		} else {
+		    System.out.println("DEBUG: loginUser is NULL.");
+		}
+		
+	    Map<String, Object> response = new HashMap<>();
+	    
+	    if (loginUser == null) {
+	        response.put("isValid", false);
+	        response.put("message", "로그인이 필요합니다.");
+	        return response;
+	    }
+	    
+	    String userId = loginUser.getUser_id();
+	    
+	    // DB에서 사용자 정보 조회 (평문 비밀번호 포함)
+	    MemberVO memberInfo = mypageService.getMember(userId);
+	    
+	    if (memberInfo == null) {
+	        response.put("isValid", false);
+	        response.put("message", "회원 정보를 찾을 수 없습니다.");
+	        return response;
+	    }
+
+	    // 🔑 핵심: DB의 평문 비밀번호와 입력된 비밀번호를 직접 비교
+	    boolean isValid = memberInfo.getPassword().equals(currentPassword);
+	    
+	    response.put("isValid", isValid);
+	    
+	    if (!isValid) {
+	        response.put("message", "비밀번호가 틀립니다.");
+	    } else {
+	    	response.put("message", "비밀번호 일치");
+	    }
+	    
+	    return response; // { "isValid": true/false, "message": "..." } 형태로 JSON 반환
+	}
+	
 	@PostMapping("/mypage/profile/update")
 	public String updateMember(
 	    MemberVO updateMember,
@@ -151,6 +203,11 @@ public class MypageController {
 	    // =================================================================
 	    // 🟢 파일 업로드 처리 로직 (기존 유지)
 	    // =================================================================
+	    
+	    if (updateMember.getPassword() != null && updateMember.getPassword().isEmpty()) {
+	        // 비밀번호를 변경하지 않는 경우, Mapper에서 UPDATE를 건너뛰도록 null로 설정
+	        updateMember.setPassword(null);
+	    }
 	    
 	    if (uploadFile != null && !uploadFile.isEmpty()) {
 	        
@@ -242,6 +299,87 @@ public class MypageController {
 
 	    // 4. 회원 정보 조회 페이지로 다시 리다이렉트
 	    return "redirect:/mypage/profile";
+	}
+	
+	@ResponseBody
+	@PostMapping("/mypage/profile/updatePassword")
+	public Map<String, Object> updatePassword(
+	    @RequestParam("newPassword") String newPassword,
+	    @SessionAttribute(value = "loginUser", required = false) MemberVO loginUser) {
+
+	    Map<String, Object> response = new HashMap<>();
+
+	    if (loginUser == null) {
+	        response.put("isUpdated", false);
+	        response.put("message", "로그인이 필요합니다.");
+	        return response;
+	    }
+	    
+	    // 💡 1. 비밀번호 암호화 (필수!)
+	    // BCryptPasswordEncoder 등을 사용하여 newPassword를 암호화해야 합니다.
+	    String encryptedPassword = newPassword; // 🚨 실제 암호화 로직으로 교체해야 함
+
+	    // 2. Service 호출
+	    int result = mypageService.updatePassword(loginUser.getUser_id(), encryptedPassword);
+
+	    if (result > 0) {
+	        response.put("isUpdated", true);
+	        response.put("message", "비밀번호가 성공적으로 변경되었습니다.");
+	    } else {
+	        response.put("isUpdated", false);
+	        response.put("message", "DB 처리 중 오류가 발생했습니다.");
+	    }
+
+	    return response;
+	}
+	
+	@PostMapping("/mypage/profile/withdrawal")
+	@ResponseBody
+	public Map<String, Object> withdrawal(HttpSession session) {
+	    
+	    Map<String, Object> response = new HashMap<>();
+	    
+	    // 1. 세션에서 로그인된 회원 정보(MemberVO)를 가져옴
+	    MemberVO loginMember = (MemberVO) session.getAttribute("loginUser"); 
+
+	    if (loginMember == null) {
+	        response.put("isSuccess", false);
+	        response.put("message", "세션이 만료되어 로그인이 필요합니다.");
+	        return response;
+	    }
+
+	    // 🚨 [수정] 회원 번호(PK) 대신 user_id를 가져옴
+	    // MemberVO 클래스에 getUser_id() 메서드가 있다고 가정합니다.
+	    String userId = loginMember.getUser_id(); 
+
+	    if (userId == null || userId.isEmpty()) {
+	        response.put("isSuccess", false);
+	        response.put("message", "회원 ID 정보를 가져올 수 없습니다.");
+	        return response;
+	    }
+
+	    try {
+	        // 2. Service 계층 호출: user_id를 인자로 전달하여 DB에서 회원 정보 삭제 처리
+	        // MypageService에 deleteMember(String userId) 메서드가 구현될 예정입니다.
+	        boolean isSuccess = mypageService.deleteMember(userId);
+
+	        if (isSuccess) {
+	            // 3. DB 삭제 성공 시: 세션 무효화 (로그아웃 처리)
+	            session.invalidate(); 
+	            response.put("isSuccess", true);
+	            
+	        } else {
+	            response.put("isSuccess", false);
+	            response.put("message", "회원 탈퇴 처리가 완료되지 않았습니다.");
+	        }
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        response.put("isSuccess", false);
+	        response.put("message", "서버 처리 중 알 수 없는 오류가 발생했습니다.");
+	    }
+
+	    return response;
 	}
 
 

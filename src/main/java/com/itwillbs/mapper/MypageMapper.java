@@ -17,9 +17,13 @@
 		
 		int updateMember(MemberVO member);
 		
+		public int updatePassword(@Param("userId") String userId, @Param("password") String password);
+		
 		public int checkDuplicateNicknameForUpdate(MemberVO member);
 		public int checkDuplicateEmailForUpdate(MemberVO member);
 		public int checkDuplicatePhoneForUpdate(MemberVO member);
+		
+		public int deleteMember(String userId);
 	
 		public List<UserFavoritesVO> selectFavoriteListByUserId(String userId);
 		
