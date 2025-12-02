@@ -48,8 +48,9 @@
 		</div>
 
 		<div class="social-login">
-			<a href="naver_login.jsp" class="btn btn-success">N 네이버로 로그인</a> <a
-				href="kakao_login.jsp" class="btn btn-warning">카카오로 로그인</a>
+			<a href="naver_login.jsp" class="btn btn-success">N 네이버로 로그인</a> 
+			<a href="https://kauth.kakao.com/oauth/authorize?client_id=${kakaoClientId}&redirect_uri=${kakaoRedirectUri}&response_type=code" class="btn btn-warning">카카오로 로그인</a>
+
 		</div>
 	</div>
 </body>
