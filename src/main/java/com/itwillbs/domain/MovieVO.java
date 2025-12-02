@@ -26,7 +26,5 @@ public class MovieVO {
 	 private boolean isFavorite;
 
 	 private Double rating;             
-	 private Integer positiveReviewCount; 
-	 private Integer negativeReviewCount; 
 	 private String genres2;
 }
