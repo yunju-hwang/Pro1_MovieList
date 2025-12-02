@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -103,7 +104,7 @@ public class KakaoService {
     // kakao 회원용 임시 비밀번호 생성
     public String generateTempPassword() {
     	int length = 12;
-    	String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+    	String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     	StringBuilder sb = new StringBuilder();
     	Random rnd = new Random();
     	
@@ -116,29 +117,46 @@ public class KakaoService {
     
     
     // DB 처리
+    @Transactional
     public MemberVO loginOrSignup(KakaoUserVO userInfo) {
-    	// 1. 기존 회원 조회
-    	MemberVO memberVO = memberMapper.findBykakaoId(userInfo.getKakaoId());
-    	
-    	if(memberVO == null) {
-    		// 신규 가입
-    		memberVO = new MemberVO();
-    		memberVO.setUser_id(generateUserId());
-    		memberVO.setPassword(generateTempPassword());
-    		memberVO.setKakaoId(userInfo.getKakaoId());
-    		memberVO.setEmail(userInfo.getEmail());
-    		memberVO.setRole("user");
-    		String nickname = userInfo.getNickname();
-    		if (nickname == null || nickname.isEmpty()) {
-    		    nickname = "KakaoUser" + System.currentTimeMillis(); // 임시 username
-    		}
-    		memberVO.setNickname(nickname);
-    		memberVO.setUsername(nickname);
-    	
-    		
-    		memberMapper.insertkakaoMember(memberVO);
-    		
-    	}
+    	Long kakaoId = userInfo.getKakaoId();
+        System.out.println("카카오ID: " + kakaoId);
+
+        // 1. 기존 회원 조회
+        MemberVO memberVO = memberMapper.findBykakaoId(kakaoId);
+
+        if (memberVO == null) {
+            // 신규 가입
+            memberVO = new MemberVO();
+            memberVO.setUser_id(generateUserId());
+            memberVO.setPassword(generateTempPassword());
+            memberVO.setKakaoId(kakaoId);
+
+            // 이메일
+            String email = userInfo.getEmail();
+            memberVO.setEmail(email);
+
+            memberVO.setRole("user");
+
+            // 닉네임
+            String nickname = userInfo.getNickname();
+            System.out.println("원래 닉네임: " + nickname);
+            if (nickname == null || nickname.isEmpty()) {
+                nickname = "KakaoUser" + System.currentTimeMillis(); // 임시 닉네임
+            }
+            System.out.println("사용할 닉네임: " + nickname);
+            memberVO.setNickname(nickname);
+            memberVO.setUsername(nickname);
+
+            // 프로필 이미지
+            String profileImage = userInfo.getProfileImageUrl();
+            memberVO.setProfileImage(profileImage);
+
+            // DB에 삽입
+            memberMapper.insertkakaoMember(memberVO);
+        } else {
+            System.out.println("이미 가입된 회원입니다: " + memberVO.getNickname());
+        }
     	
     	return memberVO;
     	
