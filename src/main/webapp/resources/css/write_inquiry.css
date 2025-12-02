@@ -1,0 +1,183 @@
+@charset "UTF-8";
+
+body{
+	background-color: #f7f7f7;
+	height: 1200px;
+}
+
+.title{
+	text-align: center;
+}
+.title1{
+	text-align: center;
+	color: gray;
+}
+.container{
+	margin:auto;
+	width:60%;
+	height:800px;
+	background: white;
+	border: 1px solid black;
+	border-radius: 30px;
+	padding-left: 30px;	
+	padding-right: 30px;
+}
+
+.unity{
+	font-size: 1.5em;
+	font-weight: 700px;
+	margin-bottom: 10px;
+}
+
+.input-dropdown {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f9f9f9;
+  transition: box-shadow 0.2s, border-color 0.2s, background-color 0.2s;
+}
+
+.input-dropdown:hover {
+  border-color: #888;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  background-color: #f2f2f2;
+}
+
+.input-dropdown input {
+  flex: 1;
+  padding: 10px;
+  font-size: 20px;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  cursor: not-allowed; /* 기본은 입력 불가 */
+  color: #666;
+}
+
+.input-dropdown input.editable {
+  cursor: text;
+  color: #000;
+}
+
+.input-dropdown select {
+  padding: 10px;
+  font-size: 20px;
+  border: none;
+  border-left: 1px solid #ccc;
+  background-color: transparent;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.2s;
+}
+
+.input-dropdown select:hover {
+  background-color: #eaeaea;
+}
+
+.text{
+    flex: 1;
+    padding: 10px;
+    font-size: 20px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
+.text-con{
+display: flex;
+    align-items: center;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #f9f9f9;
+    transition: box-shadow 0.2s, border-color 0.2s, background-color 0.2s;
+}
+
+.under{
+	margin-top: 5px;
+	font-size: 0.8em;
+	color: gray;
+}
+
+.notification{
+	background-color: #f7f7f7;
+	width: 100%;
+	height:180px;
+	border-radius: 8px;
+	border: 1px solid #ccc
+}
+
+.not-title{
+	margin-bottom: 0px;
+	margin-left: 20px;
+}
+.listcon{
+	margin-top: 10px;
+}
+
+.list{
+	color:gray;
+}
+
+.faq-con{
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	flex-direction:column;
+	width: 60%;
+	height: 100px;
+	background: white;
+	margin: 20px auto;
+	border: 1px solid black;
+	border-radius: 30px;
+	padding-left: 30px;	
+	padding-right: 30px;
+	font-size: 1.3em;
+}
+
+.faq{
+		text-decoration: none;
+		padding-bottom: 10px;
+}
+
+.btn-form {
+  display: flex;
+  justify-content: center; /* 버튼들을 가운데 정렬하고 */
+  gap: 30px; /* 버튼 사이 간격 조정 */
+  margin: 30px auto;
+}
+
+/* ✅ 공통 버튼 스타일 */
+.btn-form input[type="submit"] {
+  appearance: none; /* ← 기본 브라우저 버튼 스타일 제거 */
+  -webkit-appearance: none; /* Safari용 */
+  border: none;
+  border-radius: 8px;
+  padding: 10px 25px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* 취소 버튼 */
+.no-sub {
+  background-color: #f5f5f5;
+  color: #555;
+  border: 1px solid #ccc;
+}
+.no-sub:hover {
+  background-color: #e4e4e4;
+}
+
+/* 요청 버튼 */
+.sub {
+  background-color: #cd0000;
+  color: white;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+.sub:hover {
+  background-color: #0066d1;
+}

@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.itwillbs.domain.GenresVO;
 import com.itwillbs.domain.MovieVO;
+import com.itwillbs.domain.TheatersVO;
 
 //interface로 구현
 @Mapper
@@ -51,4 +52,19 @@ public interface MovieMapper {
     // 찜 삭제
     void removeFavorite(@Param("userId") String userId,
             @Param("tmdbId") int tmdbId);
+    
+    // 찜 반영 movies popularity에
+    void updateMoviePopularity(MovieVO movie);
+    
+    // 영화관 값들 가져오기
+    List<TheatersVO> getAllTheaters();
+    
+    // 차지된 좌석 정보 가져오기
+ // 특정 영화관/영화/시간에 이미 예약된 좌석 조회
+    List<String> findReservedSeats(
+        @Param("tmdbId") int tmdbId,
+        @Param("theaterId") int theaterId,
+        @Param("screeningTime") String screeningTime
+    );
+    
 }

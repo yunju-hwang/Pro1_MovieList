@@ -1,0 +1,57 @@
+@charset "UTF-8";
+
+/* 푸터 기본 스타일: 어두운 배경 */
+#main-footer {
+    background-color: #212529; /* 네비게이션바와 유사한 어두운 색상 */
+    color: #f8f9fa; /* 밝은 글자색 */
+    padding: 10px 0;
+    font-size: 14px;
+    margin-top: 50px;
+
+}
+
+.footer-container {
+    width: 90%;
+    max-width: 1200px; /* 네비게이션바와 동일하게 최대 폭 설정 */
+    margin: 0 auto;
+}
+
+/* 링크 섹션 정렬 (가로로 배치) */
+.footer-links {
+    display: flex;
+    justify-content: space-between; /* 섹션 간 공간 균등 배분 */
+    padding-bottom: 10px;
+    border-bottom: 1px solid #495057; /* 구분선 */
+    margin-bottom: 10px;
+}
+
+/* 각 섹션별 스타일 */
+.footer-section {
+    flex-grow: 1; /* 섹션들이 공간을 채우도록 */
+    padding: 0 20px;
+}
+
+.footer-section h4 {
+    color: #dc3545; /* 포인트 색상 (빨강) */
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-size : 18px;
+}
+
+.footer-section a,
+.footer-section p {
+    display: block; /* 링크와 텍스트를 세로로 나열 */
+    color: #ccc;
+    text-decoration: none;
+    margin-bottom: 8px;
+    transition: color 0.2s;
+}
+
+.footer-section a:hover {
+    color: #fff; /* 호버 시 밝게 */
+}
+
+.footer-bottom {
+    text-align: center;
+    color: #999;
+}

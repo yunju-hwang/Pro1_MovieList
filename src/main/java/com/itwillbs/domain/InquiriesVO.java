@@ -17,4 +17,10 @@ public class InquiriesVO {
     private String status;
     private LocalDateTime createdAt;
     private LocalDateTime answeredAt;
+    
+    
+    private String userEmail;
+    private String answerContent;
+    
+    
 }
