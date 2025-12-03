@@ -1,6 +1,7 @@
 package com.itwillbs.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -67,4 +68,10 @@ public interface MovieMapper {
         @Param("screeningTime") String screeningTime
     );
     
+    // 선호 영화관 가져오기
+    List<Long> selectTheaterIdsByUserId(String userId);
+    
+
+    // 영화 저장
+    void insertMovie(Map<String, Object> movie);
 }

@@ -183,5 +183,12 @@
 	      AND r.screening_time = #{screeningTime}
 	      
 	</select>
+	
+	<!-- 선호 영화관 불러오기 -->
+	<select id="selectTheaterIdsByUserId" parameterType="String" resultType="long">
+		SELECT theater_id
+		FROM user_theaters
+		WHERE user_id = #{userId}
+	</select>
   
 </mapper>
