@@ -22,6 +22,9 @@ public class MovieVO {
 	 // 영화가 가진 장르명 리스트
 	 private List<String> genres;
 	 
+	 // 영화 db 저장용 장르
+	 private List<Integer> genreIds; // DB 저장용
+	 
 	 // 영화 찜 여부
 	 private boolean isFavorite;
 
