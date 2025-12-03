@@ -51,6 +51,7 @@ html, body {
     box-shadow: 0 8px 15px rgba(0,0,0,0.08);
 }
 
+
 .no_icon {
     width: 50px;
     display: block;
@@ -59,7 +60,7 @@ html, body {
 
 .grid-row {
     display: grid;
-    grid-template-columns: 1fr 3fr 4fr 2fr 2fr;
+    grid-template-columns: 1fr 2fr 3fr 2fr 2fr 1fr 1fr;
     align-items: center;
 }
 
@@ -138,18 +139,21 @@ html, body {
 }
 
 .inq-con {
-    width: 110px;
+    width: 140px;
     margin: 30px auto;
     background: #4a69bd;
     color: white;
     text-align: center;
-    padding: 8px 0;
+    padding: 10px 0;
     border-radius: 30px;
     font-size: 14px;
     font-weight: 700;
     box-shadow: 0 4px 10px rgba(74,105,189,0.3);
     transition: 0.25s;
-    cursor: pointer;  /* ← 여기서 커서 모양 변경 */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .inq-con:hover {
@@ -162,4 +166,40 @@ html, body {
     width: 16px;      /* 아이콘도 더 축소 */
     margin-right: 4px;
     vertical-align: middle;
+}
+
+.item_edit, .item_delete {
+	margin: 0 8px;   /* 왼쪽·오른쪽 공간 확보 */
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.item_edit {
+    background: #ffe082;
+    color: #8d6e63;
+}
+
+.item_edit:hover {
+    background: #ffca28;
+}
+
+.item_delete {
+    background: #ef9a9a;
+    color: #b71c1c;
+}
+
+.item_delete:hover {
+    background: #e57373;
+}
+
+.edit_icon, .delete_icon {
+    width: 16px;
+    margin-right: 4px;
 }

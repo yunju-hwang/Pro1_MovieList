@@ -23,9 +23,8 @@ public interface CustomerMapper {
 
 	int inquiry_count(String userId);
 
-	InquiriesVO inquiry_update(int id);
-
-	void inquiry_delete(int id);
+	InquiriesVO getInquiryById(int id);
+	
 
 
 	InquiriesVO inquiry_detail(int id);
@@ -33,11 +32,21 @@ public interface CustomerMapper {
 	List<MovieRequestVO> movie_request(String userId);
 
 	void insert_movie_request(MovieRequestVO movieRequestVO);
+	
+	MovieRequestVO getMovieRequestById(int id);
+
+	void updateMovieRequest(MovieRequestVO vo);
+
+	void movie_request_delete(int id);
 
     List<NoticesVO> notices();   // 전체 공지 목록
     NoticesVO notice_detail(int id);    // 공지 상세
 
     List<FaqsVO> faqs();
+
+	void updateInquiry(InquiriesVO vo);
+
+	void inquiry_delete(int id);
 
 
 
