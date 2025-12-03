@@ -2,6 +2,7 @@ package com.itwillbs.service;
 
 import java.util.HashMap;
 
+
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.domain.TheatersVO;
 import com.itwillbs.domain.UserFavoritesVO;
+import com.itwillbs.domain.ReservationsVO;
 import com.itwillbs.mapper.MypageMapper;
 
 @Service
@@ -120,6 +122,17 @@ public class MypageService {
 		public List<Integer> getSavedTheaterIds(String userId) {
 		 return mypageMapper.selectUserTheaterIds(userId);
 		}
+		
+		public List<ReservationsVO> selectReservationList(String userId) {
+	        // Mapper의 getReservationList 쿼리를 호출합니다.
+	        // 이 쿼리는 movies, theaters 테이블과 JOIN하여 모든 정보를 가져옵니다.
+	        return mypageMapper.getReservationList(userId);
+	    }
+		
+		public ReservationsVO selectReservationDetail(int reservationId) {
+	        // Mapper의 getReservationDetail 쿼리를 호출합니다.
+	        return mypageMapper.getReservationDetail(reservationId);
+	    }
 	
 	
 	

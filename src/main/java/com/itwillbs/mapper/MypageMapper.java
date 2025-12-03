@@ -1,14 +1,16 @@
 	package com.itwillbs.mapper;
 	
 	import java.util.List;
+
 	
 	import org.apache.ibatis.annotations.Mapper;
-	import org.apache.ibatis.annotations.Param; // ⬅️ @Param import를 여기에 위치시킵니다.
+	import org.apache.ibatis.annotations.Param;
 	
 	import com.itwillbs.domain.InquiriesVO;
 	import com.itwillbs.domain.MemberVO;
 	import com.itwillbs.domain.UserFavoritesVO;
-	import com.itwillbs.domain.TheatersVO; // ⬅️ TheatersVO를 사용하려면 이것도 필요합니다.
+	import com.itwillbs.domain.TheatersVO; 
+	import com.itwillbs.domain.ReservationsVO;
 	
 	@Mapper
 	public interface MypageMapper {
@@ -57,6 +59,9 @@
 	    
 	    List<Integer> selectUserTheaterIds(@Param("userId") String userId);
 	    
+	    public List<ReservationsVO> getReservationList(String userId);
+	    
+	    public ReservationsVO getReservationDetail(@Param("reservationId") int reservationId);
 	
 		
 	}
