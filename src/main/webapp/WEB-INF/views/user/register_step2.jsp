@@ -58,8 +58,8 @@
 
 				<!-- 이메일 도메인 입력 필드 (직접 입력 가능 / 드롭다운 선택 가능) -->
 				<input type="text" id="emailDomain" name="emailDomain"
-					placeholder="example.com"
-					value="${emailDomain != null ? emailDomain : ''}" disabled>
+					placeholder="naver.com"
+					value="${emailDomain != null ? emailDomain : 'naver.com'}" disabled>
 
 				<!-- 이메일 도메인 선택 드롭다운 -->
 				<select id="emailDomainSelect" name="emailDomainSelect">
@@ -142,19 +142,6 @@
 				<button type="button" class="prev-btn" onclick="history.back()">이전</button>
 				<button type="submit" class="next-btn">다음</button>
 			</div>
-
-			<!--         세션값 확인용 커밋전에 지우기 -->
-			<!-- 약관 동의 정보 표시 (세션 값 사용) -->
-			<!-- 			<div class="agree-info"> -->
-			<!-- 				<p>약관 동의:</p> -->
-			<!-- 				<ul> -->
-			<%-- 					<li>이용약관 동의: ${termsAgree != null ? termsAgree : "미동의"}</li> --%>
-
-			<%-- 					<li>개인정보 처리방침 동의: ${privacyAgree != null ? privacyAgree : "미동의"}</li> --%>
-			<%-- 					<li>마케팅 정보 수신 동의: ${marketingAgree != null ? marketingAgree : "미동의"}</li> --%>
-			<!-- 				</ul> -->
-			<!-- 			</div> -->
-
 
 
 		</form>

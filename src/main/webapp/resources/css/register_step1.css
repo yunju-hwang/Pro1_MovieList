@@ -45,8 +45,13 @@ body {
 	.view-link {
 	    font-size: 0.85rem;
 	    color: #666;
-	    text-decoration: underline;
+	    text-decoration: none;  /* 밑줄 제거 */
 	    cursor: pointer;
+	}
+	
+	/* 보기 링크 hover 시 밑줄 추가 */
+	.view-link:hover {
+    text-decoration: underline;  /* hover 시 밑줄 추가 */
 	}
 	
 	.buttons {

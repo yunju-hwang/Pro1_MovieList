@@ -1,19 +1,5 @@
 @charset "UTF-8";
 
-/* body { */
-/*     margin: 0; */
-/*     padding: 0; */
-/*     background: #F7F7F7; */
-/*     font-family: 'Noto Sans KR', sans-serif; */
-/* } */
-
-/* body { */
-/*      background: #F7F7F7 ; */
-/*     font-family: 'Noto Sans KR', sans-serif; */
-/*     margin: 0; */
-/*     padding: 0; */
-/*     🔥 flex 제거 → navbar가 내려오는 문제 해결 */
-/* } */
 
 html, body {
     margin: 0;
@@ -28,12 +14,6 @@ html, body {
     box-sizing: inherit; /* 모든 요소가 box-sizing을 상속 */
 }
 
-/* .join-container { */
-/*     display: flex; */
-/*     justify-content: center; */
-/*     align-items: center; */
-/*     height: 100vh; */
-/* } */
 
 .join-container {
     display: flex;
@@ -121,6 +101,7 @@ html, body {
     justify-content: center;
 }
 /* 수정부분 끝 */
+
 
 .check-btn {
     padding: 10px 15px;

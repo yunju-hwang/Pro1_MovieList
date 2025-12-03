@@ -16,6 +16,7 @@ body {
     line-height: 1.6;
     font-family: 'Nanum Gothic', sans-serif;
     background-color: #fff;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); /* 여기서 그림자 추가됨 */
 
     /* 스크롤 추가 */
     overflow-y: auto;

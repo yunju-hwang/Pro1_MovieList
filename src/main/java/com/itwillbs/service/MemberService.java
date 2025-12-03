@@ -15,7 +15,6 @@ import com.itwillbs.mapper.MemberMapper;
 @Service
 public class MemberService {
 	
-
 	@Inject
 	private MemberMapper memberMapper; // MyBatis Mapper
 	
@@ -66,7 +65,10 @@ public class MemberService {
         return memberMapper.checkPhoneExists(phone); // 전화번호 중복 체크
     }
 
-	
+
+    public boolean checkNicknameExists(String nickname) {  // 닉네임 중복 체크
+        return memberMapper.checkNicknameExists(nickname) > 0;
+    }
 
 	
 	

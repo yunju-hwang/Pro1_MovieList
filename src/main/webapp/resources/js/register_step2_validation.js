@@ -18,21 +18,30 @@ $(function () {
         $('#genderError').text("성별이 선택 되었습니다.").css("color", "green");
     });
 
-    /* ----------------------------------------
-       02. 이름 실시간 검증
-    ---------------------------------------- */
-    $('#username').on('input', function () {
-        let username = $(this).val().trim();
-        let nameRegex = /^[가-힣a-zA-Z]{2,35}$/;
+/* ----------------------------------------
+   02. 이름 실시간 검증 (한글/영문 조건 변경)
+---------------------------------------- */
+$('#username').on('input', function () {
+    let username = $(this).val().trim();
 
-        if (username.length === 0) {
-            $('#usernameError').text("이름을 입력해주세요.").css("color", "red");
-        } else if (!nameRegex.test(username)) {
-            $('#usernameError').text("한글, 영문 대소문자만 2~35자리로 입력해주세요.").css("color", "red");
-        } else {
-            $('#usernameError').text("");
-        }
-    });
+    if (username.length === 0) {
+        $('#usernameError').text("이름을 입력해주세요.").css("color", "red");
+        return;
+    }
+
+    // 한글 최소 2글자, 영문 최소 4글자, 최대 35글자
+    let hangulRegex = /^[가-힣]{2,35}$/;
+    let englishRegex = /^[a-zA-Z]{4,35}$/;
+
+    if (hangulRegex.test(username)) {
+        $('#usernameError').text("사용 가능한 이름입니다.").css("color", "green");
+    } else if (englishRegex.test(username)) {
+        $('#usernameError').text("사용 가능한 이름입니다.").css("color", "green");
+    } else {
+        $('#usernameError').text("한글은 최소 2글자, 영문 최소 4글자 이상 입력해주세요.").css("color", "red");
+    }
+});
+
 
     /* ----------------------------------------
        03. 아이디 실시간 검증
@@ -56,6 +65,8 @@ $(function () {
 
         $('#user_idChecked').val('false');
     });
+
+
 
     /* ----------------------------------------
        04. 아이디 중복 확인
@@ -97,25 +108,27 @@ $(function () {
         });
     });
 
-    /* ----------------------------------------
-       05. 비밀번호 검증
-    ---------------------------------------- */
-    $('#password').on('input', function () {
-        let password = $(this).val().trim();
-        let passwordRegex = /^(?=.*[a-z])(?=.*[0-9])[a-z0-9]{6,12}$/;
+/* ----------------------------------------
+   05. 비밀번호 검증 (3개 이상 동일 문자 금지)
+---------------------------------------- */
+$('#password').on('input', function () {
+    let password = $(this).val().trim();
+    // 6~12자리 소문자+숫자, 동일 문자 3회 이상 반복 금지
+    let passwordRegex = /^(?=.*[a-z])(?=.*[0-9])(?!.*([a-z0-9])\1\1)[a-z0-9]{6,12}$/;
 
-        if (password.length === 0) {
-            $('#passwordError').text("비밀번호를 입력해주세요.").css("color", "red");
-            $('#passwordCheck').prop('disabled', true);
-            return;
-        } else if (!passwordRegex.test(password)) {
-            $('#passwordError').text("비밀번호는 6~12자리 소문자와 숫자를 포함해야 합니다.").css("color", "red");
-            $('#passwordCheck').prop('disabled', true);
-        } else {
-            $('#passwordError').text("사용 가능한 비밀번호입니다.").css("color", "green");
-            $('#passwordCheck').prop('disabled', false);
-        }
-    });
+    if (password.length === 0) {
+        $('#passwordError').text("비밀번호를 입력해주세요.").css("color", "red");
+        $('#passwordCheck').prop('disabled', true);
+        return;
+    } else if (!passwordRegex.test(password)) {
+        $('#passwordError').text("비밀번호는 6~12자 소문자/숫자 조합이며, 3개이상 동일 문자/숫자 입력 불가입니다.").css("color", "red");
+        $('#passwordCheck').prop('disabled', true);
+    } else {
+        $('#passwordError').text("사용 가능한 비밀번호입니다.").css("color", "green");
+        $('#passwordCheck').prop('disabled', false);
+    }
+});
+
 
     /* ----------------------------------------
        06. 비밀번호 확인
@@ -253,8 +266,55 @@ $(function () {
         });
     }
 
+/* ----------------------------------------
+   09. 별명 실시간 검증 & 중복 체크
+---------------------------------------- */
+$('#nickname').on('input', function () {
+    let nickname = $(this).val().trim();
+
+    if (nickname.length === 0) {
+        $('#nicknameError').text("별명을 입력해주세요.").css("color", "red");
+        $('#nicknameChecked').val('false');
+        return;
+    } else if (nickname.length < 2) {
+        $('#nicknameError').text("별명은 최소 2글자 이상이어야 합니다.").css("color", "red");
+        $('#nicknameChecked').val('false');
+        return;
+    }
+
+    let nicknameRegex = /^[가-힣a-zA-Z0-9]{2,10}$/;
+    if (!nicknameRegex.test(nickname)) {
+        $('#nicknameError').text("별명은 2~10자리 한글, 영문, 숫자만 가능합니다.").css("color", "red");
+        $('#nicknameChecked').val('false');
+        return;
+    }
+
+    // 형식 통과 시 중복 체크
+    $.ajax({
+        method: "GET",
+        url: contextPath + "/register/nicknameCheck",
+        data: { nickname: nickname },
+        dataType: "json",
+        success: function(result) {
+            if (result === true) {
+                $('#nicknameError').text("이미 사용 중인 별명입니다.").css("color", "red");
+                $('#nicknameChecked').val('false');
+            } else {
+                $('#nicknameError').text("사용 가능한 별명입니다.").css("color", "green");
+                $('#nicknameChecked').val('true');
+            }
+        },
+        error: function() {
+            $('#nicknameError').text("별명 확인 중 오류 발생").css("color", "red");
+            $('#nicknameChecked').val('false');
+        }
+    });
+});
+
+
+
     /* ----------------------------------------
-       09. 폼 제출 최종 검증
+       10. 폼 제출 최종 검증
     ---------------------------------------- */
     $('.join-form').submit(function () {
 
