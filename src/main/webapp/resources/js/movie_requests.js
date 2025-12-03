@@ -195,3 +195,5 @@ function deleteFromModal() {
         fetchAction(id, 'delete'); // 단일 ID를 넘깁니다.
     }
 }
+
+
