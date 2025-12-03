@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/navbar.jsp"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -285,6 +286,8 @@ body {
     text-decoration: none;
     color: inherit; /* 부모로부터 색상 상속 (555 또는 777 색상 유지) */
 }
+
+
 </style>
 </head>
 <body>
@@ -387,6 +390,11 @@ body {
 				</c:choose>
 
 			</div>
+			</div>
+			</div>
+			
+			<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+			
 
 			<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 			<script>
@@ -428,5 +436,7 @@ body {
 													});
 								});
 			</script>
+			
 </body>
+
 </html>
