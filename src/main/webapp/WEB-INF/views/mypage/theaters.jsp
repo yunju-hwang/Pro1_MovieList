@@ -485,6 +485,8 @@ body {
 
 		</div>
 	</div>
+	
+	<%@ include file="/WEB-INF/views/common/footer.jsp" %>
 	<script>
 // =========================================================
 // 1. 서버 데이터 변수 초기화

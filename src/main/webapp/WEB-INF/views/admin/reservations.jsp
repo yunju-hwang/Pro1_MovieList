@@ -2,6 +2,31 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="dashboard.jsp"%>
+<div class="table-header">
+    <div class="search-wrap">
+        <form action="<c:url value='/admin/reservations' />" method="get" id="searchForm">
+            <select name="searchType" id="searchType" class="form-select search-select">
+				<option value="id" ${currentSearchType eq 'id' ? 'selected' : ''}>예매번호</option>
+                <option value="movieTitle" ${currentSearchType eq 'movieTitle' ? 'selected' : ''}>제목</option>
+                <option value="userId" ${currentSearchType eq 'userId' ? 'selected' : ''}>예매자</option>
+                <option value="theaterName" ${currentSearchType eq 'theaterName' ? 'selected' : ''}>상영관</option>
+                <option value="screeningTime" ${currentSearchType eq 'screeningTime' ? 'selected' : ''}>상영시간</option>
+                <option value="reservationDate" ${currentSearchType eq 'reservationDate' ? 'selected' : ''}>결제일시</option>
+                </select>
+            <input type="text" name="keyword" id="keyword" class="form-control search-input" placeholder="제목을 입력해 주세요" value="${currentKeyword}">
+            <button type="submit" class="btn btn-primary search-btn">검색</button>
+           
+             <select name="sortCriteria" id="sortCriteria" class="form-select sort-select" onchange="submitSort()">
+            <option value="default">-- 정렬 기준 --</option>
+            <option value="screeningTime" ${currentSortCriteria eq 'screeningTime' ? 'selected' : ''}>상영시간</option>
+    		<option value="reservationDate" ${currentSortCriteria eq 'reservationDate' ? 'selected' : ''}>결제일시</option>
+    		<option value="finalAmount" ${currentSortCriteria eq 'finalAmount' ? 'selected' : ''}>금액</option>
+    		<option value="status" ${currentSortCriteria eq 'status' ? 'selected' : ''}>상태순</option>
+                </select>
+            
+        </form>
+    </div>
+</div>
 <div class="table-section">
 	<table class="booking-table">
 		<thead>
@@ -74,4 +99,5 @@
 		</tbody>
 	</table>
 </div>
+<script src="<c:url value='/resources/js/admin_search.js' />"></script>
 <%@ include file="end.jsp"%>
