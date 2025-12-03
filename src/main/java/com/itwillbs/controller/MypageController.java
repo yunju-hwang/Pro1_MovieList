@@ -4,11 +4,16 @@ import java.util.List;
 
 
 
+
+
 import java.io.File;
 import java.util.UUID;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.stream.Collectors;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
@@ -30,16 +35,23 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import com.google.gson.Gson;
+import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.domain.TheatersVO;
 import com.itwillbs.domain.UserFavoritesVO;
 import com.itwillbs.service.MypageService;
+import com.itwillbs.service.CustomerService;
+import com.itwillbs.domain.MovieRequestVO;
+import com.itwillbs.domain.ReservationsVO;
 
 @Controller
 public class MypageController {
 
 	@Inject // 또는 @Autowired
 	private MypageService mypageService;
+	
+	@Inject // 또는 @Autowired
+	private CustomerService customerService;
 
 	// 마이페이지 -> 관심 영화 목록
 	@GetMapping("/mypage/favorites")
@@ -93,21 +105,71 @@ public class MypageController {
 			return new ResponseEntity<>("삭제할 관심 영화를 찾을 수 없거나 DB 오류입니다.", HttpStatus.NOT_FOUND);
 		}
 	}
-	
-	
-	
-	
 
 	// 마이페이지 -> 문의 목록
 	@GetMapping("/mypage/inquiries")
-	public String inquiries() {
-		return "/mypage/inquiries";
+	public String inquiries(HttpSession session, Model model) {
+	    
+	    // 1. 로그인된 사용자 ID 가져오기 (loginUser 세션에서 ID 가져오는 기존 방식 사용)
+	    MemberVO user = (MemberVO) session.getAttribute("loginUser");
+
+	    if (user == null) {
+	        // 로그인되어 있지 않으면 로그인 페이지 등으로 리다이렉트
+	        return "redirect:/login"; 
+	    }
+	    String userId = user.getUser_id();
+	    
+	    // 2. CustomerService를 사용하여 문의 내역 리스트와 개수 조회
+	    // 💡 기존 CustomerService 메서드 그대로 재활용
+	    List<InquiriesVO> inquiry_list = customerService.inquiries(userId);
+
+	    int count = customerService.inquiry_count(userId);
+
+	    // 3. Model에 담아 JSP로 전달
+	    model.addAttribute("inquiry_list", inquiry_list);
+	    model.addAttribute("count", count);
+
+	    // 4. JSP 경로 반환
+	    return "/mypage/inquiries"; 
 	}	
 
 	// 마이페이지 -> 영화 요청 목록
 	@GetMapping("/mypage/movierequest")
-	public String movieRequest() {
-		return "/mypage/movie_request";
+	public String movieRequest(HttpSession session, Model model) {
+	    
+	    // 1. 로그인된 사용자 ID 가져오기
+	    MemberVO user = (MemberVO) session.getAttribute("loginUser");
+
+	    if (user == null) {
+	        return "redirect:/login"; 
+	    }
+	    String userId = user.getUser_id();
+
+	    // 2. CustomerService를 호출하여 VO 리스트 가져오기 (DB 연동)
+	    List<MovieRequestVO> list = customerService.movie_request(userId); 
+
+	    // 3. 날짜 포맷 정의 및 출력용 Map 리스트 생성
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	    List<Map<String, Object>> displayList = new ArrayList<>();
+
+	    for (MovieRequestVO vo : list) {
+	        Map<String, Object> map = new HashMap<>();
+	        
+	        map.put("id", vo.getId());
+	        map.put("title", vo.getTitle());
+	        map.put("content", vo.getContent());
+	        map.put("status", vo.getStatus());
+	        map.put("createdAt", vo.getCreatedAt() != null ? vo.getCreatedAt().format(formatter) : "-");
+
+	        displayList.add(map);
+	    }
+	    
+	    // 4. Model에 데이터 담기
+	    model.addAttribute("count", list.size());
+	    model.addAttribute("movie_request_list", displayList); 
+
+	    // 5. View (JSP) 경로 반환 (실제 파일 경로: /WEB-INF/views/mypage/movie_request.jsp)
+	    return "/mypage/movie_request"; // 👈 이 부분을 정확히 수정했습니다.
 	}
 
 	// 마이페이지 -> 회원정보수정
@@ -385,9 +447,45 @@ public class MypageController {
 
 	// 마이페이지 -> 영화 예약 조회
 	@GetMapping("/mypage/reservations")
-	public String reservations() {
-		return "/mypage/reservations";
+	public String reservations(HttpSession session, Model model) { // 메서드명 변경 및 파라미터 추가
+	    
+	    // 1. 로그인된 사용자 정보 확인 및 ID 추출
+	    MemberVO user = (MemberVO) session.getAttribute("loginUser");
+
+	    if (user == null) {
+	        // 로그인되어 있지 않으면 로그인 페이지로 리다이렉트
+	        return "redirect:/login"; 
+	    }
+	    String userId = user.getUser_id(); // 로그인 사용자 ID 획득
+
+	    // 2. Service 호출: 예매 내역 조회
+	    // Mapper에서 JOIN된 모든 정보(영화 제목, 상영관 이름 등)가 포함된
+	    // ReservationsVO 리스트를 가져옵니다.
+	    List<ReservationsVO> reservationList = mypageService.selectReservationList(userId);
+
+	    // 3. View에 데이터 전달
+	    model.addAttribute("reservationList", reservationList);
+	    
+	    // 총 예매 건수 계산 후 전달 (JSP의 ${count}에 사용됨)
+	    model.addAttribute("count", reservationList.size()); 
+
+	    // 4. JSP 파일로 포워드
+	    // 🚨 실제 JSP 경로에 맞게 수정합니다.
+	    return "/mypage/reservations";
 	}
+	
+	@GetMapping("/mypage/reservation/detail/{id}") // 🚨 이 부분이 스크립트의 URL과 매칭됩니다.
+    @ResponseBody // 🚨 이 어노테이션이 반환된 객체(ReservationsVO)를 JSON으로 변환합니다.
+    public ReservationsVO getReservationDetail(@PathVariable("id") int reservationId, HttpSession session) {
+        
+        // 1. URL 경로에서 {id} 값을 추출하여 int reservationId 변수에 저장합니다.
+        
+        // 2. Service를 호출하여 상세 정보를 조회합니다.
+        ReservationsVO reservationDetail = mypageService.selectReservationDetail(reservationId);
+        
+        // 3. Spring은 @ResponseBody 덕분에 이 객체를 JSON으로 변환하여 AJAX 요청에 응답합니다.
+        return reservationDetail;
+    }
 
 	// 마이페이지 -> 선호 영화관 목록
 	@GetMapping("/mypage/theaters")

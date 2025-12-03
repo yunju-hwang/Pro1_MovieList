@@ -549,8 +549,7 @@ body {
 
 				<%-- 🟢 [재추가] 단일 이메일 입력 필드에 datalist 속성 및 제안 목록 추가 --%>
 				<div class="form-group">
-					<label for="memberFullEmailInput">이메일 <span
-						class="required">*</span></label>
+					<label for="memberFullEmailInput">이메일</label>
 					<div>
 						<input type="text" id="memberFullEmailInput" name="email"
 							value="${loginMember.email}" maxlength="50"
@@ -565,7 +564,7 @@ body {
 				</div>
 
 				<div class="form-group">
-					<label>성별 <span class="required">*</span></label>
+					<label>성별</label>
 					<div class="radio-group" id="genderGroup">
 
 						<c:set var="genderUpper"
@@ -583,29 +582,30 @@ body {
 				</div>
 
 				<div class="form-group">
-					<label for="memberBirth">생년월일 <span class="required">*</span></label>
-					<input type="date" id="memberBirth" name="birthDate"
-						value="${loginMember.birthDate}">
+					<label for="memberBirth">생년월일</label> <input type="date"
+						id="memberBirth" name="birthDate" value="${loginMember.birthDate}">
 					<div id="birthError" class="error-message"></div>
 				</div>
 
 				<div class="form-group">
-					<label for="memberPhone">전화번호 <span class="required">*</span></label>
-					<input type="text" id="memberPhone" name="phone"
-						value="${loginMember.phone}">
+					<label for="memberPhone">전화번호</label> <input type="text"
+						id="memberPhone" name="phone" value="${loginMember.phone}">
 					<div id="phoneError" class="error-message"></div>
 				</div>
 
 				<button type="submit" class="submit-button">저장</button>
 			</form>
 
-			<button type="button" class="btn-withdrawal" onclick="confirmWithdrawal()">회원 탈퇴</button>
+			<button type="button" class="btn-withdrawal"
+				onclick="confirmWithdrawal()">회원 탈퇴</button>
 
 		</div>
 	</div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
+	<%@ include file="/WEB-INF/views/common/footer.jsp"%>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
 	
 	// 🟢 Controller에서 전달된 메시지 변수를 JavaScript로 가져옵니다.
     var successMsg = "${msg}";
@@ -726,11 +726,7 @@ body {
             let isValid = true;
             
             const nickname = document.getElementById('memberNickname');
-            const birth = document.getElementById('memberBirth');
-            const phone = document.getElementById('memberPhone');
-            const genderSelected = document.querySelector('input[name="gender"]:checked');
-            const fullEmailInput = document.getElementById('memberFullEmailInput');
-			let fullEmail = fullEmailInput ? fullEmailInput.value.trim() : '';
+            	
 
             // 닉네임 검사
             if (!nickname || nickname.value.trim() === "") {
@@ -740,45 +736,32 @@ body {
             }
             
             // 이메일 검사
-            if (isValid && fullEmail === "") {
-                displayError('email', "이메일 주소를 입력해주세요.");
-                fullEmailInput.focus();
-                isValid = false;
-            } else if (isValid) {
-                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailPattern.test(fullEmail)) {
-                    displayError('email', "유효한 이메일 형식(예: user@example.com)이 아닙니다.");
-                    fullEmailInput.focus();
-                    isValid = false;
-                }
-            }
+            const fullEmailInput = document.getElementById('memberFullEmailInput');
+            let fullEmail = fullEmailInput ? fullEmailInput.value.trim() : '';
+            
+            if (isValid && fullEmail !== "") { // 💡 값이 비어있지 않다면 형식 검사
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(fullEmail)) {
+        displayError('email', "유효한 이메일 형식(예: user@example.com)이 아닙니다.");
+        fullEmailInput.focus();
+        isValid = false;
+    }
+}
             
-            // 성별 선택 검사
-            if (isValid && (!genderSelected || (genderSelected.value !== 'M' && genderSelected.value !== 'F'))) {
-                displayError('gender', "성별을 선택해주세요.");
-                isValid = false;
-            }
+            
             
-            // 생년월일 검사
-            if (isValid && birth.value.trim() === "") {
-                displayError('birth', "생년월일을 입력해주세요.");
-                birth.focus();
-                isValid = false;
-            }
+            
             
             // 전화번호 검사 및 형식 검사
-            if (isValid && phone.value.trim() === "") {
-                displayError('phone', "전화번호는 필수 입력 항목입니다.");
-                phone.focus();
-                isValid = false;
-            } else if (isValid) {
-                const phonePattern = /^\d{2,3}-\d{3,4}-\d{4}$/;
-                if (!phonePattern.test(phone.value.trim())) {
-                    displayError('phone', "유효한 전화번호 형식(010-XXXX-XXXX)으로 입력해주세요.");
-                    phone.focus();
-                    isValid = false;
-                }
-            }
+            const phone = document.getElementById('memberPhone');
+if (isValid && phone.value.trim() !== "") { // 💡 값이 비어있지 않다면 형식 검사
+    const phonePattern = /^\d{2,3}-\d{3,4}-\d{4}$/;
+    if (!phonePattern.test(phone.value.trim())) {
+        displayError('phone', "유효한 전화번호 형식(010-XXXX-XXXX)으로 입력해주세요.");
+        phone.focus();
+        isValid = false;
+    }
+}
 
 
             if (isValid) {

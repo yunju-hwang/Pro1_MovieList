@@ -18,7 +18,7 @@
 		FROM
 		users
 		WHERE
-		user_id = #{user_id}
+		user_id = #{user_id}	
 	</select>
 
 	<update id="updateMember"
@@ -179,6 +179,67 @@
 		name
 		LIMIT 10
 	</select>
+	
+	<select id="getReservationList" parameterType="string"
+		resultType="com.itwillbs.domain.ReservationsVO">
+		SELECT
+			r.id,
+			r.user_id AS userId, 
+			r.tmdb_id AS tmdbId,
+			r.theater_id AS theaterId,
+			r.screening_time AS screeningTime,
+			r.reservation_date AS reservationDate,
+			r.seat,
+			p.amount AS finalAmount,  p.payment_date AS paymentDate,  r.adult_people AS adultPeople,  
+			r.child_people AS childPeople,  
+			r.status,                       
+			m.title AS movieTitle,          
+			t.name AS theaterName           
+		FROM
+			reservations r
+		JOIN
+			movies m ON r.tmdb_id = m.tmdb_id
+		JOIN
+			theaters t ON r.theater_id = t.theater_id
+		JOIN
+			payments p ON r.id = p.reservation_id  WHERE
+			r.user_id = #{userId}
+		ORDER BY
+			r.reservation_date DESC
+	</select>
+	
+	<select id="getReservationDetail" parameterType="int"
+		resultType="com.itwillbs.domain.ReservationsVO">
+		SELECT
+			r.id,
+			r.user_id AS userId, 
+			r.tmdb_id AS tmdbId,
+			r.theater_id AS theaterId,
+			r.screening_time AS screeningTime,
+			r.reservation_date AS reservationDate,
+			r.seat,
+			p.amount AS finalAmount,
+			p.payment_date AS paymentDate,
+			r.adult_people AS adultPeople,  
+			r.child_people AS childPeople,  
+			r.status,
+			m.title AS movieTitle,
+            m.poster_path AS posterPath, t.name AS theaterName           
+		FROM
+			reservations r
+		JOIN
+			movies m ON r.tmdb_id = m.tmdb_id
+		JOIN
+			theaters t ON r.theater_id = t.theater_id
+		JOIN
+			payments p ON r.id = p.reservation_id
+		WHERE
+			r.id = #{reservationId} 
+		</select>
+
+
+
+
 
 
 </mapper>
