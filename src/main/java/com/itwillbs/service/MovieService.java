@@ -8,6 +8,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -239,7 +241,90 @@ public class MovieService {
             }
         }
     }
+    // Map -> MovieVO 변환
+    public MovieVO convertMapToMovieVO(Map<String, Object> movieDetail) {
+        MovieVO movieVO = new MovieVO();
+        movieVO.setTmdbId((Integer) movieDetail.get("id"));
+        movieVO.setTitle((String) movieDetail.getOrDefault("title", "제목 없음"));
+        movieVO.setOverview((String) movieDetail.getOrDefault("overview", ""));
+        movieVO.setPosterPath((String) movieDetail.getOrDefault("poster_path", null));
 
+        String releaseDateStr = (String) movieDetail.get("release_date");
+        if (releaseDateStr != null && !releaseDateStr.isEmpty()) {
+            try {
+                movieVO.setReleaseDate(LocalDate.parse(releaseDateStr, DateTimeFormatter.ISO_DATE));
+            } catch (DateTimeParseException e) {
+                movieVO.setReleaseDate(null);
+            }
+        }
+
+        Object popularityObj = movieDetail.get("popularity");
+        movieVO.setPopularity(popularityObj != null ? ((Number) popularityObj).doubleValue() : 0.0);
+
+        Object runtimeObj = movieDetail.get("runtime");
+        movieVO.setRuntime(runtimeObj != null ? (Integer) runtimeObj : null);
+
+        // genres ID만 추출
+        List<Map<String, Object>> genresList = (List<Map<String, Object>>) movieDetail.get("genres");
+        List<Integer> genreIds = new ArrayList<>();
+        if (genresList != null) {
+            for (Map<String, Object> g : genresList) {
+                Object idObj = g.get("id");
+                if (idObj instanceof Number) {
+                    genreIds.add(((Number) idObj).intValue());
+                }
+            }
+        }
+        movieVO.setGenreIds(genreIds);
+        movieVO.setFavorite(false);
+        return movieVO;
+    }
+
+
+
+
+ // DB 저장
+    @Transactional
+    public void insertMovie(MovieVO movie) {
+        // 1. movies 테이블 저장
+        movieMapper.insertMovie(movie);
+
+        // genre_ids가 있으면 movie_genres에 바로 넣기
+        if (movie.getGenreIds() != null) {
+            for (Integer genreId : movie.getGenreIds()) {
+                movieMapper.insertMovieGenre(movie.getTmdbId(), genreId);
+            }
+        }
+    }
+    
+    // ---- 영화 감독, 배우 정보 가져오기
+    public Map<String, Object> getMovieCredits(int tmdbId){
+    	String url = "https://api.themoviedb.org/3/movie/" + tmdbId + "/credits?api_key="+tmdbApiKey+"&language=ko-KR";
+    	
+    	RestTemplate rest = new RestTemplate();
+    	Map<String, Object> response = rest.getForObject(url, Map.class);
+    	
+    	return response;
+    }
+    
+    // ---- 추천 영화 리스트 가져오기
+    public List<Map<String, Object>> getRecommendations(int tmdbId){
+    	String url = "https://api.themoviedb.org/3/movie/" + tmdbId +
+                "/recommendations?api_key=" + tmdbApiKey + "&language=ko-KR&page=1";
+    	
+    	RestTemplate rest = new RestTemplate();
+    	Map<String, Object> response = rest.getForObject(url, Map.class);
+    	
+    	if(response != null && response.containsKey("results")) {
+    		return (List<Map<String, Object>>) response.get("results");
+    	}
+    	
+    	return List.of();
+    	
+    }
+    
+    
+    
 	
 	// 영화 찜하기 
 	public boolean toggleFavorite(String userId, int tmdbId) {
@@ -303,6 +388,12 @@ public class MovieService {
 
 	        return movieList;
 		
+	}
+	
+	
+	// 선호 영화관 가져오기
+	public List<Long> getUserTheatersIds(String userId){
+		return movieMapper.selectTheaterIdsByUserId(userId);
 	}
 	
 	

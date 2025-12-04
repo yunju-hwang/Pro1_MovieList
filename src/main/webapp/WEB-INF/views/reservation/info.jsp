@@ -2,6 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/navbar.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 
 <!DOCTYPE html>
@@ -25,17 +27,22 @@
 	            <li data-location="${loc}">${loc}</li>
 	        </c:forEach>
 	    </ul>
+	    
 	
 	    <!-- 오른쪽: 영화관 -->
+	    <!-- 영화관 리스트 -->
 	    <div class="theater-list">
-	        <c:forEach var="t" items="${theaters}">
-	            <div class="theater-card" data-location="${t.location}" data-id="${t.theaterId}">
-	                ${t.name}
-	            </div>
-	        </c:forEach>
-	    </div>
-	</div>
+			<c:forEach var="t" items="${theaters}">
+			    <div class="theater-card
+			         <c:if test="${fn:contains(userTheaterIds, t.theaterId)}"> preferred</c:if>"
+			         data-location="${t.location}"
+			         data-id="${t.theaterId}">
+			        ${t.name}
+			    </div>
+			</c:forEach>
 
+		</div>
+</div>
 
 
 	<!-- 날짜 버튼 영역 -->

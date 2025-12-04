@@ -1,6 +1,8 @@
 package com.itwillbs.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -53,8 +55,8 @@ public class AdminService {
     }
     
 //    영화 관리
-    public List<MovieVO> AdminMovieList(){
-    	return adminMapper.AdminMovieList();
+    public List<MovieVO> AdminMovieList(Map<String, Object> params){
+    	return adminMapper.AdminMovieList(params);
     }
     
     
@@ -63,8 +65,8 @@ public class AdminService {
 	}
 
 //    사용자 관리
-    public List<MemberVO> AdminUserList(){
-    	return adminMapper.AdminUserList();
+    public List<MemberVO> AdminUserList(Map<String, Object> params){
+    	return adminMapper.AdminUserList(params);
     }
     
     public int deleteUsers(String user_id) {
@@ -72,8 +74,8 @@ public class AdminService {
 	}
     
 //   1:1문의 
-    public List<InquiriesVO> AdminInquiriesList() {
-		return adminMapper.AdminInquiriesList();
+    public List<InquiriesVO> AdminInquiriesList(Map<String, Object> params) {
+		return adminMapper.AdminInquiriesList(params);
 	}
 
     public void answerInquiry(int id, String answerContent) {
@@ -86,22 +88,40 @@ public class AdminService {
     }
     
 // 영화 요청
-    public List<MovieRequestVO> AdminRequestList(){
-    	return adminMapper.AdminRequestList();
+    public List<MovieRequestVO> AdminRequestList(Map<String, Object> params){
+    	return adminMapper.AdminRequestList(params);
     }
-    
-    public int updateMovieRequests(int id, String status) {
-    	return adminMapper.updateMovieRequests(id, status);
-    }
-    
-    public int deleteMovieRequests(int id) {
-    	return adminMapper.deleteMovieRequests(id);
+    public void updateMovieRequests(String[] idArray, String status) {
+        // 1. Map 객체 생성
+        Map<String, Object> params = new HashMap<>(); 
+        // 2. ID 배열과 상태를 Map에 담기. (Mapper의 <foreach collection="ids">와 연결됨)
+        params.put("ids", idArray);
+        params.put("status", status);
+        
+        // 3. Mapper 호출
+     	adminMapper.updateMovieRequests(params); // <--- Mapper.java의 메서드와 연결
     }
 
+    public void deleteMovieRequests(String[] idArray) {
+        // 1. Map 객체 생성
+        Map<String, Object> params = new HashMap<>();
+        // 2. ID 배열을 Map에 담기
+        params.put("ids", idArray); 
+        
+        // 3. Mapper 호출
+     	adminMapper.deleteMovieRequests(params); // <--- Mapper.java의 메서드와 연결
+    }
+
+    public MovieRequestVO getMovieRequestDetail(int id) {
+        return adminMapper.getMovieRequestDetail(id);
+    }
+                      
+
+    
     
  // 리뷰 관리
-    public List<ReviewsAdminVO> AdminReviewsList(){
-    	return adminMapper.AdminReviewsList();
+    public List<ReviewsAdminVO> AdminReviewsList(Map<String, Object> params){
+    	return adminMapper.AdminReviewsList(params);
     }
     
     public int deleteReviews(int id) {
@@ -109,8 +129,8 @@ public class AdminService {
     }
     
 // 예매 관리
-    public List<ReservationsVO> AdminReservationsList(){
-    	return adminMapper.AdminReservationsList();
+    public List<ReservationsVO> AdminReservationsList(Map<String, Object> params){
+    	return adminMapper.AdminReservationsList(params);
     }
     
     public void AdminReservationsRefund(int id) {
@@ -118,8 +138,8 @@ public class AdminService {
     }
     
     // FAQS
-    public List<FaqsVO> AdminFaqsList(){
-    	return adminMapper.AdminFaqsList();
+    public List<FaqsVO> AdminFaqsList(Map<String, Object> params){
+    	return adminMapper.AdminFaqsList(params);
     }
     
     public int AdminFaqsWrite(FaqsVO faqs) {
@@ -139,8 +159,8 @@ public class AdminService {
     }
     
     // 공지사항
-    public List<NoticesVO> AdminNoticesList(){
-    	return adminMapper.AdminNoticesList();
+    public List<NoticesVO> AdminNoticesList(Map<String, Object> params){
+    	return adminMapper.AdminNoticesList(params);
     }
     
     public int AdminNoticesWrite(NoticesVO notices) {
@@ -151,7 +171,7 @@ public class AdminService {
     	return adminMapper.getNoticesDetail(id);
     }
     
-    public int AdminNoticeUpdate(NoticesVO notices) {
+    public int AdminNoticesUpdate(NoticesVO notices) {
     	return adminMapper.AdminNoticesUpdate(notices);
     }
     

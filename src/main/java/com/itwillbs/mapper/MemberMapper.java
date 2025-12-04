@@ -26,4 +26,10 @@ public interface MemberMapper {
 
 	int checkUserIdExists(String user_id); // 회원가입 ID 중복체크 메서드
 	
+	// 카카오용 login
+	MemberVO findBykakaoId(Long kakaoId);
+	
+	// 카카오용 signup
+	int insertkakaoMember(MemberVO memberVO);
+	
 }

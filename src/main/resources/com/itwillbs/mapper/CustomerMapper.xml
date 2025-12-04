@@ -1,84 +1,116 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!DOCTYPE mapper
+	  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.itwillbs.mapper.CustomerMapper">
+	
+  <!-- 문의 작성 -->
+  <insert id="insertinquirty">
+    insert into inquiries(user_id,title,content,status,created_at)
+    values (#{userId},#{title},#{content},#{status},#{createdAt})
+  </insert>
 
-<mapper namespace="com.itwillbs.mapper.CustomerMapper">
+  <!-- 문의 리스트 -->
+  <select id="inquiries" resultType="com.itwillbs.domain.InquiriesVO">
+    select id, user_id as userId, title, content, status, created_at as createdAt, answer_content as answerContent
+    from inquiries
+    where user_id = #{userId}
+  </select>
 
-<insert id="insertinquirty">
-	insert into inquiries(user_id,title,content,status,created_at)
-	values (#{userId},#{title},#{content},#{status},#{createdAt})
-</insert>
+  <!-- 문의 건수 -->
+  <select id="inquiry_count" resultType="java.lang.Integer">
+    select count(*) from inquiries where user_id = #{userId}
+  </select>
 
-<select id="inquiries" resultType="com.itwillbs.domain.InquiriesVO">
-	select id, user_id as userId, title, content, status, created_at as createdAt, answer_content as answerContent from inquiries where user_id = #{userId}
+  <!-- 특정 문의 조회 -->
+  <select id="getInquiryById" resultType="com.itwillbs.domain.InquiriesVO" parameterType="int">
+    select * from inquiries where id = #{id}
+  </select>
 
-</select>
-<select id="inquiry_count" resultType="java.lang.Integer">
-	select count(*) from inquiries where user_id = #{userId}
+  <!-- 문의 수정 -->
+  <update id="updateInquiry" parameterType="com.itwillbs.domain.InquiriesVO">
+    update inquiries
+    set title = #{title}, content = #{content}
+    where id = #{id}
+  </update>
 
-</select>
-<select id="inquiry_detail" resultType="com.itwillbs.domain.InquiriesVO">
-    SELECT 
-        id,
-        user_id as userId,
-        title,
-        content,
-        status,
-        created_at as createdAt,
-        answered_at as answeredAt,
-        answer_content as answerContent
-    FROM inquiries
+  <!-- 문의 삭제 -->
+  <delete id="inquiry_delete">
+    delete from inquiries where id = #{id}
+  </delete>
+
+	<select id="inquiry_detail" resultType="com.itwillbs.domain.InquiriesVO">
+	    SELECT 
+	        id,
+	        user_id as userId,
+	        title,
+	        content,
+	        status,
+	        created_at as createdAt,
+	        answered_at as answeredAt,
+	        answer_content as answerContent
+	    FROM inquiries
+	    WHERE id = #{id}
+	</select>
+	
+
+	
+	  <insert id="insert_movie_request">
+	  	insert into movie_request(user_id,title, content, status, created_at)
+	  	values (#{userId},#{title},#{content},#{status},#{createdAt})
+	  </insert>
+	
+	  <select id="movie_request_count" resultType="java.lang.Integer">
+	  	select count(*) from movie_request where user_id = #{userId}
+	  </select>
+	
+	  <select id="movie_request" resultType="com.itwillbs.domain.MovieRequestVO">
+	  	select id,user_id, title, content, status, created_at as createdAt, processed_at as processedAt from movie_request where user_id = #{userId}
+	  </select>
+	  
+<!-- 영화 요청 단건 조회 -->
+<select id="getMovieRequestById" resultType="com.itwillbs.domain.MovieRequestVO" parameterType="int">
+    SELECT id, user_id as userId, title, content, status, created_at as createdAt, processed_at as processedAt
+    FROM movie_request
     WHERE id = #{id}
 </select>
 
-  <update id="inquiry_update">
-  	update board
-  	set title = #{title}, content = #{content}, status = #{status}
-  	where id = #{id}
-  </update>
+<!-- 영화 요청 수정 -->
+<update id="updateMovieRequest" parameterType="com.itwillbs.domain.MovieRequestVO">
+    UPDATE movie_request
+    SET title = #{title}, content = #{content}
+    WHERE id = #{id} AND user_id = #{userId}
+</update>
 
-  <delete id="inquiry_delete">
-  	delete from inquiries
-  	where id = #{id}
-  </delete>
-
-  <insert id="insert_movie_request">
-  	insert into movie_request(user_id,title, content, status, created_at)
-  	values (#{userId},#{title},#{content},#{status},#{createdAt})
-  </insert>
-
-  <select id="movie_request_count" resultType="java.lang.Integer">
-  	select count(*) from movie_request where user_id = #{userId}
-  </select>
-
-  <select id="movie_request" resultType="com.itwillbs.domain.MovieRequestVO">
-  	select id,user_id, title, content, status, created_at as createdAt, processed_at as processedAt from movie_request where user_id = #{userId}
-  </select>
-  
-    <!-- 공지 목록 -->
-    <select id="notices" resultType="com.itwillbs.domain.NoticesVO">
-SELECT 
-    id,
-    title,
-    content,
-    DATE_FORMAT(created_at, '%Y-%m-%d') AS createdAt
-FROM notices
-ORDER BY created_at DESC
-    </select>
-
-    <!-- 공지 상세 -->
-    <select id="notice_detail" parameterType="int" resultType="com.itwillbs.domain.NoticesVO">
-        SELECT id, title, content, created_at AS createdAt
-        FROM notices
-        WHERE id = #{id}
-    </select>
-    
-<select id="faqs" resultType="com.itwillbs.domain.FaqsVO">
-    SELECT id, question, answer, created_at AS createdAt, category
-    FROM faqs
-</select>
-
-</mapper>
-  
-
+<!-- 영화 요청 삭제 -->
+<delete id="movie_request_delete" parameterType="int">
+    DELETE FROM movie_request WHERE id = #{id}
+</delete>
+	  
+	    <!-- 공지 목록 -->
+	    <select id="notices" resultType="com.itwillbs.domain.NoticesVO">
+	SELECT 
+	    id,
+	    title,
+	    content,
+	    DATE_FORMAT(created_at, '%Y-%m-%d') AS createdAt
+	FROM notices
+	ORDER BY created_at DESC
+	    </select>
+	
+	    <!-- 공지 상세 -->
+	    <select id="notice_detail" parameterType="int" resultType="com.itwillbs.domain.NoticesVO">
+	        SELECT id, title, content, created_at AS createdAt
+	        FROM notices
+	        WHERE id = #{id}
+	    </select>
+	    
+	<select id="faqs" resultType="com.itwillbs.domain.FaqsVO">
+	    SELECT id, question, answer, created_at AS createdAt, category
+	    FROM faqs
+	    order by created_at desc
+	</select>
+	
+	</mapper>
+	  
+	

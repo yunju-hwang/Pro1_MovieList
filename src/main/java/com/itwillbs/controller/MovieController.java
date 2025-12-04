@@ -1,5 +1,6 @@
 package com.itwillbs.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,6 +119,7 @@ public class MovieController {
 	@GetMapping("/movies/search/detail/{id}")
 	public String searchMovieDetail(@PathVariable("id") int tmdbId, Model model) {
 		Map<String, Object> movie = movieService.getSearchMovieDetail(tmdbId);
+		Map<String, Object> credits = movieService.getMovieCredits(tmdbId); // 여기서 출연진 가져오기
 		
 		// 안전하게 문자열 처리
 	    String title = (String) movie.get("title");
@@ -148,9 +150,27 @@ public class MovieController {
 	    model.addAttribute("genresText", genresText);
 	    model.addAttribute("popularity", popularity);
 	    
+	    // 출연진 (credits에서 cast, crew 등)
+	    model.addAttribute("credits", credits);
+	    
+
+	    // 추천 영화
+	    List<Map<String, Object>> recommendations = movieService.getRecommendations(tmdbId);
+	    model.addAttribute("recommendations", recommendations);
+	   
+
 		return "movies/searchDetail";
 		
 	}
+	
+	// 영화 감독/배우 정보 들고오기
+	@GetMapping("/movies/{tmdbId}/credits")
+	@ResponseBody
+	public Map<String, Object> getMovieCredits(@PathVariable int tmdbId){
+		return movieService.getMovieCredits(tmdbId);
+	}
+	
+	
 	
 	// 영화 찜하기
     @PostMapping("/movies/favorite/{tmdbId}")
@@ -195,25 +215,61 @@ public class MovieController {
         return ResponseEntity.ok(movieList);
     }
     
+    
+    
+    
+    // tmdbId 받아서 DB에 영화 저장
+    @PostMapping("/movies/add/tmdb/{tmdbId}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> addMovieByTmdbId(@PathVariable int tmdbId) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            // tmdb API에서 상세 정보 가져오기
+            Map<String, Object> movieDetail = movieService.getSearchMovieDetail(tmdbId);
+            System.out.println(movieDetail);
+
+            // Map -> MovieVO 변환
+            MovieVO movieVO = movieService.convertMapToMovieVO(movieDetail);
+
+            // DB 저장
+            movieService.insertMovie(movieVO);
+
+            result.put("success", true);
+            result.put("message", movieVO.getTitle() + " 영화가 추가되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("success", false);
+            result.put("message", "영화 추가 실패");
+        }
+        return ResponseEntity.ok(result);
+    }
+
+
 
     
 	// 영화 예약하기 창 이동
 	@GetMapping("/reservation/info")
 	public String resInfo(@RequestParam("tmdbId")String tmdbId,@RequestParam("title")String title, Model model, HttpSession session) {
 		List<TheatersVO> theaters = movieService.getAllTheaters();
-		System.out.println(theaters);
+		
 		
 		// 지역 중복 제거
 		List<String> locationsList = theaters.stream()
 				.map(TheatersVO::getLocation)
 				.distinct()
 				.collect(Collectors.toList());
-		System.out.println(theaters);
 		
 		
+		MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
+		List<Long> userTheaterIds = new ArrayList<>();
+		if(loginUser != null) {
+			userTheaterIds = movieService.getUserTheatersIds(loginUser.getUser_id());
+		}
 		
-		model.addAttribute("theaters", theaters);
-		model.addAttribute("locationsList", locationsList);
+		System.out.println(userTheaterIds);
+		model.addAttribute("theaters", theaters); // 모든 영화관 
+		model.addAttribute("locationsList", locationsList); // 지역
+		model.addAttribute("userTheaterIds", userTheaterIds); // 선호 영화관 id
 		model.addAttribute("tmdbId", tmdbId);
 		model.addAttribute("title", title);
 		
@@ -259,6 +315,8 @@ public class MovieController {
 	}
 	
 	
+	
+
 	
 	
 	

@@ -169,6 +169,12 @@ display: flex;
   background-color: #f5f5f5;
   color: #555;
   border: 1px solid #ccc;
+  -webkit-appearance: none;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 25px;
+    font-size: 16px;
+    cursor: pointer;
 }
 .no-sub:hover {
   background-color: #e4e4e4;
