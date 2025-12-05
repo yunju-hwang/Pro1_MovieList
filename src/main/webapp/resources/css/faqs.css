@@ -1,3 +1,4 @@
+
 @charset "UTF-8";
 
 body {
@@ -121,7 +122,7 @@ body {
 .want {
   font-size: 1.6em;
   color: #222;
-  margin-bottom: 15px;
+  margin-bottom: 40px;
 }
 
 /* 문의 버튼 */
@@ -160,3 +161,30 @@ body {
     padding-left: 45px;
   }
 }
+
+.pagination {
+    text-align: center;
+    margin: 40px 0;
+}
+
+.page-number, .page-btn {
+    display: inline-block;
+    margin: 0 5px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #f1f3f5;
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.page-number.active {
+    background: #3a7afe;
+    color: white;
+}
+
+.page-number:hover, .page-btn:hover {
+    background: #d7dce1;
+}
+
