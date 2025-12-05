@@ -99,47 +99,60 @@
 	
 	<!-- 영화 인기순 정렬 -->
 	<select id="findAllByOrderByPopularityDesc" resultMap ="movieWithGenresMap" >
-		  SELECT 
+    SELECT
         m.tmdb_id,
         m.title,
         m.poster_path,
         m.release_date,
         m.overview,
         m.runtime,
-        g.genre_name AS genre_name,
+        m.popularity,
+        g.genre_name,
         CASE 
-            WHEN uf.tmdb_id IS NOT NULL THEN 1 
-            ELSE 0 
+            WHEN uf.tmdb_id IS NOT NULL THEN 1
+            ELSE 0
         END AS is_favorite
-	    FROM movies m
-	    LEFT JOIN movie_genres mg ON m.tmdb_id = mg.tmdb_id
-	    LEFT JOIN genres g ON mg.genre_id = g.genre_id
-	    LEFT JOIN user_favorites uf ON uf.tmdb_id = m.tmdb_id AND uf.user_id = #{userId}
-	    ORDER BY m.popularity DESC, m.tmdb_id
+    FROM (
+        SELECT *
+        FROM movies
+        ORDER BY popularity DESC, tmdb_id
+        LIMIT #{offset}, #{limit}
+    ) m
+    LEFT JOIN movie_genres mg ON m.tmdb_id = mg.tmdb_id
+    LEFT JOIN genres g ON mg.genre_id = g.genre_id
+    LEFT JOIN user_favorites uf ON uf.tmdb_id = m.tmdb_id AND uf.user_id = #{userId}
 	</select>
 	
 	<!-- 영화 최신순 정렬 -->
 	<select id="findAllByOrderByReleaseDateDesc" resultMap ="movieWithGenresMap" >
-		SELECT 
+    SELECT
         m.tmdb_id,
         m.title,
         m.poster_path,
         m.release_date,
         m.overview,
         m.runtime,
-        g.genre_name AS genre_name,
+        m.popularity,
+        g.genre_name,
         CASE 
-            WHEN uf.tmdb_id IS NOT NULL THEN 1 
-            ELSE 0 
-        	END AS is_favorite
-	    FROM movies m
-	    LEFT JOIN movie_genres mg ON m.tmdb_id = mg.tmdb_id
-	    LEFT JOIN genres g ON mg.genre_id = g.genre_id
-	    LEFT JOIN user_favorites uf ON uf.tmdb_id = m.tmdb_id AND uf.user_id = #{userId}
-	    ORDER BY m.release_date DESC, m.tmdb_id
+            WHEN uf.tmdb_id IS NOT NULL THEN 1
+            ELSE 0
+        END AS is_favorite
+    FROM (
+        SELECT *
+        FROM movies
+        ORDER BY release_date DESC, tmdb_id
+        LIMIT #{offset}, #{limit}
+    ) m
+    LEFT JOIN movie_genres mg ON m.tmdb_id = mg.tmdb_id
+    LEFT JOIN genres g ON mg.genre_id = g.genre_id
+    LEFT JOIN user_favorites uf ON uf.tmdb_id = m.tmdb_id AND uf.user_id = #{userId}
 	</select>
-  
-  
+  <!-- 전체 갯수 -->
+	<select id="getTotalMovieCount" resultType="int">
+	    SELECT COUNT(*) FROM movies
+	</select>
+	  
   <!-- 찜 여부 확인 -->
   <select id="isFavorite" resultType="int">
   	SELECT COUNT(*)
@@ -182,6 +195,13 @@
 	      AND r.theater_id = #{theaterId}
 	      AND r.screening_time = #{screeningTime}
 	      
+	</select>
+	
+	<!-- 선호 영화관 불러오기 -->
+	<select id="selectTheaterIdsByUserId" parameterType="String" resultType="long">
+		SELECT theater_id
+		FROM user_theaters
+		WHERE user_id = #{userId}
 	</select>
   
 </mapper>

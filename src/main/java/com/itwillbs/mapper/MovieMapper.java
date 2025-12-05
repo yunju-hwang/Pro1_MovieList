@@ -1,6 +1,7 @@
 package com.itwillbs.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -39,8 +40,12 @@ public interface MovieMapper {
     void updateMovieDetail(MovieVO movie);
     
     // 영화 정렬 (인기순, 최신순)
-    List<MovieVO> findAllByOrderByPopularityDesc(@Param("userId") String userId);
-    List<MovieVO> findAllByOrderByReleaseDateDesc(@Param("userId") String userId);
+    List<MovieVO> findAllByOrderByPopularityDesc(@Param("userId") String userId,
+            @Param("offset") int offset,
+            @Param("limit") int limit);
+    List<MovieVO> findAllByOrderByReleaseDateDesc(@Param("userId") String userId,
+            @Param("offset") int offset,
+            @Param("limit") int limit);
     
     // 찜 여부 확인
     int isFavorite(@Param("userId") String userId,
@@ -67,4 +72,13 @@ public interface MovieMapper {
         @Param("screeningTime") String screeningTime
     );
     
+    // 선호 영화관 가져오기
+    List<Long> selectTheaterIdsByUserId(String userId);
+    
+
+    // 영화 저장
+    void insertMovie(Map<String, Object> movie);
+    
+    // 영화 수 
+    int getTotalMovieCount();
 }

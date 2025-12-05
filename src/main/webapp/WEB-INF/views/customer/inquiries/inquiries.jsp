@@ -38,6 +38,18 @@
             <span class="sp_content">내용</span>
             <span class="sp_date">작성일</span>
             <span class="sp_ans">답변 여부</span>
+            <span class="sp_edit">수정</span>
+            <span class="sp_delete">삭제</span>
+            <div class="sort-container">
+    <form method="get" action="/movielist/customer/inquiries">
+        <select name="sort" onchange="this.form.submit()">
+            <option value="">최신순</option>
+            <option value="date_asc" ${param.sort == 'date_asc' ? 'selected' : ''}>오래된순</option>
+            <option value="pending" ${param.sort == 'pending' ? 'selected' : ''}>답변대기 먼저</option>
+            <option value="completed" ${param.sort == 'completed' ? 'selected' : ''}>답변완료 먼저</option>
+        </select>
+    </form>
+</div>
         </div>
 
         <div class="inquiry_list">
@@ -64,10 +76,12 @@
                     </span>
 
                     <c:if test="${inquiriesVO.status eq 'pending'}">
+                    <a href="/movielist/customer/inquiries/inquiry_detail?id=${inquiriesVO.id}" class="inq_detail">
                         <span class="item_status_pen">
                             <img src="https://cdn-icons-png.flaticon.com/512/595/595067.png" class="status_icon">
                             답변대기
                         </span>
+                         </a>
                     </c:if>
 
                     <c:if test="${inquiriesVO.status ne 'pending'}">
@@ -78,7 +92,12 @@
                             </span>
                         </a>
                     </c:if>
+                    
 
+<a href="inquiry_update?id=${inquiriesVO.id}" class="item_edit">
+<img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" class="edit_icon">수정</a>
+<a href="inquiry_delete?id=${inquiriesVO.id}" class="item_delete" onclick="return confirm('정말 삭제하시겠습니까?');">  
+<img src="https://cdn-icons-png.flaticon.com/512/3405/3405244.png" class="delete_icon">삭제</a>
                 </div>
             </c:forEach>
         </div>

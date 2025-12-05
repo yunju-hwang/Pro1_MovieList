@@ -1,185 +1,156 @@
-@charset "UTF-8";
-
-body{
-	background-color: #f7f7f7;
-	height: 1200px;
-	  margin: 0px;
-  padding: 0px;
+/* 공통 초기화 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Noto Sans KR", sans-serif;
 }
 
-.title{
-	text-align: center;
-}
-.title1{
-	text-align: center;
-	color: gray;
-}
-.container{
-	margin:auto;
-	width:60%;
-	height:800px;
-	background: white;
-	border: 1px solid black;
-	border-radius: 30px;
-	padding-left: 30px;	
-	padding-right: 30px;
+body {
+    background: #f8f9fb;
 }
 
-.unity{
-	font-size: 1.5em;
-	font-weight: 700px;
-	margin-bottom: 10px;
+/* 제목 */
+.title {
+	margin-top:30px;
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 5px;
 }
 
-.input-dropdown {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: #f9f9f9;
-  transition: box-shadow 0.2s, border-color 0.2s, background-color 0.2s;
+.title1 {
+    font-size: 16px;
+    color: #666;
+    text-align: center;
+    margin-bottom: 40px;
 }
 
-.input-dropdown:hover {
-  border-color: #888;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
-  background-color: #f2f2f2;
+/* 입력 제목 */
+.unity {
+    width: 700px;
+    margin: 0 auto 10px auto;
+    font-size: 16px;
+    font-weight: 600;
 }
 
-.input-dropdown input {
-  flex: 1;
-  padding: 10px;
-  font-size: 20px;
-  border: none;
-  outline: none;
-  background-color: transparent;
-  cursor: not-allowed; /* 기본은 입력 불가 */
-  color: #666;
+.text-con {
+    width: 700px;
+    margin: 0 auto 25px auto;
 }
 
-.input-dropdown input.editable {
-  cursor: text;
-  color: #000;
-}
-
-.input-dropdown select {
-  padding: 10px;
-  font-size: 20px;
-  border: none;
-  border-left: 1px solid #ccc;
-  background-color: transparent;
-  cursor: pointer;
-  outline: none;
-  transition: background-color 0.2s;
-}
-
-.input-dropdown select:hover {
-  background-color: #eaeaea;
-}
-
-.text{
-    flex: 1;
-    padding: 10px;
-    font-size: 20px;
-    border: none;
-    outline: none;
-    background-color: transparent;
-}
-.text-con{
-display: flex;
-    align-items: center;
+.text {
     width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #f9f9f9;
-    transition: box-shadow 0.2s, border-color 0.2s, background-color 0.2s;
+    padding: 14px 16px;
+    font-size: 15px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 10px;
+    background: #fff;
+    transition: 0.2s;
+    resize: none;
 }
 
-.under{
-	margin-top: 5px;
-	font-size: 0.8em;
-	color: gray;
+.text:focus {
+    border-color: #4a79ff;
+    box-shadow: 0 0 6px rgba(74, 121, 255, 0.3);
+    outline: none;
 }
 
-.notification{
-	background-color: #f7f7f7;
-	width: 100%;
-	height:180px;
-	border-radius: 8px;
-	border: 1px solid #ccc
+/* 수정 모드에서 입력 활성화 */
+.editable {
+    background: #fff !important;
 }
 
-.not-title{
-	margin-bottom: 0px;
-	margin-left: 20px;
-}
-.listcon{
-	margin-top: 10px;
-}
-
-.list{
-	color:gray;
+.under {
+    width: 700px;
+    margin: -15px auto 20px auto;
+    font-size: 13px;
+    color: #888;
 }
 
-.faq-con{
-	display:flex;
-	justify-content:center;
-	align-items:center;
-	flex-direction:column;
-	width: 60%;
-	height: 100px;
-	background: white;
-	margin: 20px auto;
-	border: 1px solid black;
-	border-radius: 30px;
-	padding-left: 30px;	
-	padding-right: 30px;
-	font-size: 1.3em;
+/* 안내사항 박스 */
+.notification {
+    width: 700px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 15px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.06);
 }
 
-.faq{
-		text-decoration: none;
-		padding-bottom: 10px;
+.not-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 15px;
 }
 
+.listcon {
+    list-style: none;
+}
+
+.list {
+    margin-bottom: 8px;
+    color: #555;
+    font-size: 14px;
+}
+
+/* 버튼 영역 */
 .btn-form {
-  display: flex;
-  justify-content: center; /* 버튼들을 가운데 정렬하고 */
-  gap: 30px; /* 버튼 사이 간격 조정 */
-  margin: 30px auto;
+    width: 700px;
+    margin: 30px auto;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
 }
 
-/* ✅ 공통 버튼 스타일 */
-.btn-form input[type="submit"] {
-  appearance: none; /* ← 기본 브라우저 버튼 스타일 제거 */
-  -webkit-appearance: none; /* Safari용 */
-  border: none;
-  border-radius: 8px;
-  padding: 10px 25px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-/* 취소 버튼 */
-.no-sub {
-  background-color: #f5f5f5;
-  color: #555;
-  border: 1px solid #ccc;
-}
-.no-sub:hover {
-  background-color: #e4e4e4;
-}
-
-/* 요청 버튼 */
+.no-sub,
 .sub {
-  background-color: #cd0000;
-  color: white;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    padding: 13px 25px;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+    transition: 0.2s;
 }
+
+.no-sub {
+    background: #e5e7eb;
+    color: #333;
+}
+
+.no-sub:hover {
+    background: #d1d5db;
+}
+
+.sub {
+    background: #CD0000;
+    color: white;
+    font-weight: 600;
+}
+
 .sub:hover {
-  background-color: #0066d1;
+    background: #3a63d6;
+}
+
+/* FAQ 안내 */
+.faq-con {
+    text-align: center;
+    margin-top: 60px;
+    font-size: 16px;
+}
+
+.faq-con p {
+    margin-bottom: 8px;
+    color: #444;
+}
+
+.faq {
+    font-size: 15px;
+    color: #4a79ff;
+    text-decoration: underline;
+    transition: 0.2s;
+}
+
+.faq:hover {
+    color: #3a63d6;
 }

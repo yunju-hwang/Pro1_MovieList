@@ -20,35 +20,31 @@ public class CustomerService {
 	@Inject
 	private CustomerMapper customerMapper;
 
-	public void insertinquiry(InquiriesVO inquiriesVO) {
-		inquiriesVO.setStatus("pending");
-		inquiriesVO.setCreatedAt(LocalDateTime.now());
-		customerMapper.insertinquirty(inquiriesVO);
 
-	}
+    public List<InquiriesVO> inquiries(String userId) {
+        return customerMapper.inquiries(userId);
+    }
+    
 
-	public List<InquiriesVO> inquiries(String userId) {
+    public int inquiry_count(String userId) {
+        return customerMapper.inquiry_count(userId);
+    }
+
+    public void insertinquiry(InquiriesVO inq) {
+        inq.setStatus("pending");
+        inq.setCreatedAt(LocalDateTime.now());
+        customerMapper.insertInquiry(inq);
+    }
+    public void updateInquiry(InquiriesVO inq) {
+        customerMapper.updateInquiry(inq);
+    }
+
+    public void deleteInquiry(int id, String userId) {
+        customerMapper.deleteInquiry(id, userId);
+    }
 
 
-
-
-		return customerMapper.inquiries(userId);
-	}
-
-	public int inquiry_count(String userId) {
-
-		return customerMapper.inquiry_count(userId);
-	}
-
-	public InquiriesVO inquiry_update(int id) {
-		return customerMapper.inquiry_update(id);
-	}
-
-	public void inquiry_delete(int id) {
-
-		customerMapper.inquiry_delete(id);
-	}
-
+   
 
 	   public InquiriesVO inquiry_detail(int id) {
 	        return customerMapper.inquiry_detail(id);
@@ -71,6 +67,20 @@ public class CustomerService {
 		customerMapper.insert_movie_request(movieRequestVO);
 
 	}
+	
+	public MovieRequestVO movie_request_detail(int id) {
+	    return customerMapper.movie_request_detail(id);
+	}
+
+	public void update_movie_request(MovieRequestVO vo) {
+	    customerMapper.update_movie_request(vo);
+	}
+
+
+	public void delete_movie_request(int id, String userId) {
+	    customerMapper.delete_movie_request(id, userId);
+	}
+
 
     public List<NoticesVO> notices() {
         return customerMapper.notices();
@@ -79,11 +89,28 @@ public class CustomerService {
     public NoticesVO notice_detail(int id) {
         return customerMapper.notice_detail(id);
     }
+    
+    public List<NoticesVO> getNoticesPaged(int offset, int pageSize) {
+        return customerMapper.getNoticesPaged(offset, pageSize);
+    }
+
+    public int getNoticesCount() {
+        return customerMapper.getNoticesCount();
+    }
+    
+    
 
 	public List<FaqsVO> faqs() {
 		return customerMapper.faqs();
 	}
 
+	public List<FaqsVO> getFaqsPaged(int offset, int pageSize) {
+	    return customerMapper.getFaqsPaged(offset, pageSize);
+	}
+
+	public int getFaqsCount() {
+	    return customerMapper.getFaqsCount();
+	}
 
 
 

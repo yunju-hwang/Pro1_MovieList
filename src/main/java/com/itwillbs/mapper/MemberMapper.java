@@ -52,5 +52,8 @@ public interface MemberMapper {
     public int updateTemporaryPassword(MemberVO updateMember);
 
 
+	void updateAdditionalInfo(MemberVO memberVO);
+
+
 	
 }
