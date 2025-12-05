@@ -52,13 +52,19 @@ public class MovieController {
 	// json으로 제공 (javaScript 파일)
     @GetMapping("/movies/list")
     @ResponseBody
-    public List<MovieVO> movieList(@RequestParam(value = "sort", defaultValue = "latest") String sort, HttpSession session) {
+    public Map<String, Object> movieList(
+    		@RequestParam(value = "sort", defaultValue = "latest") String sort,
+    		@RequestParam(value="page", defaultValue = "1") int page,
+    		@RequestParam(value="size", defaultValue="20") int size,
+    		HttpSession session) {
+    	
     	String userId = null;
     	if (session.getAttribute("loginUser") != null) {
             MemberVO user = (MemberVO) session.getAttribute("loginUser");
             userId = user.getUser_id();
         }
     	
+    	int offset = (page -1) * size;
     	
     	// 정렬 + userId 기준으로 영화 조회
     	List<MovieVO> movies;
@@ -67,16 +73,25 @@ public class MovieController {
         switch (sort) {
         	//인기순 
             case "popularity":
-                movies = movieService.getMovieListOrderByPopularity(userId);
+                movies = movieService.getMovieListOrderByPopularity(userId, offset, size);
                 break;
             //최신순
             case "latest":
             default:
-                movies = movieService.getMovieListOrderByReleaseDate(userId);
+                movies = movieService.getMovieListOrderByReleaseDate(userId, offset, size);
                 break;
         }
 
-        return movies;
+        int totalCount = movieService.getTotalMovieCount();
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("movies", movies);
+        response.put("totalCount", totalCount);
+        response.put("currentPage", page);
+        response.put("pageSize", size);
+        
+        
+        return response;
     }
     
     

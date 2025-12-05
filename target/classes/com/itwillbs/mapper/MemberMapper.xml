@@ -19,13 +19,30 @@
 		resultType="int">
 		SELECT COUNT(*) FROM users WHERE user_id = #{user_id}
 	</select>
+	
+		<!-- 전화번호 중복 체크 -->
+	<select id="checkPhoneExists" resultType="boolean">
+		SELECT EXISTS(SELECT 1 FROM users WHERE phone = #{phone})
+	</select>
+	
+	<!-- 이메일 중복 체크 -->
+	<select id="checkEmailExists" parameterType="String" resultType="boolean">
+	    SELECT EXISTS(SELECT 1 FROM users WHERE email = #{email})
+	</select>
+	
+	<!-- 닉네임 중복 체크 -->
+	<select id="checkNicknameExists" parameterType="String" resultType="int">
+		SELECT COUNT(*) FROM users WHERE nickname = #{nickname}
+	</select>
+	
 
 	<insert id="insertMember">
 		insert into users (user_id, role, password, username,
 		email, gender,
-		birth_date, phone, profile_image, nickname)
+		birth_date, phone, profile_image, nickname, termsAgree, privacyAgree, marketingAgree)
 		values(#{user_id},
-		#{role},#{password},#{username},#{email},#{gender},#{birthDate},#{phone},#{profileImage},#{nickname}
+		#{role},#{password},#{username},#{email},#{gender},#{birthDate},#{phone},#{profileImage},#{nickname},
+		 #{termsAgree}, #{privacyAgree}, #{marketingAgree}
 		)
 	</insert>
 
