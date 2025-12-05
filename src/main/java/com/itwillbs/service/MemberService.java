@@ -56,6 +56,19 @@ public class MemberService {
     public boolean checkUserIdExists(String user_id) {
         return memberMapper.checkUserIdExists(user_id) > 0; // 아이디가 존재하는지 체크
     }
+    
+    public boolean checkEmailExists(String email) {
+		return memberMapper.checkEmailExists(email); //이메일 중복 체크
+	}
+
+    public boolean checkPhoneExists(String phone) {
+        return memberMapper.checkPhoneExists(phone); // 전화번호 중복 체크
+    }
+
+
+    public boolean checkNicknameExists(String nickname) {  // 닉네임 중복 체크
+        return memberMapper.checkNicknameExists(nickname) > 0;
+    }
 
 	
 	

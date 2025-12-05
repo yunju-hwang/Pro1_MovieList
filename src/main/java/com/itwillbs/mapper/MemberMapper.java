@@ -26,10 +26,18 @@ public interface MemberMapper {
 
 	int checkUserIdExists(String user_id); // 회원가입 ID 중복체크 메서드
 	
+	boolean checkEmailExists(String email); //이메일 중복체크 메서드
+
+	boolean checkPhoneExists(String phone); // 전화번호 중복체크 메서드
+	
+	int checkNicknameExists(String nickname); // 별명 중복 체크
+	
+	
 	// 카카오용 login
 	MemberVO findBykakaoId(Long kakaoId);
 	
 	// 카카오용 signup
 	int insertkakaoMember(MemberVO memberVO);
+
 	
 }

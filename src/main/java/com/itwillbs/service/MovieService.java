@@ -212,16 +212,21 @@ public class MovieService {
 	}
 	
 	// 영화 정렬
-	public List<MovieVO> getMovieListOrderByPopularity(String userId) {
-		List<MovieVO> movies = movieMapper.findAllByOrderByPopularityDesc(userId);
+	public List<MovieVO> getMovieListOrderByPopularity(String userId, int offset, int size) {
+		List<MovieVO> movies = movieMapper.findAllByOrderByPopularityDesc(userId, offset, size);
         addFavoriteStatus(movies, userId);
         return movies;
 	}
 	
-	public List<MovieVO> getMovieListOrderByReleaseDate(String userId) {
-		List<MovieVO> movies = movieMapper.findAllByOrderByReleaseDateDesc(userId);
+	public List<MovieVO> getMovieListOrderByReleaseDate(String userId, int offset, int size) {
+
+		List<MovieVO> movies = movieMapper.findAllByOrderByReleaseDateDesc(userId, offset, size);
         addFavoriteStatus(movies, userId);
         return movies;
+	}
+	
+	public int getTotalMovieCount() {
+		return movieMapper.getTotalMovieCount();
 	}
 	
 	
