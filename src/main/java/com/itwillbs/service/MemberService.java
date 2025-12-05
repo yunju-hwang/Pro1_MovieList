@@ -70,7 +70,11 @@ public class MemberService {
         return memberMapper.checkNicknameExists(nickname) > 0;
     }
 
-	
+	// 소셜 회원가입 시 업데이트
+    public void updateAdditionalInfo(MemberVO member) {
+        memberMapper.updateAdditionalInfo(member);
+    }
+
 	
 	
 }
