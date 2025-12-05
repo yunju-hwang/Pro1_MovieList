@@ -38,6 +38,8 @@ public interface MemberMapper {
 	
 	// 카카오용 signup
 	int insertkakaoMember(MemberVO memberVO);
+	
+	void updateAdditionalInfo(MemberVO memberVO);
 
 	
 }

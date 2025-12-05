@@ -296,5 +296,40 @@ public class MemberController {
 			return "/user/login";
 		}
 	}
+	
+	
+    // ➤ GET: 추가 정보 입력 페이지 열기
+    @GetMapping("/member/extra-info")
+    public String extraInfoForm() {
+        return "user/extra-info";
+    }
+	
+	
+	// 소셜 회원가입 시 추가 정보 저장
+	@PostMapping("/member/extra-infoPro")
+	public String saveExtraInfo(@RequestParam String email,
+	                            @RequestParam String phone,
+	                            HttpSession session) {
+
+	    MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
+
+	    if (loginUser == null) {
+	        return "redirect:/member/login";
+	    }
+
+	    loginUser.setEmail(email);
+	    loginUser.setPhone(phone);
+
+	    // DB 저장
+	    memberService.updateAdditionalInfo(loginUser);
+
+	    // 이제 추가정보 필요 없음
+	    loginUser.setRequireAdditionalInfo(false);
+	    session.setAttribute("loginUser", loginUser);
+
+	    return "redirect:/main";
+	}
+
+	
 
 }
