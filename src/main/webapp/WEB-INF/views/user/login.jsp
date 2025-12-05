@@ -53,9 +53,10 @@
      <label for="rememberUserId">아이디 기억하기</label>
      </div> 
      <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
-				<a href="${pageContext.request.contextPath}/findId">아이디 찾기</a> | <a href="${pageContext.request.contextPath}/findPw">비밀번호 찾기</a>
-			</div>
+     <a href="${pageContext.request.contextPath}/findId">아이디 찾기</a> | <a href="${pageContext.request.contextPath}/findPw">비밀번호 찾기</a>
 
+     
+		</div>
 
 	<!-- 로그인 실패 메시지 출력 -->
 			<c:if test="${not empty msg}">
