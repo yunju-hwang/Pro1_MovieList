@@ -97,15 +97,18 @@ public class MovieController {
     
     // 영화 상세 페이지 이동 (jsp)
     @GetMapping("/movies/detailPage")
-    public String movieDetailPage() {
+    public String movieDetailPage(@RequestParam("tmdbId") int tmdbId, Model model) {
     	System.out.println("message");
+		
+		List<Map<String, Object>> recommendations = movieService.getRecommendations(tmdbId);
+		model.addAttribute("recommendations", recommendations);
         return "movies/detail";  // detail.jsp
     }
 
 	// 영화 상세 페이지 값 반환 (json) -> DB 이용
 	@GetMapping("/movies/detail")
 	@ResponseBody
-	public ResponseEntity<MovieVO> getmovieDetail(@RequestParam("tmdbId") int tmdbId, HttpSession session) {
+	public ResponseEntity<MovieVO> getmovieDetail(@RequestParam("tmdbId") int tmdbId, HttpSession session, Model model) {
 		
 		MemberVO memberVO = (MemberVO)session.getAttribute("loginUser");
 		String userId = (memberVO != null) ? memberVO.getUser_id():null;
@@ -119,6 +122,8 @@ public class MovieController {
 		}else {
 			movieVO.setFavorite(false);
 		}
+
+
 		
 		return ResponseEntity.ok(movieVO);
 	}
