@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-
 import com.itwillbs.domain.GenresVO;
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.domain.UserGenresVO;
@@ -41,6 +40,7 @@ public interface MemberMapper {
 	// 카카오용 signup
 	int insertkakaoMember(MemberVO memberVO);
 	
+
 	// mail용
     public String findIdByEmail(String email);
     
@@ -53,7 +53,7 @@ public interface MemberMapper {
 
 
 	void updateAdditionalInfo(MemberVO memberVO);
-
-
+	
 	
 }
+

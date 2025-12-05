@@ -38,6 +38,7 @@
 
 
 			<div class="form-group">
+
                <label for="userId">아이디:</label>
               <input type="text" id="user_id" name="user_id" value="${not empty user_id ? user_id : cookid}"
        					placeholder="아이디를 입력하세요" required>
@@ -76,6 +77,27 @@
           </button>
      </form>
 
+				<label for="userId">아이디:</label> <input type="text" id=user_id
+					name="user_id" placeholder="아이디를 입력하세요" required>
+			</div>
+			<div class="form-group">
+				<label for="userPw">비밀번호:</label> <input type="password"
+					id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+			</div>
+			<div class="form-group">
+				<input type="checkbox" id="rememberUserId" name="rememberUserId">
+				<label for="rememberUserId">아이디 기억하기</label>
+			</div>
+			<div class="form-group">
+				<a href="find_id.jsp">아이디 찾기</a> | <a href="find_pw.jsp">비밀번호 찾기</a>
+			</div>
+			<button type="submit" class="btn btn-primary">로그인</button>
+			<button type="button" class="btn btn-secondary"
+				onclick="location.href='${pageContext.request.contextPath}/register/step1'">
+				회원가입</button>
+		
+
+
 
 
 		<div class="or-divider">
@@ -88,7 +110,7 @@
 
 
 		</div>
-	</div>
+	
 	
 </body>
 </html>

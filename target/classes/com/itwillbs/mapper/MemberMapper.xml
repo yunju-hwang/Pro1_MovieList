@@ -69,27 +69,6 @@
         INSERT INTO users (user_id, password, kakao_id, email, nickname, username, role, profile_image)
         VALUES (#{user_id},#{password}, #{kakaoId}, #{email}, #{nickname}, #{username}, #{role}, #{profileImage})
     </insert>
-    
-    <select id="findIdByEmail" resultType="String">
-    SELECT user_id 
-    FROM users 
-    WHERE email = #{email}
-    </select>
-    
-    <select id="getMemberByIdAndEmail" resultType="com.itwillbs.domain.MemberVO">
-    SELECT 
-        user_id, password, email, nickname, username
-    FROM 
-        users 
-    WHERE 
-        user_id = #{userId} AND email = #{userEmail}
-    </select>
-    
-    <update id="updateTemporaryPassword" parameterType="com.itwillbs.domain.MemberVO">
-    UPDATE users
-    SET password = #{password}
-    WHERE user_id = #{user_id}
-    </update>
 
      <!-- 소셜 회원가입 시 업데이트 -->
     <update id="updateAdditionalInfo">
