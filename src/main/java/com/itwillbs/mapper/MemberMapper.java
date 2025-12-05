@@ -3,6 +3,7 @@ package com.itwillbs.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.itwillbs.domain.GenresVO;
 import com.itwillbs.domain.MemberVO;
@@ -39,7 +40,20 @@ public interface MemberMapper {
 	// 카카오용 signup
 	int insertkakaoMember(MemberVO memberVO);
 	
-	void updateAdditionalInfo(MemberVO memberVO);
 
+	// mail용
+    public String findIdByEmail(String email);
+    
+    // (선택적) 비밀번호 찾기 시 아이디와 이메일 일치 여부를 확인하는 메서드
+    public MemberVO getMemberByIdAndEmail(
+    		@Param("userId") String userId, 
+            @Param("userEmail") String userEmail);
+    
+    public int updateTemporaryPassword(MemberVO updateMember);
+
+
+	void updateAdditionalInfo(MemberVO memberVO);
+	
 	
 }
+
