@@ -33,7 +33,7 @@
 				<label for="rememberUserId">아이디 기억하기</label>
 			</div>
 			<div class="form-group">
-				<a href="find_id.jsp">아이디 찾기</a> | <a href="find_pw.jsp">비밀번호 찾기</a>
+				<a href="${pageContext.request.contextPath}/findId">아이디 찾기</a> | <a href="${pageContext.request.contextPath}/findPw">비밀번호 찾기</a>
 			</div>
 			<button type="submit" class="btn btn-primary">로그인</button>
 			<button type="button" class="btn btn-secondary"
