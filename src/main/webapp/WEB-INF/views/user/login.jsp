@@ -52,7 +52,7 @@
      <input type="checkbox" id="rememberUserId" name="idSave" <c:if test="${not empty cookid}">checked</c:if>>
      <label for="rememberUserId">아이디 기억하기</label>
      </div> 
-     <div class="form-group">
+     <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
 				<a href="${pageContext.request.contextPath}/findId">아이디 찾기</a> | <a href="${pageContext.request.contextPath}/findPw">비밀번호 찾기</a>
 			</div>
 

@@ -11,7 +11,7 @@ import com.itwillbs.domain.UserGenresVO;
 
 // interface로 구현
 @Mapper
-public interface MemberMapper {
+public interface MemberMapper { 
 	 // DB에서 아이디, 비밀번호 일치하는 회원 조회 (login)
     MemberVO loginMember(MemberVO member);
     
