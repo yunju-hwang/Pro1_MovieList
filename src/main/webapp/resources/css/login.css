@@ -71,6 +71,8 @@ body {
     font-size: 13px;
     color: #444;
     text-decoration: none;
+     display: block !important; /* 한 줄 내리기 */
+    margin-top: 10px !important; /* 간격 추가 */
 }
 
 .form-group a:hover {
