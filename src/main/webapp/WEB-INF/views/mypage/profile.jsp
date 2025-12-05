@@ -466,140 +466,150 @@ body {
 	</div>
 
 	<div class="container">
-		<div class="content-box" id="profileContentBox" style="display: none;">
-			<h1>회원 정보 수정</h1>
-
-
-			<div class="profile-section">
-				<div class="profile-image-container">
-
-					<c:set var="hasProfileImage"
-						value="${not empty loginMember.profileImage}" />
-
-					<img id="profileImagePreview"
-						src="<c:url value="${loginMember.profileImage}" />"
-						alt="Profile Image Preview"
-						style="display: ${hasProfileImage ? 'block' : 'none'};"> <i
-						id="profileIcon"
-						class="fa-regular fa-circle-user profile-circle-icon"
-						style="display: ${hasProfileImage ? 'none' : 'block'};"> </i> <i
-						class="fa-solid fa-pencil profile-pencil-icon"
-						onclick="document.getElementById('profileImageUpload').click();"></i>
-
+		
+		<c:if test="${isConfirmedForEdit}">
+			<div class="content-box" id="profileContentBox" style="display: block;">
+				
+				<h1>회원 정보 수정</h1>
+	
+	
+				<div class="profile-section">
+					<div class="profile-image-container">
+	
+						<c:set var="hasProfileImage"
+							value="${not empty loginMember.profileImage}" />
+	
+						<img id="profileImagePreview"
+							src="<c:url value="${loginMember.profileImage}" />"
+							alt="Profile Image Preview"
+							style="display: ${hasProfileImage ? 'block' : 'none'};"> <i
+							id="profileIcon"
+							class="fa-regular fa-circle-user profile-circle-icon"
+							style="display: ${hasProfileImage ? 'none' : 'block'};"> </i> <i
+							class="fa-solid fa-pencil profile-pencil-icon"
+							onclick="document.getElementById('profileImageUpload').click();"></i>
+	
+					</div>
+	
+					<p class="profile-name-id">${loginMember.username}님</p>
+					<p class="profile-id">ID: ${loginMember.user_id}</p>
 				</div>
-
-				<p class="profile-name-id">${loginMember.username}님</p>
-				<p class="profile-id">ID: ${loginMember.user_id}</p>
+				            
+				<form action="<c:url value="/mypage/profile/update" />" method="POST"
+					enctype="multipart/form-data" onsubmit="return validateForm()">
+	
+					<input type="file" id="profileImageUpload" name="uploadFile"
+						accept="image/*" onchange="handleImageUpload(event)"
+						style="display: none;"> <input type="hidden"
+						id="memberProfileImage" name="profileImage"
+						value="${loginMember.profileImage}">
+	
+					<div class="form-group">
+						<label>닉네임 <span class="required">*</span></label> <input
+							type="text" id="memberNickname" name="nickname"
+							value="${loginMember.nickname}">
+						<div id="nicknameError" class="error-message"></div>
+					</div>
+	
+					<div class="form-group">
+						<label>비밀번호 <span class="required">*</span></label> <input
+							type="password" value="********" readonly>
+	
+						<p class="help-text">비밀번호는 변경 버튼을 통해 수정할 수 있습니다.</p>
+	
+						<div class="password-group">
+							<button type="button" class="btn-password-change"
+								onclick="openPasswordChangeModal()">
+								<i class="fa-solid fa-lock"></i> 비밀번호 변경
+							</button>
+						</div>
+					</div>
+	
+					<div id="passwordChangeModal" class="modal-overlay"
+						style="display: none;">
+						<div class="modal-content">
+							<h2>새 비밀번호 변경</h2>
+	
+							<div class="form-group">
+								<label for="modalNewPassword">새 비밀번호</label> <input
+									type="password" id="modalNewPassword" placeholder="새 비밀번호 입력">
+								<p id="passwordError" class="error-message" style="color: red;"></p>
+							</div>
+	
+							<div class="form-group">
+								<label for="modalConfirmPassword">새 비밀번호 확인</label> <input
+									type="password" id="modalConfirmPassword"
+									placeholder="새 비밀번호 확인">
+							</div>
+	
+							<button type="button" id="applyPasswordBtn"
+								class="btn btn-primary">변경 내용 적용</button>
+							<button type="button" onclick="closePasswordChangeModal()"
+								class="btn btn-secondary">취소</button>
+						</div>
+					</div>
+	
+	
+					<%-- 🟢 [재추가] 단일 이메일 입력 필드에 datalist 속성 및 제안 목록 추가 --%>
+					<div class="form-group">
+						<label for="memberFullEmailInput">이메일</label>
+						<div>
+							<input type="text" id="memberFullEmailInput" name="email"
+								value="${loginMember.email}" maxlength="50"
+								placeholder="이메일 주소를 입력하세요" list="emailDomainSuggestions"
+								oninput="updateSuggestions()">
+	
+							<%-- 🟢 [재추가] 자동 완성 제안 목록을 담을 datalist --%>
+							<datalist id="emailDomainSuggestions">
+							</datalist>
+						</div>
+						<div id="emailError" class="error-message"></div>
+					</div>
+	
+					<div class="form-group">
+						<label>성별</label>
+						<div class="radio-group" id="genderGroup">
+	
+							<c:set var="genderUpper"
+								value="${fn:toUpperCase(loginMember.gender)}" />
+	
+							<input type="radio" id="genderM" name="gender" value="M"
+								<c:if test="${genderUpper eq 'M'}">checked</c:if>> <label
+								for="genderM" style="font-weight: normal; margin-bottom: 0;">남성</label>
+	
+							<input type="radio" id="genderF" name="gender" value="F"
+								<c:if test="${genderUpper eq 'F'}">checked</c:if>> <label
+								for="genderF" style="font-weight: normal; margin-bottom: 0;">여성</label>
+						</div>
+						<div id="genderError" class="error-message"></div>
+					</div>
+	
+					<div class="form-group">
+						<label for="memberBirth">생년월일</label> <input type="date"
+							id="memberBirth" name="birthDate" value="${loginMember.birthDate}">
+						<div id="birthError" class="error-message"></div>
+					</div>
+	
+					<div class="form-group">
+						<label for="memberPhone">전화번호</label> <input type="text"
+							id="memberPhone" name="phone" value="${loginMember.phone}">
+						<div id="phoneError" class="error-message"></div>
+					</div>
+	
+					<button type="submit" class="submit-button">저장</button>
+				</form>
+	
+				<button type="button" class="btn-withdrawal"
+					onclick="confirmWithdrawal()">회원 탈퇴</button>
+	
 			</div>
-			            
-			<form action="<c:url value="/mypage/profile/update" />" method="POST"
-				enctype="multipart/form-data" onsubmit="return validateForm()">
+		</c:if>
 
-				<input type="file" id="profileImageUpload" name="uploadFile"
-					accept="image/*" onchange="handleImageUpload(event)"
-					style="display: none;"> <input type="hidden"
-					id="memberProfileImage" name="profileImage"
-					value="${loginMember.profileImage}">
-
-				<div class="form-group">
-					<label>닉네임 <span class="required">*</span></label> <input
-						type="text" id="memberNickname" name="nickname"
-						value="${loginMember.nickname}">
-					<div id="nicknameError" class="error-message"></div>
+		<c:if test="${!isConfirmedForEdit}">
+			<div class="content-box" id="profileContentBox" style="display: none;">
 				</div>
+		</c:if>
 
-				<div class="form-group">
-					<label>비밀번호 <span class="required">*</span></label> <input
-						type="password" value="********" readonly>
-
-					<p class="help-text">비밀번호는 변경 버튼을 통해 수정할 수 있습니다.</p>
-
-					<div class="password-group">
-						<button type="button" class="btn-password-change"
-							onclick="openPasswordChangeModal()">
-							<i class="fa-solid fa-lock"></i> 비밀번호 변경
-						</button>
-					</div>
-				</div>
-
-				<div id="passwordChangeModal" class="modal-overlay"
-					style="display: none;">
-					<div class="modal-content">
-						<h2>새 비밀번호 변경</h2>
-
-						<div class="form-group">
-							<label for="modalNewPassword">새 비밀번호</label> <input
-								type="password" id="modalNewPassword" placeholder="새 비밀번호 입력">
-							<p id="passwordError" class="error-message" style="color: red;"></p>
-						</div>
-
-						<div class="form-group">
-							<label for="modalConfirmPassword">새 비밀번호 확인</label> <input
-								type="password" id="modalConfirmPassword"
-								placeholder="새 비밀번호 확인">
-						</div>
-
-						<button type="button" id="applyPasswordBtn"
-							class="btn btn-primary">변경 내용 적용</button>
-						<button type="button" onclick="closePasswordChangeModal()"
-							class="btn btn-secondary">취소</button>
-					</div>
-				</div>
-
-
-				<%-- 🟢 [재추가] 단일 이메일 입력 필드에 datalist 속성 및 제안 목록 추가 --%>
-				<div class="form-group">
-					<label for="memberFullEmailInput">이메일</label>
-					<div>
-						<input type="text" id="memberFullEmailInput" name="email"
-							value="${loginMember.email}" maxlength="50"
-							placeholder="이메일 주소를 입력하세요" list="emailDomainSuggestions"
-							oninput="updateSuggestions()">
-
-						<%-- 🟢 [재추가] 자동 완성 제안 목록을 담을 datalist --%>
-						<datalist id="emailDomainSuggestions">
-						</datalist>
-					</div>
-					<div id="emailError" class="error-message"></div>
-				</div>
-
-				<div class="form-group">
-					<label>성별</label>
-					<div class="radio-group" id="genderGroup">
-
-						<c:set var="genderUpper"
-							value="${fn:toUpperCase(loginMember.gender)}" />
-
-						<input type="radio" id="genderM" name="gender" value="M"
-							<c:if test="${genderUpper eq 'M'}">checked</c:if>> <label
-							for="genderM" style="font-weight: normal; margin-bottom: 0;">남성</label>
-
-						<input type="radio" id="genderF" name="gender" value="F"
-							<c:if test="${genderUpper eq 'F'}">checked</c:if>> <label
-							for="genderF" style="font-weight: normal; margin-bottom: 0;">여성</label>
-					</div>
-					<div id="genderError" class="error-message"></div>
-				</div>
-
-				<div class="form-group">
-					<label for="memberBirth">생년월일</label> <input type="date"
-						id="memberBirth" name="birthDate" value="${loginMember.birthDate}">
-					<div id="birthError" class="error-message"></div>
-				</div>
-
-				<div class="form-group">
-					<label for="memberPhone">전화번호</label> <input type="text"
-						id="memberPhone" name="phone" value="${loginMember.phone}">
-					<div id="phoneError" class="error-message"></div>
-				</div>
-
-				<button type="submit" class="submit-button">저장</button>
-			</form>
-
-			<button type="button" class="btn-withdrawal"
-				onclick="confirmWithdrawal()">회원 탈퇴</button>
-
-		</div>
 	</div>
 
 	<%@ include file="/WEB-INF/views/common/footer.jsp"%>
@@ -607,13 +617,21 @@ body {
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script>
 	
-	// 🟢 Controller에서 전달된 메시지 변수를 JavaScript로 가져옵니다.
+	// 🔑 [핵심 수정 2] Controller에서 전달된 상태 변수를 JavaScript로 가져옵니다.
+	var isConfirmedForEdit = "${isConfirmedForEdit}" === "true"; // Controller의 Model Attribute
     var successMsg = "${msg}";
     var errorMsg = "${errorMsg}";
 
     window.onload = function() {
-        
-        openPasswordConfirmModal();
+       
+        // 🔑 [핵심 수정 3] isConfirmedForEdit 상태에 따라 모달을 띄울지 결정합니다.
+        if (!isConfirmedForEdit) {
+            // 확인이 필요할 때만 모달을 띄웁니다.
+            openPasswordConfirmModal();
+        } else {
+            // 확인이 완료되었을 때만 content box를 보여줍니다. (이미 JSTL에서 display: block 상태)
+            $('#profileContentBox').show(); 
+        }
         
         if (errorMsg && errorMsg.trim() !== '') {
             closePasswordConfirmModal();
@@ -736,31 +754,31 @@ body {
             }
             
             // 이메일 검사
-            const fullEmailInput = document.getElementById('memberFullEmailInput');
-            let fullEmail = fullEmailInput ? fullEmailInput.value.trim() : '';
-            
+            const fullEmailInput = document.getElementById('memberFullEmailInput');
+            let fullEmail = fullEmailInput ? fullEmailInput.value.trim() : '';
+            
             if (isValid && fullEmail !== "") { // 💡 값이 비어있지 않다면 형식 검사
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(fullEmail)) {
-        displayError('email', "유효한 이메일 형식(예: user@example.com)이 아닙니다.");
-        fullEmailInput.focus();
-        isValid = false;
-    }
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(fullEmail)) {
+        displayError('email', "유효한 이메일 형식(예: user@example.com)이 아닙니다.");
+        fullEmailInput.focus();
+        isValid = false;
+    }
 }
             
-            
             
-            
+            
+            
             
             // 전화번호 검사 및 형식 검사
             const phone = document.getElementById('memberPhone');
 if (isValid && phone.value.trim() !== "") { // 💡 값이 비어있지 않다면 형식 검사
-    const phonePattern = /^\d{2,3}-\d{3,4}-\d{4}$/;
-    if (!phonePattern.test(phone.value.trim())) {
-        displayError('phone', "유효한 전화번호 형식(010-XXXX-XXXX)으로 입력해주세요.");
-        phone.focus();
-        isValid = false;
-    }
+    const phonePattern = /^\d{2,3}-\d{3,4}-\d{4}$/;
+    if (!phonePattern.test(phone.value.trim())) {
+        displayError('phone', "유효한 전화번호 형식(010-XXXX-XXXX)으로 입력해주세요.");
+        phone.focus();
+        isValid = false;
+    }
 }
 
 
@@ -798,23 +816,23 @@ function closePasswordConfirmModal() {
 		}
         
         // ==========================================================
-        // 🚨 [수정] 회원 탈퇴 확인 및 처리 함수 (함수명 변경 및 AJAX 로직 추가)
+        // 🚨 [수정] 회원 탈퇴 확인 및 처리 함수 (유지)
         // ==========================================================
 		function confirmWithdrawal() {
 			// 1. 첫 번째 알림창: 사용자에게 최종 확인 요청
 		    if (confirm("정말로 회원 탈퇴를 하시겠습니까? 모든 정보가 삭제되며 복구할 수 없습니다.")) {
-		        
-		        // 사용자 계정 데이터를 서버에 보내 삭제 요청 (AJAX)
+		        
+		        // 사용자 계정 데이터를 서버에 보내 삭제 요청 (AJAX)
 		        $.ajax({
-		            // URL '/mypage/profile/withdrawal' 적용
-		            url: '<c:url value="/mypage/profile/withdrawal" />', 
-		            type: 'POST', 
-		            dataType: 'json', 
+		            // URL '/mypage/profile/withdrawal' 적용
+		            url: '<c:url value="/mypage/profile/withdrawal" />', 
+		            type: 'POST', 
+		            dataType: 'json', 
 		            success: function(response) {
-		                if (response.isSuccess) { 
+		                if (response.isSuccess) { 
 		                    // 2. 성공 알림창: 탈퇴 완료 메시지 표시
 		                    alert("탈퇴 완료 되었습니다.");
-		                    
+		                    
 		                    // 3. 탈퇴 후 메인 페이지 또는 로그인 페이지로 리디렉션
 		                    window.location.href = '${contextPath}/main';
 		                } else {
@@ -844,7 +862,7 @@ function closePasswordConfirmModal() {
 		        }
 		    });
 
-			// --- 1. [핵심 수정] 현재 비밀번호 확인 버튼 클릭 이벤트 (유지) ---
+			// --- 1. [핵심 수정 4] 현재 비밀번호 확인 버튼 클릭 이벤트 ---
 			$('#submitCurrentPasswordBtn').click(function() {
 		        const currentPwd = $('#currentPasswordInput').val();
 		        $('#currentPasswordError').text('');
@@ -862,8 +880,11 @@ function closePasswordConfirmModal() {
 		            dataType: 'json',
 		            success: function(response) {
 		                if (response.isValid) { 
-		                    closePasswordConfirmModal();
-		                    alert("본인 확인이 완료되었습니다."); 
+		                    
+                            // 🔑 핵심 수정: 세션 설정 후 페이지를 새로 고침하여 Controller가 isConfirmedForEdit=true로 렌더링하도록 유도
+                            alert("본인 확인이 완료되었습니다. 회원 정보 수정 페이지로 이동합니다."); 
+                            window.location.reload();
+                            
 		                } else {
 		                    $('#currentPasswordError').text(response.message || '비밀번호가 일치하지 않습니다.');
 		                    $('#currentPasswordInput').val('');

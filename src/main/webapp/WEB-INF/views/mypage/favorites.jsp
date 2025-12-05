@@ -221,8 +221,8 @@ body {
 
 .card-content h3 {
 	margin: 0 0 5px 0;
-	font-size: 18px;
-	color: #333;
+	font-size: 16px;
+	color: #000000;
 }
 
 /* 평점 및 시간 정보 */
@@ -276,7 +276,7 @@ body {
 }
 .movie-link-wrapper h3 {
     text-decoration: none;
-    color: #333; /* 기본 색상 유지 */
+    color: #000000; /* 기본 색상 유지 */
 }
 .movie-link-wrapper:hover {
     text-decoration: none;
@@ -341,7 +341,8 @@ body {
 												</button>
 											</div>
 
-											<div class="movie-info">${movie.release_date}</div>
+											<div class="movie-info">
+											${fn:replace(movie.release_date, '-', ',')}</div>
 
 											<div class="movie-info genres-container">
 												<%-- 현재 영화의 장르 목록을 genresMap에서 가져옴 --%>

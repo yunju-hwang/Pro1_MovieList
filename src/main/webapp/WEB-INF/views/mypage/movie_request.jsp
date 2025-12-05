@@ -126,7 +126,28 @@
                                 </c:otherwise>
                             </c:choose>
                         </span>
-                        <span class="item_date">${movieRequest.createdAt.toString().substring(0,10)}</span>
+                        <span class="item_date">
+    <c:choose>
+        <%-- 1. createdAt이 null이 아닌지 확인 --%>
+        <c:when test="${not empty movieRequest.createdAt}">
+            <%-- createdAt을 문자열로 변환 --%>
+            <c:set var="dateStr" value="${movieRequest.createdAt.toString()}" />
+            
+            <%-- 2. 문자열의 길이가 10 이상인지 확인 (안전하게 substring 사용) --%>
+            <c:if test="${fn:length(dateStr) >= 10}">
+                ${fn:substring(dateStr, 0, 10)}
+            </c:if>
+            <%-- 3. 길이가 짧으면 전체 출력 (또는 에러 메시지) --%>
+            <c:if test="${fn:length(dateStr) < 10}">
+                ${dateStr} <%-- 또는 '날짜 포맷 오류'와 같은 메시지 출력 --%>
+            </c:if>
+        </c:when>
+        <%-- 4. createdAt이 null일 경우 처리 --%>
+        <c:otherwise>
+            -
+        </c:otherwise>
+    </c:choose>
+</span>
 
                         <c:if test="${movieRequest.status eq 'pending'}">
                             <span class="item_status_pen">

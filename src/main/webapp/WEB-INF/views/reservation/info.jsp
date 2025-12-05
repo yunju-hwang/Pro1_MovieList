@@ -18,9 +18,12 @@
 <h1 id="title">${title}</h1>
 <input type="hidden" id="tmdbId" value="${tmdbId}">
 
-
+<button id="openFavModal" class="btn btn-preferred">선호 영화관 보기</button>	
 <div class="page-layout">
+	
 	<div class="theater-wrapper">
+	
+	
 	    <!-- 왼쪽: 지역 -->
 	    <ul class="region-list">
 	        <c:forEach var="loc" items="${locationsList}">
@@ -42,6 +45,16 @@
 			</c:forEach>
 
 		</div>
+		
+		<!-- 선호 영화관 모달 -->
+		<div id="favTheaterModal" class="modal">
+		  <div class="modal-content">
+		    <span id="closeModal" class="close">&times;</span>
+		    <h3>나의 선호 영화관</h3>
+		    <div id="favTheaterContainer"></div>
+		  </div>
+		</div>
+		
 </div>
 
 
