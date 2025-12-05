@@ -20,38 +20,31 @@ public class CustomerService {
 	@Inject
 	private CustomerMapper customerMapper;
 
-    public void insertinquiry(InquiriesVO inquiriesVO) {
-        inquiriesVO.setStatus("pending");
-        inquiriesVO.setCreatedAt(LocalDateTime.now());
-        customerMapper.insertinquirty(inquiriesVO);
-    }
 
-    // 문의 리스트
     public List<InquiriesVO> inquiries(String userId) {
         return customerMapper.inquiries(userId);
     }
+    
 
-    // 문의 건수
     public int inquiry_count(String userId) {
         return customerMapper.inquiry_count(userId);
     }
 
-    // 특정 문의 조회
-    public InquiriesVO getInquiryById(int id) {
-        return customerMapper.getInquiryById(id);
+    public void insertinquiry(InquiriesVO inq) {
+        inq.setStatus("pending");
+        inq.setCreatedAt(LocalDateTime.now());
+        customerMapper.insertInquiry(inq);
+    }
+    public void updateInquiry(InquiriesVO inq) {
+        customerMapper.updateInquiry(inq);
     }
 
-    // 문의 삭제
-    public void inquiry_delete(int id) {
-        customerMapper.inquiry_delete(id);
-    }
-
-    // 문의 수정
-    public void updateInquiry(InquiriesVO vo) {
-        customerMapper.updateInquiry(vo);
+    public void deleteInquiry(int id, String userId) {
+        customerMapper.deleteInquiry(id, userId);
     }
 
 
+   
 
 	   public InquiriesVO inquiry_detail(int id) {
 	        return customerMapper.inquiry_detail(id);
@@ -75,20 +68,19 @@ public class CustomerService {
 
 	}
 	
-	// 특정 영화 요청 조회
-	public MovieRequestVO getMovieRequestById(int id) {
-	    return customerMapper.getMovieRequestById(id);
+	public MovieRequestVO movie_request_detail(int id) {
+	    return customerMapper.movie_request_detail(id);
 	}
 
-	// 영화 요청 수정
-	public void updateMovieRequest(MovieRequestVO vo) {
-	    customerMapper.updateMovieRequest(vo);
+	public void update_movie_request(MovieRequestVO vo) {
+	    customerMapper.update_movie_request(vo);
 	}
 
-	// 영화 요청 삭제
-	public void movie_request_delete(int id) {
-	    customerMapper.movie_request_delete(id);
+
+	public void delete_movie_request(int id, String userId) {
+	    customerMapper.delete_movie_request(id, userId);
 	}
+
 
     public List<NoticesVO> notices() {
         return customerMapper.notices();
@@ -97,21 +89,29 @@ public class CustomerService {
     public NoticesVO notice_detail(int id) {
         return customerMapper.notice_detail(id);
     }
+    
+    public List<NoticesVO> getNoticesPaged(int offset, int pageSize) {
+        return customerMapper.getNoticesPaged(offset, pageSize);
+    }
+
+    public int getNoticesCount() {
+        return customerMapper.getNoticesCount();
+    }
+    
+    
 
 	public List<FaqsVO> faqs() {
 		return customerMapper.faqs();
 	}
 
-
-	public MovieRequestVO getMovieRequestById(int id, String userId) {
-	    MovieRequestVO vo = customerMapper.getMovieRequestById(id);
-	    if(vo != null && vo.getUserId().equals(userId)) {
-	        return vo;
-	    }
-	    return null;
+	public List<FaqsVO> getFaqsPaged(int offset, int pageSize) {
+	    return customerMapper.getFaqsPaged(offset, pageSize);
 	}
 
-	
+	public int getFaqsCount() {
+	    return customerMapper.getFaqsCount();
+	}
+
 
 
 

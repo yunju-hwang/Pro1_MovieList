@@ -40,6 +40,14 @@
                 <span class="sp_status">상태</span>
                 <span class="sp_update">수정</span>
                 <span class="sp_delete">삭제</span>
+                	<div class="sort-container">
+    <form method="get" action="/movielist/customer/movie_request">
+        <select name="sort" onchange="this.form.submit()">
+            <option value="">답변완료 먼저</option>
+            <option value="pending" ${param.sort == 'pending' ? 'selected' : ''}>답변대기 먼저</option>
+        </select>
+    </form>
+</div>
             </div>
 
             <!-- 리스트 -->
@@ -48,7 +56,12 @@
                      onclick="location.href='/movielist/customer/movie_request_detail?id=${movieRequest.id}'">
 
                     <span class="item_num">${status.index + 1}</span>
-                    <span class="item_title">${movieRequest.title}</span>
+                    <span class="item_title"><c:choose>
+                            <c:when test="${fn:length(movieRequest.title) > 15}">
+                                ${fn:substring(movieRequest.title, 0, 15)}...
+                            </c:when>
+                            <c:otherwise>${movieRequest.title}</c:otherwise>
+                        </c:choose></span>
                     <span class="item_content">
                         <c:choose>
                             <c:when test="${fn:length(movieRequest.content) > 15}">

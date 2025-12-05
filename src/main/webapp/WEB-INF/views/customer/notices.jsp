@@ -3,6 +3,7 @@
 <%@ include file="/WEB-INF/views/common/navbar.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html>
@@ -46,8 +47,33 @@
 
         </a>
     </div>
+    
+    <!-- 페이징 버튼 -->
+
 </c:forEach>
 
+
+<div class="pagination">
+
+    <!-- 이전 버튼 -->
+    <c:if test="${currentPage > 1}">
+        <a href="?page=${currentPage - 1}" class="page-btn">이전</a>
+    </c:if>
+
+    <!-- 페이지 번호 -->
+    <c:forEach begin="1" end="${totalPages}" var="p">
+        <a href="?page=${p}"
+           class="page-btn ${p == currentPage ? 'active' : ''}">
+            ${p}
+        </a>
+    </c:forEach>
+
+    <!-- 다음 버튼 -->
+    <c:if test="${currentPage < totalPages}">
+        <a href="?page=${currentPage + 1}" class="page-btn">다음</a>
+    </c:if>
+
+</div>
 </body>
 </html>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

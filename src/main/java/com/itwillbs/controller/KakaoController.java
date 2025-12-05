@@ -39,7 +39,10 @@ public class KakaoController {
 		
 		//4. 세션 로그인 처리
 		session.setAttribute("loginUser", loginUser);
-		
+	    // 추가정보 필요하면 입력 페이지로 보내기
+	    if (loginUser.isRequireAdditionalInfo()) {
+	        return "redirect:/member/extra-info";
+	    }
 		return "redirect:/";
 	}
 	

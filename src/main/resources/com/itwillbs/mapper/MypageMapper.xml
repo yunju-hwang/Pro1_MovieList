@@ -13,12 +13,13 @@
 		birth_date AS birthDate,
 		phone,
 		nickname,
-		profile_image AS profileImage,
+		profile_image AS
+		profileImage,
 		password
 		FROM
 		users
 		WHERE
-		user_id = #{user_id}	
+		user_id = #{user_id}
 	</select>
 
 	<update id="updateMember"
@@ -43,7 +44,8 @@
 	<update id="updatePassword">
 		UPDATE users
 		SET password = #{password}
-		WHERE user_id = #{userId}
+		WHERE user_id =
+		#{userId}
 	</update>
 
 	<select id="checkDuplicateNicknameForUpdate" resultType="int">
@@ -77,9 +79,10 @@
 	</select>
 
 	<delete id="deleteMember" parameterType="string">
-    DELETE FROM users
-    WHERE user_id = #{userId}
-</delete>
+		DELETE FROM users
+		WHERE
+		user_id = #{userId}
+	</delete>
 
 	<select id="selectFavoriteListByUserId" parameterType="string"
 		resultType="com.itwillbs.domain.UserFavoritesVO">
@@ -179,63 +182,92 @@
 		name
 		LIMIT 10
 	</select>
-	
+
 	<select id="getReservationList" parameterType="string"
 		resultType="com.itwillbs.domain.ReservationsVO">
 		SELECT
-			r.id,
-			r.user_id AS userId, 
-			r.tmdb_id AS tmdbId,
-			r.theater_id AS theaterId,
-			r.screening_time AS screeningTime,
-			r.reservation_date AS reservationDate,
-			r.seat,
-			p.amount AS finalAmount,  p.payment_date AS paymentDate,  r.adult_people AS adultPeople,  
-			r.child_people AS childPeople,  
-			r.status,                       
-			m.title AS movieTitle,          
-			t.name AS theaterName           
+		r.id,
+		r.user_id AS userId,
+		r.tmdb_id AS tmdbId,
+		r.theater_id AS theaterId,
+		r.screening_time AS screeningTime,
+		r.reservation_date AS reservationDate,
+		r.seat,
+		p.amount AS finalAmount,
+		p.payment_date AS paymentDate, r.adult_people AS
+		adultPeople,
+		r.child_people AS childPeople,
+		r.status,
+		m.title AS movieTitle,
+		t.name AS
+		theaterName
 		FROM
-			reservations r
+		reservations r
 		JOIN
-			movies m ON r.tmdb_id = m.tmdb_id
+		movies m ON r.tmdb_id = m.tmdb_id
 		JOIN
-			theaters t ON r.theater_id = t.theater_id
-		JOIN
-			payments p ON r.id = p.reservation_id  WHERE
-			r.user_id = #{userId}
+		theaters t ON r.theater_id = t.theater_id
+		-- 🚨 [수정] payments 테이블과의 조인을 INNER JOIN에서 LEFT JOIN으로 변경
+		LEFT JOIN
+		payments p ON r.id = p.reservation_id
+		WHERE
+		r.user_id = #{userId}
 		ORDER BY
-			r.reservation_date DESC
+		r.reservation_date DESC
 	</select>
-	
+
 	<select id="getReservationDetail" parameterType="int"
 		resultType="com.itwillbs.domain.ReservationsVO">
 		SELECT
-			r.id,
-			r.user_id AS userId, 
-			r.tmdb_id AS tmdbId,
-			r.theater_id AS theaterId,
-			r.screening_time AS screeningTime,
-			r.reservation_date AS reservationDate,
-			r.seat,
-			p.amount AS finalAmount,
-			p.payment_date AS paymentDate,
-			r.adult_people AS adultPeople,  
-			r.child_people AS childPeople,  
-			r.status,
-			m.title AS movieTitle,
-            m.poster_path AS posterPath, t.name AS theaterName           
+		r.id,
+		r.user_id AS userId,
+		r.tmdb_id AS tmdbId,
+		r.theater_id AS theaterId,
+		r.screening_time AS screeningTime,
+		r.reservation_date AS reservationDate,
+		r.seat,
+		p.amount AS finalAmount,
+		p.payment_date AS paymentDate,
+		r.adult_people AS adultPeople,
+		r.child_people AS childPeople,
+		r.status,
+		m.title AS movieTitle,
+		m.poster_path AS posterPath, t.name AS theaterName
 		FROM
-			reservations r
+		reservations r
 		JOIN
-			movies m ON r.tmdb_id = m.tmdb_id
+		movies m ON r.tmdb_id = m.tmdb_id
 		JOIN
-			theaters t ON r.theater_id = t.theater_id
+		theaters t ON r.theater_id =
+		t.theater_id
 		JOIN
-			payments p ON r.id = p.reservation_id
+		payments p ON r.id = p.reservation_id
 		WHERE
-			r.id = #{reservationId} 
-		</select>
+		r.id =
+		#{reservationId}
+	</select>
+
+	<update id="updateReservationStatus">
+		UPDATE reservations
+		SET
+		status = #{status}
+		WHERE
+		id =
+		#{reservationId}
+		AND user_id = #{userId}
+		AND status != 'cancelled'
+	</update>
+
+	<select id="selectKakaoUserByUserId"
+		resultType="com.itwillbs.domain.MemberVO">
+		SELECT
+		user_id,
+		username,
+		kakao_id AS kakaoId, nickname,
+		email
+		FROM users
+		WHERE user_id = #{userId} AND kakao_id IS NOT NULL;
+	</select>
 
 
 

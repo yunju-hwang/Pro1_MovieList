@@ -1,16 +1,19 @@
 @charset "UTF-8";
 
-body {
-    background: #F7F7F7 ;
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #F7F7F7;
     font-family: 'Noto Sans KR', sans-serif;
+    box-sizing: border-box;
 }
 
-/* .join-container { */
-/*     display: flex; */
-/*     justify-content: center; */
-/*     align-items: center; */
-/*     height: 100vh; */
-/* } */
+* {
+    box-sizing: inherit; /* 모든 요소가 box-sizing을 상속 */
+}
+
 
 .join-container {
     display: flex;
@@ -57,11 +60,48 @@ body {
     background: #f6f6f8;
 }
 
+/* 수정부분 시작 */
 .input-row {
     display: flex;
     align-items: center;
     gap: 10px;
+    width: 100%;          /* 부모 폭이 충분히 넓게 */
+    box-sizing: border-box;
 }
+
+.input-row input {
+    flex: 1 1 auto;       /* 입력창이 가용 공간 다 차지 */
+    min-width: 0;         /* flex 아이템 최소 폭 0으로 설정 */
+    height: 40px;
+    padding: 0 10px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    line-height: 40px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #f6f6f8;
+}
+
+.input-row .check-btn {
+    flex: 0 0 auto;       /* 버튼은 내용 크기만큼 */
+    height: 40px;
+    padding: 0 15px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    line-height: 40px;
+    box-sizing: border-box;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #f4f4f4;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+/* 수정부분 끝 */
+
 
 .check-btn {
     padding: 10px 15px;
@@ -100,4 +140,122 @@ body {
     background: #e60000;
     color: white;
     margin-left: 10px;
+}
+
+/* 이름 에러 메시지 스타일 */
+#usernameError {
+    display: block;
+    min-height: 18px;
+    font-size: 14px;
+    font-weight: normal;
+    color: red; /* 기본적으로 빨간색 */
+    margin-top: 10px; /* 에러 메시지 간격을 띄워줍니다. */
+    white-space: nowrap; /* 에러 메시지 길이가 길어지지 않도록 처리 */
+}
+
+#usernameError.success {
+    color: black; /* 정상적인 이름이 입력되었을 때 색상을 검정색으로 변경 */
+}
+
+#usernameError.error {
+    color: red; /* 에러 메시지 색상 */
+}
+
+/* 이름 입력란 경계선 색상 수정 */
+#username {
+    border: 1px solid #ddd; /* 기본 경계선 색 */
+}
+
+#username:invalid {
+    border: 1px solid red; /* 유효하지 않은 값일 때 빨간색 경계선 */
+}
+
+#username:valid {
+    border: 1px solid black; /* 유효한 값일 때 검정색 경계선 */
+}
+
+/* 이메일 선택 드롭 */
+
+.email-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;  /* 입력칸 간의 간격을 조정 */
+}
+
+.email-row input[type="text"] {
+    padding: 10px;
+    border-radius: 5px;
+    background: #f6f6f8;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.email-row select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background: #f6f6f8;
+    font-size: 14px;
+}
+
+.email-row span {
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+.email-row input[type="text"]:disabled {
+    background-color: #f6f6f8;
+    color: #777;
+}
+
+/* 전화번호 입력 전체 컨테이너 */
+.phone-row {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 입력칸 간의 간격 */
+}
+
+/* 지역번호 드롭다운 스타일 */
+#areaCodeSelect {
+    width: 100px; /* 드롭다운의 폭 조정 */
+    height: 40px; /* 드롭다운의 높이 조정 */
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background: #f6f6f8;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+/* 중간번호와 끝번호 입력칸 스타일 */
+.phone-row input[type="text"] {
+    width: 100px;
+    height: 40px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #f6f6f8;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+/* 숨김 처리용 */
+.hidden {
+    display: none;
+}
+
+/* 전화번호 입력칸 스타일 (필요시 추가) */
+.phone-row input {
+    /* 공통 스타일을 적용할 수 있습니다 */
+}
+
+.invalid {
+    border: 1px solid red; /* 빨간색 경계선 */
+}
+
+//에러 메시지 공통부분
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    min-height: 18px;
+    display: block;
 }

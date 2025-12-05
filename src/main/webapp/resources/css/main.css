@@ -69,3 +69,62 @@ body{
 .favorite-btn:hover {
     transform: scale(1.2);
 }
+
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.page-btn {
+    margin: 0 4px;
+    padding: 6px 12px;
+    border: 1px solid #888;
+    background: white;
+    cursor: pointer;
+}
+
+.page-btn.active {
+    background: #333;
+    color: white;
+    font-weight: bold;
+}
+
+/* 페이징 컨테이너 */
+#pagination {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin: 25px 0;
+}
+
+/* 기본 페이지 버튼 */
+.page-btn {
+    padding: 8px 14px;
+    background: #f1f1f1;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+/* hover 효과 */
+.page-btn:hover {
+    background: #cd0000;
+    color: white;
+}
+
+/* 선택된(active) 페이지 */
+.page-btn.active {
+    background: #cd0000;
+    color: white;
+    border-color: #cd0000;
+    font-weight: bold;
+}
+
+/* 이전/다음 버튼 강조 */
+.page-btn[data-page]:not(.active) {
+    color: #444;
+}
+
+

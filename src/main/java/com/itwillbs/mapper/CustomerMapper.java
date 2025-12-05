@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.itwillbs.domain.FaqsVO;
 import com.itwillbs.domain.InquiriesVO;
@@ -17,36 +18,54 @@ public interface CustomerMapper {
 
 	int movie_request_count(String userId);
 
-	void insertinquirty(InquiriesVO inquiriesVO);
+    void insertInquiry(InquiriesVO inq);
 
-	List<InquiriesVO> inquiries(String userId);
+    List<InquiriesVO> inquiries(String userId);
 
-	int inquiry_count(String userId);
+    int inquiry_count(String userId);
+    
 
-	InquiriesVO getInquiryById(int id);
-	
+ // 수정
+    void updateInquiry(InquiriesVO inq);
+
+    // 삭제
+    void deleteInquiry(@Param("id") int id, @Param("userId") String userId);
 
 
-	InquiriesVO inquiry_detail(int id);
+
+
+    InquiriesVO inquiry_detail(int id);
+
+  
+
+
 
 	List<MovieRequestVO> movie_request(String userId);
 
 	void insert_movie_request(MovieRequestVO movieRequestVO);
 	
-	MovieRequestVO getMovieRequestById(int id);
+	MovieRequestVO movie_request_detail(int id);
 
-	void updateMovieRequest(MovieRequestVO vo);
+	void update_movie_request(MovieRequestVO vo);
 
-	void movie_request_delete(int id);
+	void delete_movie_request(@Param("id") int id, @Param("userId") String userId);
+
 
     List<NoticesVO> notices();   // 전체 공지 목록
     NoticesVO notice_detail(int id);    // 공지 상세
+    
+    List<NoticesVO> getNoticesPaged(@Param("offset") int offset,
+            @Param("pageSize") int pageSize);
+
+	int getNoticesCount();
 
     List<FaqsVO> faqs();
+    
+    List<FaqsVO> getFaqsPaged(@Param("offset") int offset, @Param("pageSize") int pageSize);
+    int getFaqsCount();
 
-	void updateInquiry(InquiriesVO vo);
 
-	void inquiry_delete(int id);
+
 
 
 

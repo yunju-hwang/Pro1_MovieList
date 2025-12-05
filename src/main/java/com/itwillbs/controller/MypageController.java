@@ -176,33 +176,65 @@ public class MypageController {
 	@GetMapping("/mypage/profile")
 	public String profile(HttpSession session, Model model) {
 
-		MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
+	    MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
 
-		if (loginUser == null) {
-			// 2-1. 로그인 정보가 없으면 로그인 페이지로 리다이렉트
-			return "redirect:/login"; // 또는 다른 적절한 로그인 페이지 경로
-		}
+	    if (loginUser == null) {
+	        // 로그인 정보가 없으면 로그인 페이지로 리다이렉트
+	        return "redirect:/login"; 
+	    }
 
-		String userId = loginUser.getUser_id();
+	    String userId = loginUser.getUser_id();
+	    
+	    // DB에서 카카오 사용자 정보 조회
+	    MemberVO kakaoUser = mypageService.selectKakaoUserByUserId(userId);
 
-		MemberVO memberInfoFromDB = mypageService.getMember(userId);
+	    if (kakaoUser != null && kakaoUser.getKakaoId() != null) {
+	        
+	        // 🚨 [핵심 수정] 리다이렉트 대신 View 경로를 반환하여 바로 FORWARD합니다.
+	        model.addAttribute("loginMember", kakaoUser);
+	 
+	        return "/mypage/socialProfile"; // 🟢 View 이름만 반환 (FORWARD)
 
-		if (memberInfoFromDB != null) {
-			model.addAttribute("loginMember", memberInfoFromDB);
-		} else {
-			// (선택) DB에서 정보를 찾지 못한 경우 처리
-			model.addAttribute("msg", "회원 정보를 찾을 수 없습니다.");
-		}
+	    } else {
+	        // 일반 사용자 처리: DB 정보를 다시 가져옵니다.
+	        MemberVO memberInfoFromDB = mypageService.getMember(userId);
 
-		return "/mypage/profile";
+	        if (memberInfoFromDB != null) {
+	            model.addAttribute("loginMember", memberInfoFromDB);
+	        } else {
+	            model.addAttribute("msg", "회원 정보를 찾을 수 없습니다.");
+	        }
+	     // 🔑 핵심 변경: 타임스탬프를 가져와 유효성 검사
+	        Long expiryTime = (Long) session.getAttribute("confirmedExpiryTime");
+	        boolean isConfirmedForEdit = false;
 
+	        if (expiryTime != null) {
+	            long currentTime = System.currentTimeMillis();
+	            
+	            if (currentTime < expiryTime) {
+	                // 현재 시각이 만료 시각보다 빠르다면: 유효함
+	                isConfirmedForEdit = true;
+	            } else {
+	                // 만료 시각이 지났다면: 세션에서 제거하고 재확인 필요
+	                session.removeAttribute("confirmedExpiryTime");
+	            }
+	        }
+	        
+	        // 💡 JSP에서 사용할 변수에 최종 결과 설정
+	        model.addAttribute("isConfirmedForEdit", isConfirmedForEdit);
+	        
+	        
+
+	        // 4. 일반 사용자 JSP로 FORWARD
+	        return "/mypage/profile"; // 🟢 View 이름만 반환 (FORWARD)
+	    }
 	}
 	
 	@ResponseBody
 	@PostMapping("/mypage/profile/checkPassword")
 	public Map<String, Object> checkCurrentPassword(
 	        @RequestParam("currentPassword") String currentPassword,
-	        @SessionAttribute(value = "loginUser", required = false) MemberVO loginUser) { // loginUser 세션 사용
+	        @SessionAttribute(value = "loginUser", required = false) MemberVO loginUser, HttpSession session) { // loginUser 세션 사용
 		System.out.println("DEBUG: currentPassword: " + currentPassword);
 		if (loginUser != null) {
 		    System.out.println("DEBUG: loginUser ID: " + loginUser.getUser_id());
@@ -237,8 +269,11 @@ public class MypageController {
 	    
 	    if (!isValid) {
 	        response.put("message", "비밀번호가 틀립니다.");
+	        session.removeAttribute("confirmedExpiryTime");
 	    } else {
 	    	response.put("message", "비밀번호 일치");
+	    	long expiryTime = System.currentTimeMillis() + (5 * 60 * 1000L); 
+	        session.setAttribute("confirmedExpiryTime", expiryTime);
 	    }
 	    
 	    return response; // { "isValid": true/false, "message": "..." } 형태로 JSON 반환
@@ -350,14 +385,18 @@ public class MypageController {
 	    int result = mypageService.updateMember(updateMember);
 
 	    if (result > 0) {
-	        // 3. DB 수정 성공 시, 세션 정보 갱신
-	        MemberVO updatedInfo = mypageService.getMember(userId);
-	        session.setAttribute("loginUser", updatedInfo); 
-	        rttr.addFlashAttribute("msg", "회원 정보가 성공적으로 수정되었습니다.");
-	    } else {
-	        // DB 업데이트 실패 (예: 쿼리 오류 등)
-	        rttr.addFlashAttribute("errorMsg", "데이터베이스 오류로 인해 회원 정보 수정에 실패했습니다.");
-	    }
+		    // 3. DB 수정 성공 시, 세션 정보 갱신
+		    MemberVO updatedInfo = mypageService.getMember(userId);
+		    session.setAttribute("loginUser", updatedInfo);  
+		    rttr.addFlashAttribute("msg", "회원 정보가 성공적으로 수정되었습니다.");
+	        
+	        // 🔑 핵심 수정: 업데이트 성공 후, 비밀번호 확인 상태 세션 제거
+	        session.removeAttribute("passwordConfirmed"); // ✨ 이 코드를 추가해주세요.
+	        
+		} else {
+		    // DB 업데이트 실패 (예: 쿼리 오류 등)
+		    rttr.addFlashAttribute("errorMsg", "오류로 인해 회원 정보 수정에 실패했습니다.");
+		}
 
 	    // 4. 회원 정보 조회 페이지로 다시 리다이렉트
 	    return "redirect:/mypage/profile";
@@ -367,13 +406,23 @@ public class MypageController {
 	@PostMapping("/mypage/profile/updatePassword")
 	public Map<String, Object> updatePassword(
 	    @RequestParam("newPassword") String newPassword,
-	    @SessionAttribute(value = "loginUser", required = false) MemberVO loginUser) {
+	    @SessionAttribute(value = "loginUser", required = false) MemberVO loginUser, HttpSession session) {
 
 	    Map<String, Object> response = new HashMap<>();
 
 	    if (loginUser == null) {
 	        response.put("isUpdated", false);
 	        response.put("message", "로그인이 필요합니다.");
+	        return response;
+	    }
+	    
+	    String userId = loginUser.getUser_id();
+	    MemberVO memberInfoFromDB = mypageService.selectKakaoUserByUserId(userId);
+	    
+	    if (memberInfoFromDB != null && memberInfoFromDB.getKakaoId() != null) {
+	        // 소셜 로그인(카카오) 사용자 확인
+	        response.put("isUpdated", false);
+	        response.put("message", "소셜 로그인된 상태에서는 비밀번호를 변경할 수 없습니다.");
 	        return response;
 	    }
 	    
@@ -387,6 +436,9 @@ public class MypageController {
 	    if (result > 0) {
 	        response.put("isUpdated", true);
 	        response.put("message", "비밀번호가 성공적으로 변경되었습니다.");
+	        
+	        session.removeAttribute("passwordConfirmed");
+	        
 	    } else {
 	        response.put("isUpdated", false);
 	        response.put("message", "DB 처리 중 오류가 발생했습니다.");
@@ -486,6 +538,44 @@ public class MypageController {
         // 3. Spring은 @ResponseBody 덕분에 이 객체를 JSON으로 변환하여 AJAX 요청에 응답합니다.
         return reservationDetail;
     }
+	
+	@PostMapping("/mypage/reservations/cancel")
+	@ResponseBody
+	public Map<String, Object> cancelReservation(
+	    @RequestParam("reservationId") int reservationId,
+	    @SessionAttribute(value = "loginUser", required = false) MemberVO loginUser) {
+
+	    Map<String, Object> response = new HashMap<>();
+
+	    if (loginUser == null) {
+	        response.put("isSuccess", false);
+	        response.put("message", "로그인이 필요합니다.");
+	        return response;
+	    }
+	    
+	    String userId = loginUser.getUser_id();
+
+	    try {
+	        // 1. Service를 호출하여 예매 상태를 '취소'로 업데이트
+	        // (Service 및 Mapper에 updateReservationStatusToCanceled(int reservationId, String userId) 메서드가 필요)
+	        int result = mypageService.updateReservationStatusToCanceled(reservationId, userId);
+
+	        if (result > 0) {
+	            response.put("isSuccess", true);
+	            response.put("message", "예매가 성공적으로 취소되었습니다.");
+	        } else {
+	            // result가 0인 경우: 해당 ID의 예매가 없거나, 이미 취소된 경우, 또는 사용자 ID 불일치
+	            response.put("isSuccess", false);
+	            response.put("message", "취소 권한이 없거나 예매 정보를 찾을 수 없습니다.");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        response.put("isSuccess", false);
+	        response.put("message", "서버 처리 중 오류가 발생했습니다.");
+	    }
+
+	    return response;
+	}
 
 	// 마이페이지 -> 선호 영화관 목록
 	@GetMapping("/mypage/theaters")

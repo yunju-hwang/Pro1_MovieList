@@ -13,6 +13,25 @@
 
 <div id="movie-detail">Loading...</div>
 
+<div class="recommend-section">
+    <h2>추천 영화</h2>
+
+    <div class="recommend-list">
+        <c:forEach var="rec" items="${recommendations}">
+            <a href="${ctx}/movies/search/detail/${rec.id}" class="rec-card-link">
+                <div class="rec-card">
+                    <img src="https://image.tmdb.org/t/p/w500${rec.poster_path}" />
+                    <p>${rec.title}</p>
+                </div>
+            </a>
+        </c:forEach>
+    </div>
+</div>
+
+
+
+
+
 <!-- JS 분리 -->
 <script>
     // JSP에서 ctx와 tmdbId를 JS로 전달

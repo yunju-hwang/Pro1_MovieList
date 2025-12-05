@@ -40,8 +40,12 @@ public interface MovieMapper {
     void updateMovieDetail(MovieVO movie);
     
     // 영화 정렬 (인기순, 최신순)
-    List<MovieVO> findAllByOrderByPopularityDesc(@Param("userId") String userId);
-    List<MovieVO> findAllByOrderByReleaseDateDesc(@Param("userId") String userId);
+    List<MovieVO> findAllByOrderByPopularityDesc(@Param("userId") String userId,
+            @Param("offset") int offset,
+            @Param("limit") int limit);
+    List<MovieVO> findAllByOrderByReleaseDateDesc(@Param("userId") String userId,
+            @Param("offset") int offset,
+            @Param("limit") int limit);
     
     // 찜 여부 확인
     int isFavorite(@Param("userId") String userId,
@@ -74,4 +78,7 @@ public interface MovieMapper {
 
     // 영화 저장
     void insertMovie(Map<String, Object> movie);
+    
+    // 영화 수 
+    int getTotalMovieCount();
 }

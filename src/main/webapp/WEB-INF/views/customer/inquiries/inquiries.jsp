@@ -11,13 +11,14 @@
 <link rel="stylesheet" href="<c:url value='/resources/css/inquiries.css?after' />">
 </head>
 <body>
-
 <h1 class="inquery">
     <img src="<c:url value='/resources/img/message.png' />" class="title_icon">
     문의 내역
 </h1>
 
-<h4 class="many">총 ${count }건의 문의 내역</h4>
+<h4 class="many">
+    총 ${count }건의 문의 내역
+</h4>
 
 <div class="container">
 
@@ -31,13 +32,24 @@
 
     <c:otherwise>
 
-        <!-- 헤더 -->
-        <div class="inquiry_head grid-row">
-            <span>글번호</span>
-            <span>제목</span>
-            <span>내용</span>
-            <span>작성일</span>
-            <span>답변 여부</span>
+<div class="inquiry_head grid-row">
+            <span class="sp_num">글번호</span>
+            <span class="sp_title">제목</span>
+            <span class="sp_content">내용</span>
+            <span class="sp_date">작성일</span>
+            <span class="sp_ans">답변 여부</span>
+            <span class="sp_edit">수정</span>
+            <span class="sp_delete">삭제</span>
+            <div class="sort-container">
+    <form method="get" action="/movielist/customer/inquiries">
+        <select name="sort" onchange="this.form.submit()">
+            <option value="">최신순</option>
+            <option value="date_asc" ${param.sort == 'date_asc' ? 'selected' : ''}>오래된순</option>
+            <option value="pending" ${param.sort == 'pending' ? 'selected' : ''}>답변대기 먼저</option>
+            <option value="completed" ${param.sort == 'completed' ? 'selected' : ''}>답변완료 먼저</option>
+        </select>
+    </form>
+</div>
         </div>
 
         <div class="inquiry_list">
@@ -53,7 +65,9 @@
                             <c:when test="${fn:length(inquiriesVO.content) > 15}">
                                 ${fn:substring(inquiriesVO.content, 0, 15)}...
                             </c:when>
-                            <c:otherwise>${inquiriesVO.content}</c:otherwise>
+                            <c:otherwise>
+                                ${inquiriesVO.content}
+                            </c:otherwise>
                         </c:choose>
                     </span>
 
@@ -61,14 +75,13 @@
                         ${inquiriesVO.createdAt.toString().substring(0,10)}
                     </span>
 
-                    <!-- 답변 여부 -->
                     <c:if test="${inquiriesVO.status eq 'pending'}">
-                        <a href="/movielist/customer/inquiries/inquiry_detail?id=${inquiriesVO.id}" class="inq_detail">                        
+                    <a href="/movielist/customer/inquiries/inquiry_detail?id=${inquiriesVO.id}" class="inq_detail">
                         <span class="item_status_pen">
                             <img src="https://cdn-icons-png.flaticon.com/512/595/595067.png" class="status_icon">
                             답변대기
                         </span>
-                        </a>
+                         </a>
                     </c:if>
 
                     <c:if test="${inquiriesVO.status ne 'pending'}">
@@ -79,26 +92,14 @@
                             </span>
                         </a>
                     </c:if>
-
-                    <!-- 수정 버튼 -->
-                    <c:if test="${inquiriesVO.status eq 'pending' }">
                     
-                    <span class="item_edit"
-                          onclick="location.href='/movielist/customer/write_inquiry?id=${inquiriesVO.id}'">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" class="edit_icon">
-                        수정
-                    </span>
 
-                    <!-- 삭제 버튼 -->
-                    <span class="item_delete"
-                          onclick="if(confirm('정말 삭제하시겠습니까?')) location.href='/movielist/customer/inquiry_delete?id=${inquiriesVO.id}'">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3405/3405244.png" class="delete_icon">
-                        삭제
-                    </span>
-					</c:if>
+<a href="inquiry_update?id=${inquiriesVO.id}" class="item_edit">
+<img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" class="edit_icon">수정</a>
+<a href="inquiry_delete?id=${inquiriesVO.id}" class="item_delete" onclick="return confirm('정말 삭제하시겠습니까?');">  
+<img src="https://cdn-icons-png.flaticon.com/512/3405/3405244.png" class="delete_icon">삭제</a>
                 </div>
             </c:forEach>
-
         </div>
     </c:otherwise>
 </c:choose>
@@ -111,6 +112,5 @@
 </div>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
-
 </body>
 </html>

@@ -51,7 +51,6 @@ html, body {
     box-shadow: 0 8px 15px rgba(0,0,0,0.08);
 }
 
-
 .no_icon {
     width: 50px;
     display: block;
@@ -60,7 +59,7 @@ html, body {
 
 .grid-row {
     display: grid;
-    grid-template-columns: 1fr 2fr 3fr 2fr 2fr 1fr 1fr;
+    grid-template-columns: 1fr 2fr 3fr 1fr 1fr 0.5fr 0.5fr 1fr;
     align-items: center;
 }
 
@@ -150,10 +149,10 @@ html, body {
     font-weight: 700;
     box-shadow: 0 4px 10px rgba(74,105,189,0.3);
     transition: 0.25s;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    cursor: pointer;  /* ← 여기서 커서 모양 변경 */
+	align-items: center;
+	justify-content: center;
+	display: flex;
 }
 
 .inq-con:hover {
@@ -169,16 +168,17 @@ html, body {
 }
 
 .item_edit, .item_delete {
-	margin: 0 8px;   /* 왼쪽·오른쪽 공간 확보 */
+    margin: 0 8px;
     cursor: pointer;
     padding: 6px 10px;
     border-radius: 8px;
     font-size: 14px;
     font-weight: 700;
-    transition: 0.2s;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    transition: 0.2s;
+    text-decoration: none;
 }
 
 .item_edit {
@@ -203,3 +203,36 @@ html, body {
     width: 16px;
     margin-right: 4px;
 }
+/* ================== 정렬 select 박스 꾸미기 ================== */
+.sort-container {
+    display: inline-block;
+    margin-left: auto;
+    margin-right: 0;
+    text-align: right;
+}
+
+.sort-container form {
+    display: inline-block;
+}
+
+.sort-container select {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sort-container select:hover {
+    border-color: #888;
+    background-color: #f0f0f0;
+}
+
+.sort-container select:focus {
+    outline: none;
+    border-color: #555;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+

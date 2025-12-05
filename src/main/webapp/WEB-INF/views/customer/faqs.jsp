@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <div class="reserve">
     <c:forEach var="faq" items="${list}">
         <div class="faq-item">
-            <p class="book"> ${faq.question}</p>
+            <p class="book">${faq.question}</p>
             <div class="answer">
                 <p>${faq.answer}</p>
             </div>
@@ -53,16 +53,36 @@ document.addEventListener("DOMContentLoaded", () => {
     </c:forEach>
 </div>
 
+<!-- ✔ 페이징 -->
+<div class="pagination">
+    <c:if test="${currentPage > 1}">
+        <a href="?page=${currentPage - 1}" class="page-btn">← 이전</a>
+    </c:if>
+
+    <c:forEach begin="1" end="${totalPages}" var="p">
+        <a href="?page=${p}" 
+           class="page-number ${p == currentPage ? 'active' : ''}">
+            ${p}
+        </a>
+    </c:forEach>
+
+    <c:if test="${currentPage < totalPages}">
+        <a href="?page=${currentPage + 1}" class="page-btn">다음 →</a>
+    </c:if>
+</div>
+
+
 <div class="inquirey">
     <p class="want">원하는 답변을 찾지 못하셨나요?</p>
 
-   <c:choose>
-    <c:when test="${not empty sessionScope.userId}">
+<c:choose>
+    <c:when test="${not empty sessionScope.loginUser}">
         <a href="/movielist/customer/write_inquiry" class="inq">1:1 문의하기 →</a>
     </c:when>
 
     <c:otherwise>
-        <a href="#" class="inq" onclick="alert('로그인이 필요한 서비스입니다.'); return false;">
+        <a href="#" class="inq"
+           onclick="alert('로그인이 필요한 서비스입니다.'); return false;">
             1:1 문의하기 →
         </a>
     </c:otherwise>
