@@ -40,9 +40,9 @@ public class MemberVO {
     private boolean termsAgree;
     private boolean privacyAgree;
     private boolean marketingAgree;
-    
+
     private boolean requireAdditionalInfo;
 
-	
+
 	
 }

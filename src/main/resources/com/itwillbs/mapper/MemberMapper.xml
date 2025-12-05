@@ -69,7 +69,7 @@
         INSERT INTO users (user_id, password, kakao_id, email, nickname, username, role, profile_image)
         VALUES (#{user_id},#{password}, #{kakaoId}, #{email}, #{nickname}, #{username}, #{role}, #{profileImage})
     </insert>
-    
+
      <!-- 소셜 회원가입 시 업데이트 -->
     <update id="updateAdditionalInfo">
 	    UPDATE users
@@ -79,6 +79,7 @@
 	    WHERE user_id = #{user_id}
 	</update>
     
+
 
 
 </mapper>

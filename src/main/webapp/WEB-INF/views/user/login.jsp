@@ -31,7 +31,7 @@
 </head>
 
 <body>
-	<div class="container">
+<div class="container">
 		<h1>MovieList</h1>
 		<p>영화 리뷰와 예매 서비스</p>
 		   <form action="${pageContext.request.contextPath}/loginPro" method="post" name="fr">
@@ -53,9 +53,9 @@
      <label for="rememberUserId">아이디 기억하기</label>
      </div> 
      <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
-     <a href="#">아이디 찾기</a>
+     <a href="${pageContext.request.contextPath}/findId">아이디 찾기</a>
      
-     <a href="#">비밀번호 찾기</a>
+     <a href="${pageContext.request.contextPath}/findPw">비밀번호 찾기</a>
      
 		</div>
 
@@ -84,6 +84,13 @@
 
 		</div>
 	</div>
+	
+	
+	<script>
+    <c:if test="${not empty alertMsg}">
+        alert('${alertMsg}');
+    </c:if>
+    </script>
 	
 </body>
 </html>
