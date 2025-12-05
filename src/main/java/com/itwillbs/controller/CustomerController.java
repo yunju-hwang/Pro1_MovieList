@@ -257,7 +257,6 @@ public class CustomerController {
 
 	    // 1. 로그인 체크
 	    String userId = (String) session.getAttribute("user_id");
-	    System.out.println(userId);
 	    if (userId == null) {
 	        // 로그인 안 되었으면 로그인 페이지로 리다이렉트
 	        return "redirect:/member/login";
@@ -378,10 +377,8 @@ public class CustomerController {
 
 	@PostMapping("/customer/write_movie_request_pro")
 	public String write_movie_request_pro(MovieRequestVO movieRequestVO, HttpSession session) {
-		System.out.println("customerController write_movie_request_pro");
 		movieRequestVO.setUserId((String)session.getAttribute("user_id"));
 
-		System.out.println("movieRequestVO = " + movieRequestVO);
 		customerService.insert_movie_request(movieRequestVO);
 
 

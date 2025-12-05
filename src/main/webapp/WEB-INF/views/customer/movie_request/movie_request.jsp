@@ -38,22 +38,19 @@
                 <span class="sp_content">내용</span>
                 <span class="sp_date">요청일</span>
                 <span class="sp_status">상태</span>
-                <span class="sp_update">수정</span>
-                <span class="sp_delete">삭제</span>
-                	<div class="sort-container">
-    <form method="get" action="/movielist/customer/movie_request">
-        <select name="sort" onchange="this.form.submit()">
-            <option value="">답변완료 먼저</option>
-            <option value="pending" ${param.sort == 'pending' ? 'selected' : ''}>답변대기 먼저</option>
-        </select>
-    </form>
-</div>
+                <div class="sort-container">
+                    <form method="get" action="/movielist/customer/movie_request">
+                        <select name="sort" onchange="this.form.submit()">
+                            <option value="">답변 완료</option>
+                            <option value="pending" ${param.sort == 'pending' ? 'selected' : ''}>답변 대기</option>
+                        </select>
+                    </form>
+                </div>
             </div>
 
             <!-- 리스트 -->
             <c:forEach var="movieRequest" items="${movie_request_list}" varStatus="status">
-                <div class="request_item grid-row" 
-                     onclick="location.href='/movielist/customer/movie_request_detail?id=${movieRequest.id}'">
+                <div class="request_item grid-row" onclick="location.href='/movielist/customer/movie_request_detail?id=${movieRequest.id}'">
 
                     <span class="item_num">${status.index + 1}</span>
                     <span class="item_title"><c:choose>
@@ -72,30 +69,29 @@
                     </span>
                     <span class="item_date">${movieRequest.createdAt}</span>
 
-                    <c:choose>
-                        <c:when test="${movieRequest.status eq 'pending'}">
-                            <span class="item_status_pen">
+                    <span class="item_status">
+                        <c:choose>
+                            <c:when test="${movieRequest.status eq 'pending'}">
                                 <img src="https://cdn-icons-png.flaticon.com/512/595/595067.png" class="status_icon">
                                 대기
-                            </span>
-                        </c:when>
-                        <c:otherwise>
-                            <span class="item_status_com">
+                            </c:when>
+                            <c:otherwise>
                                 <img src="https://cdn-icons-png.flaticon.com/512/845/845646.png" class="status_icon">
                                 완료
-                            </span>
-                        </c:otherwise>
-                    </c:choose>
+                            </c:otherwise>
+                        </c:choose>
+                    </span>
 
-                    <!-- 수정/삭제 -->
-                    <c:if test="${movieRequest.status eq 'pending'}">
+                    <!-- 버튼 그룹: 항상 가로 유지 -->
+                    <div class="button-group">
                         <span class="item_edit" onclick="event.stopPropagation(); location.href='/movielist/customer/write_movie_request?id=${movieRequest.id}'">
                             <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" class="edit_icon">수정
                         </span>
                         <span class="item_delete" onclick="event.stopPropagation(); if(confirm('정말 삭제하시겠습니까?')) location.href='/movielist/customer/movie_request_delete?id=${movieRequest.id}'">
                             <img src="https://cdn-icons-png.flaticon.com/512/3405/3405244.png" class="delete_icon">삭제
                         </span>
-                    </c:if>
+                    </div>
+
                 </div>
             </c:forEach>
 
@@ -109,7 +105,6 @@
     <p>영화 요청하기</p>
 </div>
 
-
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
 </body>
 </html>
-<%@ include file="/WEB-INF/views/common/footer.jsp" %>

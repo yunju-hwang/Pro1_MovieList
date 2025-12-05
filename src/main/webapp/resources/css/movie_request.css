@@ -13,9 +13,10 @@ html, body {
 
 .container {
     flex: 1;
-    width: 80%;
+    width: 90%;
+    max-width: 1200px;
     margin: 0 auto;
-    align-items: center; /* 중앙 정렬 */
+    align-items: center;
 }
 
 /* 제목 */
@@ -27,18 +28,10 @@ html, body {
     color: #333;
 }
 
-.title_icon {
-    width: 30px;
-    vertical-align: middle;
-    margin-right: 6px;
-}
+.title_icon { width: 30px; vertical-align: middle; margin-right: 6px; }
 
 /* 총 개수 */
-.many {
-    text-align: center;
-    color: #555;
-    margin-bottom: 40px;
-}
+.many { text-align: center; color: #555; margin-bottom: 40px; }
 
 /* 데이터 없을 때 */
 .no-data {
@@ -51,16 +44,12 @@ html, body {
     box-shadow: 0 8px 15px rgba(0,0,0,0.08);
 }
 
-.no_icon {
-    width: 50px;
-    display: block;
-    margin: 0 auto 10px;
-}
+.no_icon { width: 50px; display: block; margin: 0 auto 10px; }
 
 /* 그리드 */
 .grid-row {
     display: grid;
-    grid-template-columns: 1fr 1fr 2fr 1fr 1fr 0.5fr 0.5fr 1fr; /* 마지막 열 자동으로 공간 확보 */
+    grid-template-columns: 1fr 2fr 3fr 1fr 1fr 1fr; /* 버튼 영역 따로 flex 적용 */
     align-items: center;
     width: 100%;
     gap: 10px;
@@ -96,72 +85,44 @@ html, body {
 }
 
 /* 번호, 제목, 내용, 날짜, 상태 */
-.item_num, .item_date {
-    text-align: center;
-}
-
-.item_title {
-    font-weight: 600;
-    color: #333;
-}
-
-.item_content {
-    color: #666;
-}
+.item_num, .item_date { text-align: center; }
+.item_title { font-weight: 600; color: #333; }
+.item_content { color: #666; }
 
 /* 상태 아이콘 */
-.status_icon {
-    width: 16px;
-    margin-right: 5px;
-    vertical-align: middle;
+.status_icon { width: 16px; margin-right: 5px; vertical-align: middle; }
+.item_status_pen { color: #d9534f; font-weight: 700; }
+.item_status_com { color: #28a745; font-weight: 700; }
+
+/* 버튼 그룹 */
+.button-group {
+    display: flex; /* 항상 가로 유지 */
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: nowrap; /* 모바일에서도 가로 유지 */
 }
 
-.item_status_pen {
-    color: #d9534f;
-    font-weight: 700;
-}
-
-.item_status_com {
-    color: #28a745;
-    font-weight: 700;
-}
-
-/* 수정/삭제 버튼 */
 .item_edit, .item_delete {
-    margin: 0 8px;
-    cursor: pointer;
+    flex: none;
+    width: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
     padding: 6px 10px;
     border-radius: 8px;
     font-size: 14px;
     font-weight: 700;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    cursor: pointer;
     transition: 0.2s;
 }
 
-.item_edit {
-    background: #ffe082;
-    color: #8d6e63;
-}
+.item_edit { background: #ffe082; color: #8d6e63; }
+.item_edit:hover { background: #ffca28; }
+.item_delete { background: #ef9a9a; color: #b71c1c; }
+.item_delete:hover { background: #e57373; }
 
-.item_edit:hover {
-    background: #ffca28;
-}
-
-.item_delete {
-    background: #ef9a9a;
-    color: #b71c1c;
-}
-
-.item_delete:hover {
-    background: #e57373;
-}
-
-.edit_icon, .delete_icon {
-    width: 16px;
-    margin-right: 4px;
-}
+.edit_icon, .delete_icon { width: 16px; margin-right: 4px; }
 
 /* 영화 요청 버튼 */
 .req-con {
@@ -187,44 +148,49 @@ html, body {
     transform: translateY(-2px);
 }
 
-.write_icon {
-    width: 16px;
-    margin-right: 6px;
-}
+.write_icon { width: 16px; margin-right: 6px; }
 
-
-
-/* select 박스 */
+/* ================== 정렬 select 박스 꾸미기 ================== */
 .sort-container {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
+    display: inline-block;
+    margin-left: auto;
+    text-align: right;
+    position: relative;
+    font-family: "Noto Sans KR", sans-serif;
 }
+
+.sort-container form { display: inline-block; }
 
 .sort-container select {
+    padding: 8px 36px 8px 12px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    background: linear-gradient(145deg,#fff,#f0f0f0);
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    padding: 6px 30px 6px 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    font-size: 14px;
-    cursor: pointer;
-    background-image: url('https://cdn-icons-png.flaticon.com/512/271/271228.png');
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    background-size: 16px 16px;
-    transition: all 0.2s;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.08);
+    position: relative;
 }
 
-.sort-container select:hover {
-    border-color: #888;
-    background-color: #f9f9f9;
+.sort-container select:hover { border-color: #4a69bd; background: linear-gradient(145deg,#f0f0f0,#e9eef7); box-shadow:3px3px8px rgba(0,0,0,0.12);}
+.sort-container select:focus { outline:none; border-color:#4a69bd; box-shadow:0 0 8px rgba(74,105,189,0.3); }
+.sort-container::after { content:"▼"; font-size:12px; color:#555; position:absolute; right:12px; top:50%; transform:translateY(-50%); pointer-events:none; }
+
+/* ================== 반응형 ================== */
+@media screen and (max-width: 768px) {
+    .grid-row { grid-template-columns: 1fr 2fr 2fr 1fr 1fr 1fr; gap: 6px; }
+    .item_title, .item_content { font-size: 13px; }
+    .item_edit, .item_delete { font-size: 12px; padding: 4px 8px; }
 }
 
-.sort-container select:focus {
-    outline: none;
-    border-color: #555;
-    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+@media screen and (max-width: 480px) {
+    .grid-row { grid-template-columns: 1fr 2fr 2fr 1fr 1fr 1fr; gap: 4px; }
+    .item_title, .item_content { font-size: 12px; }
+    .item_edit, .item_delete { font-size: 11px; padding: 3px 6px; }
+    .request { font-size: 24px; }
+    .many { font-size: 14px; }
 }
