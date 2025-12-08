@@ -167,6 +167,10 @@ public class NaverService {
             
             memberVO.setNaver_access_token(accessToken);
             
+            // 전화번호
+            String phone = userInfo.getMobile();
+            memberVO.setPhone(phone);
+            
             // DB에 삽입
             memberMapper.insertnaverMember(memberVO);
         } else {
