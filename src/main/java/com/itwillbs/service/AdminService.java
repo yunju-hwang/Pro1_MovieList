@@ -17,6 +17,7 @@ import com.itwillbs.domain.MovieVO;
 import com.itwillbs.domain.NoticesVO;
 import com.itwillbs.domain.ReservationsVO;
 import com.itwillbs.domain.ReviewsAdminVO;
+import com.itwillbs.domain.ReviewsVO;
 import com.itwillbs.mapper.AdminMapper;
 
 
@@ -124,6 +125,10 @@ public class AdminService {
     	return adminMapper.AdminReviewsList(params);
     }
     
+	public ReviewsAdminVO AdminReviewsDetail(int id) {
+		return adminMapper.AdminReviewsDetail(id);
+	}
+    
     public int deleteReviews(int id) {
     	return adminMapper.deleteReviews(id);
     }
@@ -133,6 +138,11 @@ public class AdminService {
     	return adminMapper.AdminReservationsList(params);
     }
     
+	public ReservationsVO AdminReservationDetail(int id) {
+		return adminMapper.AdminReservationDetail(id);
+	}
+    
+   
     public void AdminReservationsRefund(int id) {
     	adminMapper.AdminReservationsRefund(id);
     }
@@ -178,6 +188,10 @@ public class AdminService {
     public int AdminNoticesDelete(int id) {
     	return adminMapper.AdminNoticesDelete(id);
     }
+
+
+
+
     
     
 }

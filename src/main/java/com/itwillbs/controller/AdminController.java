@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,8 +24,10 @@ import com.itwillbs.domain.MovieVO;
 import com.itwillbs.domain.NoticesVO;
 import com.itwillbs.domain.ReservationsVO;
 import com.itwillbs.domain.ReviewsAdminVO;
+import com.itwillbs.domain.ReviewsVO;
 import com.itwillbs.mapper.AdminMapper;
 import com.itwillbs.service.AdminService;
+import com.itwillbs.util.StringUtil;
 import com.mysql.cj.Session;
 
 @Controller
@@ -208,6 +211,16 @@ public class AdminController {
 	    }
 		
 		List<InquiriesVO> adminInquiriesList = adminService.AdminInquiriesList(params);
+		
+		final int TITLE_TRUNCATE_LENGTH = 15;
+		
+	    for (InquiriesVO request : adminInquiriesList) { 
+	        String originalTitle = request.getTitle(); 
+	        String truncatedTitle = StringUtil.truncateText(originalTitle, TITLE_TRUNCATE_LENGTH);
+	        
+	        request.setTitle(truncatedTitle);
+	    }
+		
 		model.addAttribute("adminInquiriesList", adminInquiriesList);
 	    model.addAttribute("currentSortCriteria", sortCriteria);
 	    model.addAttribute("currentSearchType", searchType);
@@ -283,6 +296,20 @@ public class AdminController {
 	    // 이 메서드는 이제 파라미터(params)를 받아서 동적으로 쿼리를 만들어야 해.
 		List<MovieRequestVO> adminRequestList = adminService.AdminRequestList(params);
 	    
+		final int TRUNCATE_LENGTH = 25;
+		final int TITLE_TRUNCATE_LENGTH = 15;
+		
+	    for (MovieRequestVO request : adminRequestList) { 
+	        String originalContent = request.getContent(); 
+	        String originalTitle = request.getTitle();
+	        String truncatedContent = StringUtil.truncateText(originalContent, TRUNCATE_LENGTH); 
+	        String truncatedTitle = StringUtil.truncateText(originalTitle, TITLE_TRUNCATE_LENGTH);
+	        
+	        request.setContent(truncatedContent);
+	        request.setTitle(truncatedTitle);
+	    }
+		
+		
 	    // 6. Model에 데이터 및 현재 상태를 담기
 	    model.addAttribute("adminRequestList", adminRequestList);
 	    
@@ -417,12 +444,31 @@ public class AdminController {
 	    }
 
 		List<ReviewsAdminVO> adminReviewsList = adminService.AdminReviewsList(params);
+		
+		final int TRUNCATE_LENGTH = 25;
+	    
+	    for (ReviewsAdminVO review : adminReviewsList) { 
+	        String originalContent = review.getContent(); 
+	        String truncatedContent = StringUtil.truncateText(originalContent, TRUNCATE_LENGTH); 
+	       
+	        review.setContent(truncatedContent); 
+	    }
 		model.addAttribute("adminReviewsList", adminReviewsList);
 	    model.addAttribute("currentSortCriteria", sortCriteria);
 	    model.addAttribute("currentSearchType", searchType);
 	    model.addAttribute("currentKeyword", keyword);
 		return "/admin/reviews";
 }
+	
+	@GetMapping("/reviews/detail/{id}")
+	@ResponseBody 
+	public ReviewsAdminVO ReviewDetail(@PathVariable("id") int id) {
+
+	    ReviewsAdminVO detail = adminService.AdminReviewsDetail(id);
+	    
+	    return detail; 
+	}
+	
 	
 	@PostMapping("/reviews/delete")
 	public String deletereviews(HttpSession session, @RequestParam("id") int id) {
@@ -457,8 +503,6 @@ public class AdminController {
 	        orderByClause = "r.screening_time ASC";
 	    } else if (sortCriteria.equals("reservationDate")) {
 	        orderByClause = "r.reservation_date DESC"; 
-	    } else if (sortCriteria.equals("finalAmount")) {
-	        orderByClause = "p.amount DESC"; 
 	    } else if (sortCriteria.equals("status")) {
 	        orderByClause = "r.status ASC"; 
 	    } else {
@@ -480,6 +524,18 @@ public class AdminController {
 		return "/admin/reservations";
 	}
 		
+	@GetMapping("/reservations/detail/{id}")
+	@ResponseBody // JSON 형태로 데이터를 반환해야 하므로 @ResponseBody를 사용
+	public ReservationsVO ReservationDetail(@PathVariable("id") int id) {
+	    // 1. 권한 체크 로직 생략 (필요하면 추가)
+
+	    // 2. Service를 호출하여 해당 ID의 모든 상세 정보 (11개)를 가져옴
+	    ReservationsVO detail = adminService.AdminReservationDetail(id);
+	    
+	    // 3. 데이터를 JSON 형태로 반환
+	    return detail; 
+	}
+	
 		
 	@PostMapping("/reservations/refund")
 	public String reservationsRefund(HttpSession session, @RequestParam("id") int id) {

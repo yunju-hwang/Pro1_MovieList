@@ -356,12 +356,29 @@
 		</if>
 	</select>
 
+	<select id="AdminReviewsDetail"
+		resultType="com.itwillbs.domain.ReviewsAdminVO">
+		SELECT
+		r.id,
+		r.tmdb_id AS tmdbId,
+		r.user_id AS userId,
+		r.content,
+		r.rating,
+		r.created_at AS createdAt,
+		m.title AS movieTitle
+		FROM reviews r
+		LEFT JOIN
+		movies m ON r.tmdb_id = m.tmdb_id
+		WHERE
+		r.id = #{id}
+	</select>
+
 	<delete id="deleteReviews">
 		DELETE FROM reviews
 		WHERE id = #{id}
 	</delete>
 
-	<!-- 예매관리 -->
+	<!-- 예매 관리 -->
 	<select id="AdminReservationsList"
 		resultType="com.itwillbs.domain.ReservationsVO">
 		SELECT
@@ -407,10 +424,6 @@
 					<when test="searchType == 'userId'">
 						r.user_id LIKE CONCAT('%', #{keyword}, '%')
 					</when>
-					<when test="searchType == 'theaterName'">
-						CONCAT(t.name, ' (', t.location, ')')
-						 LIKE CONCAT('%', #{keyword}, '%')
-					</when>
 					<when test="searchType == 'screeningTime'">
 						r.screening_time LIKE CONCAT('%', #{keyword}, '%')
 					</when>
@@ -427,6 +440,35 @@
 		<if test="orderBy == null or orderBy == ''">
 			ORDER BY r.reservation_date DESC, r.id DESC
 		</if>
+	</select>
+
+	<select id="AdminReservationDetail"
+		resultType="com.itwillbs.domain.ReservationsVO">
+		SELECT
+		r.id,
+		r.user_id AS userId,
+		r.tmdb_id AS tmdbId,
+		r.theater_id AS theaterId,
+		r.screening_time AS screeningTime,
+		r.reservation_date AS reservationDate,
+		r.seat AS seat,
+		r.adult_people AS
+		adultPeople,
+		r.child_people AS childPeople,
+		r.status,
+		m.title AS
+		movieTitle,
+		p.amount AS finalAmount,
+		p.payment_date AS paymentDate,
+		CONCAT(t.name, ' (', t.location, ')') AS theaterName
+		FROM reservations
+		r
+		LEFT JOIN movies m ON r.tmdb_id = m.tmdb_id
+		LEFT JOIN payments p ON
+		r.id = p.reservation_id
+		LEFT JOIN theaters t ON r.theater_id =
+		t.theater_id
+		WHERE r.id = #{id}
 	</select>
 
 	<update id="AdminReservationsRefund">
