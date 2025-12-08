@@ -41,7 +41,7 @@
                 <div class="sort-container">
                     <form method="get" action="/movielist/customer/movie_request">
                         <select name="sort" onchange="this.form.submit()">
-                            <option value="">답변 완료</option>
+                            <option value="completed" ${param.sort == 'completed' ? 'selected' : ''}>답변 완료</option>
                             <option value="pending" ${param.sort == 'pending' ? 'selected' : ''}>답변 대기</option>
                         </select>
                     </form>
