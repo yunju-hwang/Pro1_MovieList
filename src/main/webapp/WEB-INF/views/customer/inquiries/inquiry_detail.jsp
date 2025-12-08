@@ -37,21 +37,34 @@
     <c:choose>
         <c:when test="${not empty inq.answerContent}">
             <div class="box answer">
-                <div class="box-header green">💬 답변완료</div>
-                <div class="box-body">
-                    <p>${inq.answerContent}</p>
-                </div>
-                <p class="date">답변일 : ${answeredDate}</p>
-            </div>
+    <div class="box-header green">💬 답변완료</div>
+    <div class="box-body">
+        <p>${inq.answerContent}</p>
+    </div>
+
+    <!-- 답변일 -->
+    <p class="date">답변일 : ${answeredDate}</p>
+
+    <!-- 버튼 (항상 박스 우측 하단, 답변일 아래 겹치지 않게) -->
+    <div class="back-btn-container">
+        <button class="back-btn" onclick="history.back();">← 뒤로가기</button>
+    </div>
+</div>
+
         </c:when>
 
         <c:otherwise>
             <div class="empty-answer">
                 <img src="<c:url value='/resources/img/wait.png'/>" class="wait-icon">
                 <p>아직 답변이 등록되지 않았어요.<br>조금만 기다려주세요 😊</p>
+                <div class="back-btn-container">
+                <button class="back-btn" onclick="history.back();">← 뒤로가기</button>
+            </div>
             </div>
         </c:otherwise>
     </c:choose>
+    
+    
 
 </div>
 

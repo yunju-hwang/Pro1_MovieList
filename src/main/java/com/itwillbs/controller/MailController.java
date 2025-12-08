@@ -14,6 +14,7 @@ import com.itwillbs.service.MailService; // MailService 주입
 public class MailController {
 
     // 🔗 MailService 주입 (SendGrid 통신 및 DB 조회/업데이트 담당)
+//	as
     @Inject 
     private MailService mailService; 
     

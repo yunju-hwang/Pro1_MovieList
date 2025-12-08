@@ -41,6 +41,14 @@ public interface MemberMapper {
 	int insertkakaoMember(MemberVO memberVO);
 	
 
+	// 네이버용 login
+	MemberVO findBynaverId(String naverId);
+	
+	// 네이버용 signup
+	int insertnaverMember(MemberVO memberVO);
+
+	void updateAccessToken(MemberVO memberVO);
+
 	// mail용
     public String findIdByEmail(String email);
     
@@ -54,6 +62,7 @@ public interface MemberMapper {
 
 	void updateAdditionalInfo(MemberVO memberVO);
 	
+
 	
 }
 
