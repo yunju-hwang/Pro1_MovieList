@@ -77,8 +77,8 @@
 
     <!-- 네이버 신규 회원 생성 -->
     <insert id="insertnaverMember" parameterType="com.itwillbs.domain.MemberVO">
-        INSERT INTO users (user_id, password, naver_id, email, nickname, username, role, profile_image, naver_access_token)
-        VALUES (#{user_id},#{password}, #{naverId}, #{email}, #{nickname}, #{username}, #{role}, #{profileImage}, #{naver_access_token})
+        INSERT INTO users (user_id, password, naver_id, email, nickname, username, role, phone, profile_image, naver_access_token)
+        VALUES (#{user_id},#{password}, #{naverId}, #{email}, #{nickname}, #{username}, #{role}, #{phone}, #{profileImage}, #{naver_access_token})
     </insert>
     
 	<!-- 로그아웃시 토큰삭제 -->
