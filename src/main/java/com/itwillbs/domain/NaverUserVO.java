@@ -20,6 +20,8 @@ public class NaverUserVO {
         private String email;
         private String nickname;
         private String profileImage;
+        private String mobile;
+        
     }
 
     // 편하게 꺼내는 메서드
@@ -50,5 +52,13 @@ public class NaverUserVO {
         }
         return null;
     }
+    
+    public String getMobile() {
+        if (response != null) {
+            return response.getMobile();
+        }
+        return null;
+    }
+    
     
 }
