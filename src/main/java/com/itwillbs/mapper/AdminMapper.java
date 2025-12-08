@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.itwillbs.domain.NoticesVO;
 import com.itwillbs.domain.ReservationsVO;
 import com.itwillbs.domain.ReviewsAdminVO;
+import com.itwillbs.domain.ReviewsVO;
 import com.itwillbs.domain.FaqsVO;
 import com.itwillbs.domain.InquiriesVO;
 import com.itwillbs.domain.MemberVO;
@@ -65,10 +66,14 @@ public MovieRequestVO getMovieRequestDetail(int id);
 // 리뷰 관리
 public List<ReviewsAdminVO> AdminReviewsList(Map<String, Object> params);
 
+public ReviewsAdminVO AdminReviewsDetail(int id);
+
 public int deleteReviews(int id);
 
 // 예매 관리
 public List<ReservationsVO> AdminReservationsList(Map<String, Object> params);
+
+public ReservationsVO AdminReservationDetail(int id);
 
 public void AdminReservationsRefund(int id);
 
@@ -94,6 +99,12 @@ public NoticesVO getNoticesDetail(int id);
 public int AdminNoticesUpdate(NoticesVO notices);
 
 public int AdminNoticesDelete(int id);
+
+
+
+
+
+
 
 
 

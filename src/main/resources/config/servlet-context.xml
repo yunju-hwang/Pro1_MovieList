@@ -50,7 +50,4 @@
 		
 		<beans:property name="maxInMemorySize" value="10240" />
 	</beans:bean>
-
-
-
 </beans:beans>

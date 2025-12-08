@@ -1,7 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/navbar.jsp"%>
+
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="naverState" value="<%= new java.math.BigInteger(130, new java.security.SecureRandom()).toString(32) %>" />
 
 <%
      Cookie[] cookies = request.getCookies();
@@ -16,7 +19,6 @@
      }
      request.setAttribute("cookid", cookid);
 %>
-
 
 <!DOCTYPE html>
 <html>
@@ -78,7 +80,7 @@
 		</div>
 
 		<div class="social-login">
-			<a href="naver_login.jsp" class="btn btn-success">N 네이버로 로그인</a> 
+			<a href="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naverClientId}&redirect_uri=${naverRedirectUri}&state=${naverState}&prompt=login" class="btn btn-success">N 네이버로 로그인</a> 
 			<a href="https://kauth.kakao.com/oauth/authorize?client_id=${kakaoClientId}&redirect_uri=${kakaoRedirectUri}&response_type=code&prompt=login" class="btn btn-warning">카카오로 로그인</a>
 
 
