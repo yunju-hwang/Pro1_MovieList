@@ -49,7 +49,7 @@
 		</div>
 
 		<div class="social-login">
-			<a href="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naverClientId}&redirect_uri=${naverRedirectUri}&state=${naverState}" class="btn btn-success">N 네이버로 로그인</a> 
+			<a href="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naverClientId}&redirect_uri=${naverRedirectUri}&state=${naverState}&prompt=login" class="btn btn-success">N 네이버로 로그인</a> 
 			<a href="https://kauth.kakao.com/oauth/authorize?client_id=${kakaoClientId}&redirect_uri=${kakaoRedirectUri}&response_type=code&prompt=login" class="btn btn-warning">카카오로 로그인</a>
 
 

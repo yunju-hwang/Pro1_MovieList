@@ -114,12 +114,13 @@ public class MemberController {
     @GetMapping("/member/logout")
     public String logout (HttpSession session) {
     	System.out.println("MemberController logout()");
-        
+        /*
         MemberVO member = (MemberVO) session.getAttribute("loginUser");
 
         if (member != null && member.getNaver_access_token() != null) {
             naverService.naverLogout(member.getNaver_access_token());
         }
+        */
         session.invalidate();
         
  

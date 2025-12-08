@@ -180,7 +180,8 @@ public class NaverService {
     }
     
     public void naverLogout(String accessToken) {
-        String naverLogoutUrl = "https://nid.naver.com/oauth2.0/token?grant_type=delete" +
+        /*
+         String naverLogoutUrl = "https://nid.naver.com/oauth2.0/token?grant_type=delete" +
                                 "&client_id=" + naverClientId +
                                 "&client_secret=" + naverClientSecret +
                                 "&access_token=" + accessToken +
@@ -193,6 +194,7 @@ public class NaverService {
         } catch (Exception e) {
             System.err.println("네이버 Access Token 삭제 실패: " + e.getMessage());
         }
+        */
     }
     
     
