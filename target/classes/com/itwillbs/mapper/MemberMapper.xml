@@ -53,5 +53,22 @@
         VALUES (#{user_id},#{password}, #{kakaoId}, #{email}, #{nickname}, #{username}, #{role}, #{profileImage})
     </insert>
 
+    <!-- 네이버 ID로 조회 -->
+    <select id="findBynaverId" resultType="com.itwillbs.domain.MemberVO">
+        SELECT * FROM users WHERE naver_id = #{naverId}
+    </select>
+
+    <!-- 네이버 신규 회원 생성 -->
+    <insert id="insertnaverMember" parameterType="com.itwillbs.domain.MemberVO">
+        INSERT INTO users (user_id, password, naver_id, email, nickname, username, role, profile_image, naver_access_token)
+        VALUES (#{user_id},#{password}, #{naverId}, #{email}, #{nickname}, #{username}, #{role}, #{profileImage}, #{naver_access_token})
+    </insert>
+    
+	<!-- 로그아웃시 토큰삭제 -->
+	<update id="updateAccessToken">
+    UPDATE users
+    SET naver_access_token = #{naver_access_token}
+    WHERE naver_id = #{naverId} </update>
+
 
 </mapper>

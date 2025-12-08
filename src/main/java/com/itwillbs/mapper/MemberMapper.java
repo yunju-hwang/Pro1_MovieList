@@ -32,4 +32,12 @@ public interface MemberMapper {
 	// 카카오용 signup
 	int insertkakaoMember(MemberVO memberVO);
 	
+	// 네이버용 login
+	MemberVO findBynaverId(String naverId);
+	
+	// 네이버용 signup
+	int insertnaverMember(MemberVO memberVO);
+
+	void updateAccessToken(MemberVO memberVO);
+	
 }

@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="dashboard.jsp"%>
+<input type="hidden" id="contextPath" value="<c:url value='/' />">
 <div class="table-header">
     <div class="search-wrap">
         <form action="<c:url value='/admin/movie_requests' />" method="get" id="searchForm">
@@ -102,7 +103,6 @@
 		</div>
 	</div>
 </div>
-<input type="hidden" id="contextPath" value="<c:url value='/' />">
-<script src="<c:url value='/resources/js/movie_requests.js' />"></script>
+<script src="<c:url value='/resources/js/admin_movie_requests.js' />"></script>
 <script src="<c:url value='/resources/js/admin_search.js' />"></script>
 <%@ include file="end.jsp"%>

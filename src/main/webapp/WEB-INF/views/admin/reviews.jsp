@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="dashboard.jsp"%>
+<input type="hidden" id="contextPath" value="<c:url value='/' />">
 <div class="table-header">
     <div class="search-wrap">
         <form action="<c:url value='/admin/reviews' />" method="get" id="searchForm">
@@ -34,7 +35,7 @@
 				<th>리뷰 내용</th>
 				<th>평점</th>
 				<th>작성날짜</th>
-				<th>관리</th>
+				<th>상세보기</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -53,15 +54,8 @@
 							value="${fn:substring(createdAt, 0, 10)}" /> <br> <c:out
 							value="${fn:substring(createdAt, 11, 16)}" /></td>
 					<td>
-						<form action="<c:url value='/admin/reviews/delete' />" method="post">
-							<input type="hidden" name="id" value="${reviews.id}">
-							<button type="submit" class="action-icon-btn"
-								onclick="return confirm('${reviews.id}번 리뷰를 정말로 삭제하시겠습니까?');">
-								<img
-									src="${pageContext.request.contextPath}/resources/img/trash_red.png"
-									alt="삭제 아이콘">
-							</button>
-						</form>
+						<button class="action-btn view-content-btn"
+							onclick="openReviewDetail(${reviews.id})">상세보기</button>
 					</td>
 				</tr>
 			</c:forEach>
@@ -69,5 +63,18 @@
 		</tbody>
 	</table>
 </div>
+<div id="reviewDetailModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeReviewModal()">&times;</span> <h2>리뷰 상세 정보</h2>
+        
+        <div class="modal-body" id="modalBodyContent">
+            </div>
+        
+        <div class="modal-actions"> 
+            <button class="action-btn delete-btn" onclick="deleteFromReviewModal()" disabled>삭제하기</button>
+        </div>
+    </div>
+</div>
+<script src="<c:url value='/resources/js/admin_reviews.js' />"></script>
 <script src="<c:url value='/resources/js/admin_search.js' />"></script>
 <%@ include file="end.jsp"%>

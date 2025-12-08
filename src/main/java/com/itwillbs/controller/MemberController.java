@@ -22,6 +22,7 @@ import com.itwillbs.domain.GenresVO;
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.domain.UserGenresVO;
 import com.itwillbs.service.MemberService;
+import com.itwillbs.service.NaverService;
 
 @Controller
 public class MemberController {
@@ -31,17 +32,35 @@ public class MemberController {
 	@Inject
 	private MemberService memberService;
 	
+	@Autowired
+	private NaverService naverService;
+	
     @Value("${kakao.restapi.key}")
     private String kakaoClientId;
 
     @Value("${kakao.redirect.uri}")
     private String kakaoRedirectUri;
 	
+    // 네이버
+    @Value("${naver.client.id}")
+    private String naverClientId;
+    
+    @Value("${naver.client.secret}")
+    private String naverClientSecret;
+
+    @Value("${naver.redirect.uri}")
+    private String naverRedirectUri;
+    
 	//로그인 페이지 이동
 	@GetMapping("/login")
 	public String login(Model model) {
 		model.addAttribute("kakaoClientId", kakaoClientId);
 		model.addAttribute("kakaoRedirectUri", kakaoRedirectUri);
+		
+		model.addAttribute("naverClientId", naverClientId);
+		model.addAttribute("naverClientSecret", naverClientSecret);
+		model.addAttribute("naverRedirectUri", naverRedirectUri);
+		
 		return "/user/login";
 	}
 	
@@ -95,7 +114,15 @@ public class MemberController {
     @GetMapping("/member/logout")
     public String logout (HttpSession session) {
     	System.out.println("MemberController logout()");
+        
+        MemberVO member = (MemberVO) session.getAttribute("loginUser");
+
+        if (member != null && member.getNaver_access_token() != null) {
+            naverService.naverLogout(member.getNaver_access_token());
+        }
         session.invalidate();
+        
+ 
         return "redirect:/login";
     }
 	

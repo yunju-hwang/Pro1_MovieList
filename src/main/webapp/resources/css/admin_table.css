@@ -59,7 +59,7 @@
 
 /* FAQ/문의/공지 제목 컬럼 정렬 */
 .faq-table th:nth-child(3), .faq-table td:nth-child(3) { width: 60%; text-align: left; }
-.inquiry-table th:nth-child(2), .inquiry-table td:nth-child(2) { width: 30%; text-align: left; }
+.inquiry-table th:nth-child(2), .inquiry-table td:nth-child(2) { width: 30%;}
 .notice-table th:nth-child(2), .notice-table td:nth-child(2) { width: 60%; text-align: left; }
 
 /* -------------------- 2-2. 테이블 내 하이퍼링크 스타일 (밑줄 문제 해결) -------------------- */
@@ -430,4 +430,41 @@ height:29px;
 	border: 1px solid #ddd;
 	box-sizing: border-box; 
 	resize: vertical; 
+}
+
+/* 모달 본문 P 태그 기본 스타일 */
+#modalBodyContent p {
+    margin: 8px 0; 
+    line-height: 1.5; 
+    font-size: 15px; 
+    padding-bottom: 5px; 
+}
+#modalBodyContent p:last-child {
+    border-bottom: none;
+}
+
+/* 💡 섹션 구분선 */
+.detail-separator {
+    border: 0; 
+    border-top: 2px solid #ddd; /* 구분선을 좀 더 굵게 */
+    margin: 10px 0; /* 위아래 간격을 넓혀 섹션을 확실히 구분 */
+}
+
+/* 💡 상단 2열 정보 (예매자 ID & 결제 일시) */
+.top-info-row {
+    display: flex;
+    justify-content: space-between; /* 양쪽 끝으로 밀기 */
+}
+
+/* top-info-row 내부 P 태그는 줄 구분선 제거 */
+.top-info-row p {
+    margin: 0 !important;
+    padding: 0 !important;
+    border-bottom: none !important;
+    /* 우측 P 태그만 텍스트 오른쪽 정렬 */
+    text-align: left; 
+}
+.top-info-row p.align-right {
+    text-align: right;
+    flex-grow: 1; /* 오른쪽 텍스트가 공간을 차지하게 */
 }
