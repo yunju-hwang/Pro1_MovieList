@@ -1,13 +1,13 @@
 	package com.itwillbs.mapper;
 	
 	import java.util.List;
+import java.util.Map;
 
-	
-	import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Mapper;
 	import org.apache.ibatis.annotations.Param;
 	
 	import com.itwillbs.domain.InquiriesVO;
-	import com.itwillbs.domain.MemberVO;
+import com.itwillbs.domain.MemberVO;
 	import com.itwillbs.domain.UserFavoritesVO;
 	import com.itwillbs.domain.TheatersVO; 
 	import com.itwillbs.domain.ReservationsVO;
@@ -16,6 +16,8 @@
 	public interface MypageMapper {
 		
 		public MemberVO getMember(String user_id);
+		
+		public MemberVO selectKakaoUserByUserId(String userId);
 		
 		int updateMember(MemberVO member);
 		
@@ -62,6 +64,8 @@
 	    public List<ReservationsVO> getReservationList(String userId);
 	    
 	    public ReservationsVO getReservationDetail(@Param("reservationId") int reservationId);
+	    
+	    int updateReservationStatus(Map<String, Object> params);
 	
 		
 	}

@@ -3,85 +3,102 @@
 <%@ include file="/WEB-INF/views/common/navbar.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>문의내역</title>
-<link rel="stylesheet" href="<c:url value='/resources/css/inquiries.css?after' />">
+<title>문의 내역</title>
+<link rel="stylesheet" href="<c:url value='/resources/css/inquiries.css'/>">
 </head>
 <body>
+
 <h1 class="inquery">
     <img src="<c:url value='/resources/img/message.png' />" class="title_icon">
     문의 내역
 </h1>
 
-<h4 class="many">
-    총 ${count }건의 문의 내역
-</h4>
+<h4 class="many">총 ${count}건의 문의 내역</h4>
 
 <div class="container">
 
 <c:choose>
     <c:when test="${count == 0}">
-        <p class="ma no-data">
+        <p class="no-data">
             <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png" class="no_icon">
             문의 내역이 없습니다
         </p>
     </c:when>
-
     <c:otherwise>
 
-<div class="inquiry_head grid-row">
+        <!-- 헤더 -->
+        <div class="inquiry_head grid-row">
             <span class="sp_num">글번호</span>
             <span class="sp_title">제목</span>
             <span class="sp_content">내용</span>
             <span class="sp_date">작성일</span>
-            <span class="sp_ans">답변 여부</span>
+            <span class="sp_status">답변 여부</span>
+            <div class="sort-container">
+                <form method="get" action="/movielist/customer/inquiries">
+                    <select name="sort" onchange="this.form.submit()">
+                        <option value="">최신순</option>
+                        <option value="date_asc" ${param.sort == 'date_asc' ? 'selected' : ''}>오래된순</option>
+                        <option value="pending" ${param.sort == 'pending' ? 'selected' : ''}>답변 대기</option>
+                        <option value="completed" ${param.sort == 'completed' ? 'selected' : ''}>답변 완료</option>
+                    </select>
+                </form>
+            </div>
         </div>
 
-        <div class="inquiry_list">
+        <!-- 리스트 -->
+        <c:forEach var="inquiriesVO" items="${inquiry_list}" varStatus="status">
+            <div class="inquiry_item grid-row" onclick="location.href='/movielist/customer/inquiries/inquiry_detail?id=${inquiriesVO.id}'">
+                
+                <span class="item_num">${status.index + 1}</span>
+                <span class="item_title">
+                    <c:choose>
+                        <c:when test="${fn:length(inquiriesVO.title) > 15}">
+                            ${fn:substring(inquiriesVO.title, 0, 15)}...
+                        </c:when>
+                        <c:otherwise>${inquiriesVO.title}</c:otherwise>
+                    </c:choose>
+                </span>
+                <span class="item_content">
+                    <c:choose>
+                        <c:when test="${fn:length(inquiriesVO.content) > 15}">
+                            ${fn:substring(inquiriesVO.content, 0, 15)}...
+                        </c:when>
+                        <c:otherwise>${inquiriesVO.content}</c:otherwise>
+                    </c:choose>
+                </span>
+                <span class="item_date">${inquiriesVO.createdAt.toString().substring(0,10)}</span>
 
-            <c:forEach var="inquiriesVO" items="${inquiry_list}" varStatus="status">
-                <div class="inquiry_item grid-row">
-
-                    <span class="item_num">${status.index + 1}</span>
-                    <span class="item_title">${inquiriesVO.title}</span>
-
-                    <span class="item_content">
-                        <c:choose>
-                            <c:when test="${fn:length(inquiriesVO.content) > 15}">
-                                ${fn:substring(inquiriesVO.content, 0, 15)}...
-                            </c:when>
-                            <c:otherwise>
-                                ${inquiriesVO.content}
-                            </c:otherwise>
-                        </c:choose>
-                    </span>
-
-                    <span class="item_date">
-                        ${inquiriesVO.createdAt.toString().substring(0,10)}
-                    </span>
-
-                    <c:if test="${inquiriesVO.status eq 'pending'}">
-                        <span class="item_status_pen">
+                <span class="item_status">
+                    <c:choose>
+                        <c:when test="${inquiriesVO.status eq 'pending'}">
                             <img src="https://cdn-icons-png.flaticon.com/512/595/595067.png" class="status_icon">
                             답변대기
-                        </span>
-                    </c:if>
+                        </c:when>
+                        <c:otherwise>
+                            <img src="https://cdn-icons-png.flaticon.com/512/845/845646.png" class="status_icon">
+                            답변완료
+                        </c:otherwise>
+                    </c:choose>
+                </span>
 
-                    <c:if test="${inquiriesVO.status ne 'pending'}">
-                        <a href="/movielist/customer/inquiries/inquiry_detail?id=${inquiriesVO.id}" class="inq_detail">
-                            <span class="item_status_com">
-                                <img src="https://cdn-icons-png.flaticon.com/512/845/845646.png" class="status_icon">
-                                답변완료
-                            </span>
-                        </a>
-                    </c:if>
-
+                <!-- 버튼 그룹 -->
+                <div class="button-group">
+                    <span class="item_edit" onclick="event.stopPropagation(); location.href='/movielist/customer/inquiries/inquiry_update?id=${inquiriesVO.id}'">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" class="edit_icon">수정
+                    </span>
+                    <span class="item_delete" onclick="event.stopPropagation(); if(confirm('정말 삭제하시겠습니까?')) location.href='/movielist/customer/inquiries/inquiry_delete?id=${inquiriesVO.id}'">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3405/3405244.png" class="delete_icon">삭제
+                    </span>
                 </div>
-            </c:forEach>
-        </div>
+
+            </div>
+        </c:forEach>
+
     </c:otherwise>
 </c:choose>
 

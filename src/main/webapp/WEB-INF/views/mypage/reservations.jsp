@@ -256,6 +256,63 @@ body {
     opacity: 0.5;
 }
 
+.status-tag.canceled {
+    background-color: #888; /* 회색 계열 */
+}
+
+/* 취소된 항목 전체 배경색 */
+.reservation-item.canceled-item {
+    background-color: #f0f0f0; 
+    border: 1px solid #ddd;
+    opacity: 0.8;
+}
+
+/* 비활성화된 버튼 스타일 */
+.cancel-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    border-color: #aaa;
+    color: #aaa;
+    background-color: #f7f7f7 !important;
+}
+.cancel-btn:disabled:hover {
+    background-color: #f7f7f7;
+}
+
+.page-nav-btn {
+    padding: 10px 15px; 
+    margin: 0 5px;
+    cursor: pointer; 
+    border: 1px solid #ccc; 
+    background-color: white; 
+    border-radius: 4px;
+}
+.page-nav-btn:hover:not(:disabled) {
+    background-color: #f0f0f0;
+}
+
+.filter-controls {
+    margin: 15px 0;
+    text-align: center;
+}
+
+.filter-controls .filter-btn {
+    padding: 8px 15px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.filter-controls .filter-btn.active {
+    background-color: #cd0000; /* 활성화 색상 */
+    color: white;
+    border-color: #cd0000;
+    font-weight: bold;
+}
+
 </style>
 
 </head>
@@ -284,11 +341,23 @@ body {
 			<div class="reservation-summary">총 ${count}건의 예매</div>
 		</div>
 		
+		<div class="filter-controls">
+			<button class="filter-btn active" data-filter="all">전체</button>
+			<button class="filter-btn" data-filter="reserved">예매 완료</button>
+			<button class="filter-btn" data-filter="cancelled">예매 취소</button>
+		</div>
+		<hr>
+		
 		<div id="reservation-list">
 			<c:choose>
 				<c:when test="${not empty reservationList}">
 					<c:forEach var="reservation" items="${reservationList}">
-						<div class="reservation-item" data-id="${reservation.id}">
+						<%-- 취소 여부 판단 변수 설정: 'cancelled'와 비교 --%>
+						<c:set var="isCanceled" value="${reservation.status eq 'cancelled'}" />
+						
+						<div class="reservation-item ${isCanceled ? 'canceled-item' : ''}" 
+							data-id="${reservation.id}" 
+							data-status="${reservation.status}">
 
 							<div class="item-main-info">
 								<div class="movie-title-group">
@@ -302,7 +371,10 @@ body {
 										</small>
 									</div>
 								</div>
-								<span class="status-tag">예매 완료</span>
+								<%-- isCanceled 값에 따라 한글 상태 태그 출력 --%>
+								<span class="status-tag ${isCanceled ? 'canceled' : ''}" style="background-color: ${isCanceled ? '#888' : '#cd0000'};">
+									${isCanceled ? '예매 취소' : '예매 완료'}
+								</span>
 							</div>
 
 							<div class="item-detail">
@@ -344,41 +416,88 @@ body {
 								</div>
 
 							</div>
-                            <div class="cancel-box">
+                            <div class="cancel-box">
+								<%-- isCanceled 값에 따라 버튼 비활성화 및 텍스트 변경 --%>
 								<button class="cancel-btn"
-									data-reservation-id="${reservation.id}">예매 취소</button>
+									data-reservation-id="${reservation.id}"
+									${isCanceled ? 'disabled' : ''}>
+									${isCanceled ? '취소 완료' : '예매 취소'}
+								</button>
 							</div>
 						</div>
 					</c:forEach>
 				</c:when>
-				<c:otherwise>
-					<div class="no-reservations">
-						<i class="fa-solid fa-ticket fa-2x" style="margin-bottom: 10px;"></i>
-						<p>예매 내역이 없습니다.</p>
-					</div>
-				</c:otherwise>
-			</c:choose>
+				</c:choose>
 		</div>
 	</div>
 </div>
 
+<%@ include file="/WEB-INF/views/common/footer.jsp"%>
+
 	   
 	<script>
-    // jQuery 사용 방지 설정 (기존 코드 유지)
-    const j = jQuery.noConflict(); 
+    // jQuery 사용 방지 설정
+    const j = jQuery.noConflict();  
     
     // --- 페이지네이션 변수 설정 ---
-    const items = document.querySelectorAll('.reservation-item');
-    const totalItems = items.length;
-    let currentPage = 1;
-    const itemsPerPage = 1; // 🚩 한 페이지에 1개의 예매 내역만 표시
-    
-    // --- HTML 요소 추가 ---
     const container = document.getElementById('reservation-list');
+    let items; // 현재 표시되는 예매 항목
+    let totalItems;
+    let currentPage = 1;
+    const itemsPerPage = 1; // 한 페이지에 1개의 예매 내역만 표시
+    const pageBlockSize = 5; // 한 번에 보여줄 페이지 번호 개수 (예: 1 2 3 4 5)
+
+    // ==========================================================
+    // 1. 예매 내역 정렬 함수 (취소된 항목을 뒤로)
+    // ==========================================================
+    function sortReservations() {
+    const listContainer = document.getElementById('reservation-list');
+    const allItems = document.querySelectorAll('.reservation-item');
+    const currentItems = Array.from(allItems);
+
+    currentItems.sort((a, b) => {
+        // 1. 예매일 문자열 추출
+        // a.querySelector('small').textContent는 "예매일: 2025-12-04 12:00" 형태의 문자열을 반환합니다.
+        const dateStringA = a.querySelector('small').textContent.replace('예매일: ', '').trim();
+        const dateStringB = b.querySelector('small').textContent.replace('예매일: ', '').trim();
+
+        // 2. Date 객체로 변환 (정확한 비교를 위해)
+        // YYYY-MM-DD HH:MM 형식은 ISO 포맷처럼 인식되므로 new Date() 사용 가능
+        const dateA = new Date(dateStringA);
+        const dateB = new Date(dateStringB);
+        
+        // 3. 내림차순 정렬 (최신 예매일이 앞으로)
+        return dateB.getTime() - dateA.getTime();
+    });
+
+    // 정렬된 순서대로 DOM에 다시 삽입하여 순서만 변경합니다.
+    currentItems.forEach(item => {
+        listContainer.appendChild(item);
+    });
     
-    // 페이지네이션 컨트롤러를 생성하는 함수
+    // 정렬 후, 현재 활성화된 필터 값을 기준으로 목록을 업데이트합니다.
+    const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+    filterReservations(activeFilter);
+}
+    
+    // ==========================================================
+    // 2. 페이지네이션 초기화 및 표시 함수
+    // ==========================================================
+    function initializePagination() {
+        totalItems = items.length;
+        currentPage = 1; 
+        
+        if (totalItems > 0) {
+            displayPage(currentPage);
+        } else {
+             // 항목이 0개일 경우 페이지네이션 컨트롤 삭제
+             const existingControls = document.getElementById('pagination-controls');
+             if (existingControls) existingControls.remove();
+        }
+    }
+
+    // 3. 페이지네이션 컨트롤러 생성 함수 (페이지 번호 목록)
     function createPaginationControls() {
-        // 이미 컨트롤이 있으면 제거
         const existingControls = document.getElementById('pagination-controls');
         if (existingControls) {
             existingControls.remove();
@@ -386,50 +505,73 @@ body {
 
         const totalPages = Math.ceil(totalItems / itemsPerPage);
         
-        // 총 항목 수가 1개 이하일 경우 컨트롤 표시 안 함
         if (totalPages <= 1) return; 
 
         const controls = document.createElement('div');
         controls.id = 'pagination-controls';
         controls.style.cssText = 'text-align: center; margin-top: 20px;';
 
-        // 이전 버튼
-        const prevBtn = document.createElement('button');
-        prevBtn.textContent = '이전';
-        prevBtn.style.cssText = 'padding: 10px 15px; margin-right: 10px; cursor: pointer; border: 1px solid #ccc; background-color: white; border-radius: 4px;';
-        prevBtn.disabled = (currentPage === 1);
-        prevBtn.onclick = () => {
-            if (currentPage > 1) {
-                currentPage--;
+        const currentBlock = Math.ceil(currentPage / pageBlockSize);
+        const startPage = (currentBlock - 1) * pageBlockSize + 1;
+        let endPage = startPage + pageBlockSize - 1;
+        
+        if (endPage > totalPages) {
+            endPage = totalPages;
+        }
+
+        // [이전] 버튼
+        if (startPage > 1) {
+            const prevBlockBtn = document.createElement('button');
+            prevBlockBtn.textContent = '이전';
+            prevBlockBtn.className = 'page-nav-btn';
+            prevBlockBtn.style.cssText = 'padding: 10px 15px; margin-right: 10px; cursor: pointer; border: 1px solid #ccc; background-color: white; border-radius: 4px;';
+            prevBlockBtn.onclick = () => {
+                currentPage = startPage - 1; 
                 displayPage(currentPage);
+            };
+            controls.appendChild(prevBlockBtn);
+        }
+
+        // 페이지 번호 링크
+        for (let i = startPage; i <= endPage; i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.textContent = i;
+            pageBtn.className = 'page-num-btn';
+            pageBtn.style.cssText = 'margin: 0 5px; padding: 5px 10px; cursor: pointer; border: 1px solid #ccc; background-color: white; border-radius: 4px;';
+            
+            if (i === currentPage) {
+                pageBtn.style.cssText = 'margin: 0 5px; padding: 5px 10px; border: 1px solid #cd0000; background-color: #cd0000; color: white; border-radius: 4px; font-weight: bold; cursor: default;';
+                pageBtn.disabled = true;
             }
-        };
-        controls.appendChild(prevBtn);
 
-        // 페이지 번호 표시
-        const pageInfo = document.createElement('span');
-        pageInfo.textContent = `${currentPage} / ${totalPages}`;
-        pageInfo.style.cssText = 'font-weight: bold; font-size: 16px; color: #cd0000;';
-        controls.appendChild(pageInfo);
+            pageBtn.onclick = (function(pageNumber) {
+                return function() {
+                    currentPage = pageNumber;
+                    displayPage(currentPage);
+                };
+            })(i);
+            
+            controls.appendChild(pageBtn);
+        }
 
-        // 다음 버튼
-        const nextBtn = document.createElement('button');
-        nextBtn.textContent = '다음';
-        nextBtn.style.cssText = 'padding: 10px 15px; margin-left: 10px; cursor: pointer; border: 1px solid #ccc; background-color: white; border-radius: 4px;';
-        nextBtn.disabled = (currentPage === totalPages);
-        nextBtn.onclick = () => {
-            if (currentPage < totalPages) {
-                currentPage++;
+        // [다음] 버튼
+        if (endPage < totalPages) {
+            const nextBlockBtn = document.createElement('button');
+            nextBlockBtn.textContent = '다음';
+            nextBlockBtn.className = 'page-nav-btn';
+            nextBlockBtn.style.cssText = 'padding: 10px 15px; margin-left: 10px; cursor: pointer; border: 1px solid #ccc; background-color: white; border-radius: 4px;';
+
+            nextBlockBtn.onclick = () => {
+                currentPage = endPage + 1; 
                 displayPage(currentPage);
-            }
-        };
-        controls.appendChild(nextBtn);
-
-        // 컨트롤을 목록 컨테이너 뒤에 추가
+            };
+            controls.appendChild(nextBlockBtn);
+        }
+        
         container.parentNode.insertBefore(controls, container.nextSibling);
     }
 
-    // 특정 페이지의 항목만 표시하는 함수
+    // 4. 특정 페이지의 항목만 표시하는 함수
     function displayPage(page) {
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
@@ -442,26 +584,131 @@ body {
             }
         });
         
-        // 페이지 정보 및 버튼 상태 업데이트
         createPaginationControls(); 
     }
     
-    // 초기 로드 시 1페이지 표시
-    if (totalItems > 0) {
-        displayPage(currentPage);
-    }
-    
-    // --- 취소 버튼 이벤트 리스너 (기존 기능 유지) ---
-    document.querySelectorAll('.cancel-btn').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const reservationId = e.target.dataset.reservationId;
-            const item = e.target.closest('.reservation-item');
-            const title = item.querySelector('h2').textContent;
-            
-            if (confirm(`'${title}' 예매를 정말로 취소하시겠습니까?`)) {
-                // 실제 구현: 서버로 취소 요청 (AJAX 또는 폼 제출)
-                alert("취소 요청이 접수되었습니다. (실제 기능은 서버에서 처리됩니다.)");
+    // ==========================================================
+    // 5. 🟢 [수정] 필터링 함수 (DOM 조작 대신 display 토글 사용)
+    // ==========================================================
+    function filterReservations(filterStatus) {
+        // DOM에 있는 모든 예매 항목을 가져옵니다.
+        const allItemsInDOM = document.querySelectorAll('.reservation-item');
+        const listContainer = document.getElementById('reservation-list');
+        
+        // 이전에 추가된 'no-reservations' 메시지가 있다면 제거
+        const existingNoReservations = listContainer.querySelector('.no-reservations');
+        if (existingNoReservations) {
+            existingNoReservations.remove();
+        }
+        
+        const filteredItems = [];
+
+        // 1. 모든 항목을 순회하며 display 스타일 토글
+        allItemsInDOM.forEach(item => {
+            const itemStatus = item.dataset.status;
+            let shouldShow = false;
+
+            if (filterStatus === 'all') {
+                shouldShow = true;
+            } else if (filterStatus === itemStatus) {
+                shouldShow = true;
             }
+
+            if (shouldShow) {
+                item.style.display = 'block';
+                filteredItems.push(item);
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        // 2. 항목이 0개일 때 처리
+        if (filteredItems.length === 0) {
+            const noReservationsDiv = document.createElement('div');
+            noReservationsDiv.className = 'no-reservations';
+            noReservationsDiv.innerHTML = `
+                <i class="fa-solid fa-ticket fa-2x" style="margin-bottom: 10px;"></i>
+                <p>예매 내역이 없습니다.</p>
+            `;
+            listContainer.appendChild(noReservationsDiv);
+        }
+        
+        // 3. 페이지네이션 재실행
+        items = filteredItems;
+        initializePagination();
+    }
+
+    // ==========================================================
+    // 6. DOMContentLoaded (이벤트 핸들러)
+    // ==========================================================
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. 초기 로드 시 정렬 및 '전체' 필터 적용
+        // sortReservations 내부에서 filterReservations('all')을 호출함
+        sortReservations(); 
+
+        // 필터링 버튼 이벤트 리스너 설정
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const buttonElement = e.target;
+                const filterValue = buttonElement.dataset.filter;
+                
+                // 버튼 active 클래스 업데이트
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                buttonElement.classList.add('active');
+                
+                // 필터링 실행
+                filterReservations(filterValue);
+            });
+        });
+
+        // 취소 버튼 이벤트 리스너 설정
+        document.querySelectorAll('.cancel-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const buttonElement = e.target;
+                const reservationId = buttonElement.dataset.reservationId;
+                
+                if (buttonElement.disabled) return;
+
+                if (confirm(`예매를 취소하시겠습니까?`)) {
+                    j.ajax({
+                        url: '<c:url value="/mypage/reservations/cancel" />',
+                        type: 'POST',
+                        data: { reservationId: reservationId },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.isSuccess) {
+                                alert(response.message);
+                                
+                                const item = buttonElement.closest('.reservation-item');
+                                
+                                // 데이터 상태를 'cancelled'로 변경
+                                item.dataset.status = 'cancelled'; 
+                                item.classList.add('canceled-item');
+                                
+                                // 상태 태그 및 버튼 업데이트
+                                const statusTag = item.querySelector('.status-tag');
+                                if (statusTag) {
+                                    statusTag.textContent = '예매 취소'; 
+                                    statusTag.style.backgroundColor = '#888';
+                                    statusTag.classList.add('canceled');
+                                }
+                                
+                                buttonElement.textContent = '취소 완료';
+                                buttonElement.disabled = true;
+                                
+                                // 취소 후 정렬 및 현재 필터 다시 적용
+                                sortReservations(); 
+
+                            } else {
+                                alert('취소 실패: ' + response.message);
+                            }
+                        },
+                        error: function() {
+                            alert('서버 통신 오류가 발생했습니다.');
+                        }
+                    });
+                }
+            });
         });
     });
 </script>

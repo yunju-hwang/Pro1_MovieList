@@ -3,6 +3,7 @@ package com.itwillbs.service;
 import java.util.HashMap;
 
 
+
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,11 @@ public class MypageService {
 	public MemberVO getMember(String user_id) {
 		return mypageMapper.getMember(user_id);
 	}
+	
+	public MemberVO selectKakaoUserByUserId(String userId) {
+        // 💡 [추가] Mapper의 메서드를 호출하고 결과를 Controller로 반환
+        return mypageMapper.selectKakaoUserByUserId(userId);
+    }
 	
 	public int updateMember(MemberVO member) {
         return mypageMapper.updateMember(member);
@@ -133,6 +139,19 @@ public class MypageService {
 	        // Mapper의 getReservationDetail 쿼리를 호출합니다.
 	        return mypageMapper.getReservationDetail(reservationId);
 	    }
+		
+		@Transactional
+		public int updateReservationStatusToCanceled(int reservationId, String userId) {
+		    // Map에 필요한 인자를 담아서 Mapper로 전달합니다.
+		    Map<String, Object> params = new HashMap<>();
+		    params.put("reservationId", reservationId);
+		    params.put("userId", userId);
+		    
+		    // 🚨 [수정] DB의 실제 상태 값인 'cancelled' (소문자로 가정) 사용
+		    params.put("status", "cancelled"); 
+
+		    return mypageMapper.updateReservationStatus(params); 
+		}
 	
 	
 	

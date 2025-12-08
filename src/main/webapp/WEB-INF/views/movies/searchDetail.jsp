@@ -67,8 +67,8 @@
         <h2>추천 영화</h2>
         <div class="recommend-list">
             <c:forEach var="rec" items="${recommendations}">
-                <div class="recommend-card">
-                    <a href="${pageContext.request.contextPath}/movies/search/detail/${rec.id}">
+                <div class="rec-card">
+                    <a href="${pageContext.request.contextPath}/movies/search/detail/${rec.id}" class="rec-card-link">
                         <img src="https://image.tmdb.org/t/p/w200${rec.poster_path}" alt="${rec.title}" />
                         <p>${rec.title}</p>
                     </a>

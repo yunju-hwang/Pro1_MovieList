@@ -1,5 +1,6 @@
 package com.itwillbs.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,13 +52,19 @@ public class MovieController {
 	// json으로 제공 (javaScript 파일)
     @GetMapping("/movies/list")
     @ResponseBody
-    public List<MovieVO> movieList(@RequestParam(value = "sort", defaultValue = "latest") String sort, HttpSession session) {
+    public Map<String, Object> movieList(
+    		@RequestParam(value = "sort", defaultValue = "latest") String sort,
+    		@RequestParam(value="page", defaultValue = "1") int page,
+    		@RequestParam(value="size", defaultValue="20") int size,
+    		HttpSession session) {
+    	
     	String userId = null;
     	if (session.getAttribute("loginUser") != null) {
             MemberVO user = (MemberVO) session.getAttribute("loginUser");
             userId = user.getUser_id();
         }
     	
+    	int offset = (page -1) * size;
     	
     	// 정렬 + userId 기준으로 영화 조회
     	List<MovieVO> movies;
@@ -66,30 +73,42 @@ public class MovieController {
         switch (sort) {
         	//인기순 
             case "popularity":
-                movies = movieService.getMovieListOrderByPopularity(userId);
+                movies = movieService.getMovieListOrderByPopularity(userId, offset, size);
                 break;
             //최신순
             case "latest":
             default:
-                movies = movieService.getMovieListOrderByReleaseDate(userId);
+                movies = movieService.getMovieListOrderByReleaseDate(userId, offset, size);
                 break;
         }
 
-        return movies;
+        int totalCount = movieService.getTotalMovieCount();
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("movies", movies);
+        response.put("totalCount", totalCount);
+        response.put("currentPage", page);
+        response.put("pageSize", size);
+        
+        
+        return response;
     }
     
     
     // 영화 상세 페이지 이동 (jsp)
     @GetMapping("/movies/detailPage")
-    public String movieDetailPage() {
+    public String movieDetailPage(@RequestParam("tmdbId") int tmdbId, Model model) {
     	System.out.println("message");
+		
+		List<Map<String, Object>> recommendations = movieService.getRecommendations(tmdbId);
+		model.addAttribute("recommendations", recommendations);
         return "movies/detail";  // detail.jsp
     }
 
 	// 영화 상세 페이지 값 반환 (json) -> DB 이용
 	@GetMapping("/movies/detail")
 	@ResponseBody
-	public ResponseEntity<MovieVO> getmovieDetail(@RequestParam("tmdbId") int tmdbId, HttpSession session) {
+	public ResponseEntity<MovieVO> getmovieDetail(@RequestParam("tmdbId") int tmdbId, HttpSession session, Model model) {
 		
 		MemberVO memberVO = (MemberVO)session.getAttribute("loginUser");
 		String userId = (memberVO != null) ? memberVO.getUser_id():null;
@@ -103,6 +122,8 @@ public class MovieController {
 		}else {
 			movieVO.setFavorite(false);
 		}
+
+
 		
 		return ResponseEntity.ok(movieVO);
 	}
@@ -214,25 +235,61 @@ public class MovieController {
         return ResponseEntity.ok(movieList);
     }
     
+    
+    
+    
+    // tmdbId 받아서 DB에 영화 저장
+    @PostMapping("/movies/add/tmdb/{tmdbId}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> addMovieByTmdbId(@PathVariable int tmdbId) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            // tmdb API에서 상세 정보 가져오기
+            Map<String, Object> movieDetail = movieService.getSearchMovieDetail(tmdbId);
+            System.out.println(movieDetail);
+
+            // Map -> MovieVO 변환
+            MovieVO movieVO = movieService.convertMapToMovieVO(movieDetail);
+
+            // DB 저장
+            movieService.insertMovie(movieVO);
+
+            result.put("success", true);
+            result.put("message", movieVO.getTitle() + " 영화가 추가되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("success", false);
+            result.put("message", "영화 추가 실패");
+        }
+        return ResponseEntity.ok(result);
+    }
+
+
 
     
 	// 영화 예약하기 창 이동
 	@GetMapping("/reservation/info")
 	public String resInfo(@RequestParam("tmdbId")String tmdbId,@RequestParam("title")String title, Model model, HttpSession session) {
 		List<TheatersVO> theaters = movieService.getAllTheaters();
-		System.out.println(theaters);
+		
 		
 		// 지역 중복 제거
 		List<String> locationsList = theaters.stream()
 				.map(TheatersVO::getLocation)
 				.distinct()
 				.collect(Collectors.toList());
-		System.out.println(theaters);
 		
 		
+		MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
+		List<Long> userTheaterIds = new ArrayList<>();
+		if(loginUser != null) {
+			userTheaterIds = movieService.getUserTheatersIds(loginUser.getUser_id());
+		}
 		
-		model.addAttribute("theaters", theaters);
-		model.addAttribute("locationsList", locationsList);
+		System.out.println(userTheaterIds);
+		model.addAttribute("theaters", theaters); // 모든 영화관 
+		model.addAttribute("locationsList", locationsList); // 지역
+		model.addAttribute("userTheaterIds", userTheaterIds); // 선호 영화관 id
 		model.addAttribute("tmdbId", tmdbId);
 		model.addAttribute("title", title);
 		
@@ -279,9 +336,7 @@ public class MovieController {
 	
 	
 	
-	
-	
-	
+
 	
 	
 	

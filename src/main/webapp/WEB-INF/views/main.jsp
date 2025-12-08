@@ -47,6 +47,7 @@
 
 
 
+<div id="pagination" class="pagination"></div>
 
 
 <!-- JS 변수 선언 후 외부 JS 호출 -->

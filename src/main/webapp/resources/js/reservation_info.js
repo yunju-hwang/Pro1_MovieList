@@ -9,11 +9,63 @@ document.addEventListener("DOMContentLoaded", () => {
     const summaryDate = document.getElementById("summaryDate");
     const summaryTime = document.getElementById("summaryTime");
     
+    const modal = document.getElementById("favTheaterModal");
+    const openBtn = document.getElementById("openFavModal");
+    const closeBtn = document.getElementById("closeModal");
+    const favContainer = document.getElementById("favTheaterContainer");
+    
+    
+    
     // 다음 버튼
     const nextButton = document.querySelector(".btn-submit");
 
     // 초기: 모든 영화관 숨김
     theaters.forEach(t => t.style.display = "none");
+    
+    
+    if (openBtn) {
+        openBtn.addEventListener("click", () => {
+            // 기존 내용 초기화
+            favContainer.innerHTML = "";
+
+            // preferred 영화관만 모으기
+            const preferredList = document.querySelectorAll(".theater-card.preferred");
+
+            if (preferredList.length === 0) {
+                favContainer.textContent = "선호 영화관이 없습니다.";
+            } else {
+                preferredList.forEach(t => {
+                    const div = document.createElement("div");
+                    div.className = "fav-theater-item";
+                    div.textContent = t.textContent;
+                    div.dataset.id = t.dataset.id;
+                    div.dataset.location = t.dataset.location;
+
+                    // 클릭 시 실제 theater-card 클릭 동작 트리거
+                    div.addEventListener("click", () => {
+                        t.click();
+                        modal.style.display = "none";
+                    });
+
+                    favContainer.appendChild(div);
+                });
+            }
+
+            modal.style.display = "block";
+        });
+    }
+
+    if (closeBtn) {
+        closeBtn.addEventListener("click", () => modal.style.display = "none");
+    }
+
+    // 모달 외부 클릭 시 닫기
+    window.addEventListener("click", e => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+    
 
     // 지역 선택 시 해당 영화관 표시
     regions.forEach(region => {

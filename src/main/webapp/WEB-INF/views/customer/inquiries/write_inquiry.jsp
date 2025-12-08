@@ -7,57 +7,42 @@
 <meta charset="UTF-8">
 <title>고객센터/문의 작성하기</title>
 <link rel="stylesheet" href="<c:url value='/resources/css/write_inquiry.css?after'/>">
-<script>
-function changePlaceholder(value) {
-  const select = document.getElementById('selectBox');
-  const input = document.getElementById('textInput');
-  const selectedOption = select.options[select.selectedIndex];
-  const newPlaceholder = selectedOption.getAttribute('data-placeholder');
-  input.placeholder = newPlaceholder || '예매/결제';
-  // 입력 가능 여부 조정
-  if (value === "4") {
-    input.removeAttribute('readonly');
-    input.classList.add('editable');
-    input.focus();
-  } else {
-    input.setAttribute('readonly', true);
-    input.classList.remove('editable');
-    input.value = "";
-  }
-}
-</script>
 </head>
 <body>
 	<h1 class="title">1:1 문의</h1>
 	<h4 class="title1">궁금한 사항을 남겨주시면 빠르게 답변 드리겠습니다</h4>
-	<form action="${pageContext.request.contextPath }/customer/write_inquiry_pro" method="post">
-	<div class="container">
-<!-- 		<p class="unity">문의 유형 *</p> -->
-<!-- <div class="input-dropdown"> -->
-<!--   <input type="text" id="textInput" placeholder="예매/결제" readonly> -->
-<!--   <select id="selectBox" onchange="changePlaceholder(this.value)"> -->
-<!--     <option value="">예매/결제</option> -->
-<!--     <option value="1" data-placeholder="회원정보">회원정보</option> -->
-<!--     <option value="2" data-placeholder="영화정보">영화정보</option> -->
-<!--     <option value="3" data-placeholder="기술지원">기술지원</option> -->
-<!--     <option value="4" data-placeholder="직접입력">직접입력</option> -->
-<!--   </select> -->
-<!-- </div> -->
-	<p class="unity">문의 제목 *</p>
-	<div class="text-con">
-	<input type="text" placeholder="문의 제목을 입력하세요" class="text" required name="title">
+<form action="<c:choose>
+                <c:when test='${mode == "update"}'>
+                    ${pageContext.request.contextPath}/customer/inquiry_update_pro
+                </c:when>
+                <c:otherwise>
+                    ${pageContext.request.contextPath}/customer/write_inquiry_pro
+                </c:otherwise>
+              </c:choose>"
+      method="post">
+
+<!-- 수정 시 id hidden 전달 -->
+<c:if test="${mode == 'update'}">
+    <input type="hidden" name="id" value="${inq.id}">
+</c:if>
+
+<p class="unity">문의 제목 *</p>
+<div class="text-con">
+    <input type="text"
+           placeholder="문의 제목을 입력하세요"
+           class="text"
+           required
+           name="title"
+           value="${inq.title}">
 </div>
 
-<!-- <p class="unity">이메일 주소 *</p> -->
-<!-- <div class="text-con"> -->
-<!-- <input type="email" placeholder="답변 받으실 이메일 주소를 입력하세요" class="text" required> -->
-<!-- </div> -->
-<!-- <p class="under">답변은 입력하신 이메일및 마이페이지에서 확인 가능합니다</p> -->
-
 <p class="unity">문의 내용 *</p>
-
 <div class="text-con">
-	<textarea cols="40" rows="10" placeholder="문의 내용을 입력하세요" class="text" required name="content"></textarea>
+    <textarea cols="40" rows="10"
+              placeholder="문의 내용을 입력하세요"
+              class="text"
+              required
+              name="content">${inq.content}</textarea>
 </div>
 
 <p class="under">최소 10자 이상 작성해주세요</p>
@@ -72,11 +57,21 @@ function changePlaceholder(value) {
 </div>
 
 <div class="btn-form">
-  <input type="submit" value="취소하기" class="no-sub" onclick="location.href='/movielist/customer/inquiries';">
-  <input type="submit" value="문의하기" class="sub">
+    <input type="button" value="취소하기" class="no-sub"
+           onclick="location.href='/movielist/customer/inquiries';">
+
+    <c:choose>
+        <c:when test="${mode == 'update'}">
+            <input type="submit" value="수정하기" class="sub">
+        </c:when>
+        <c:otherwise>
+            <input type="submit" value="문의하기" class="sub">
+        </c:otherwise>
+    </c:choose>
 </div>
-	</div>
+
 </form>
+
 
 
 	<div class="faq-con">
@@ -86,3 +81,4 @@ function changePlaceholder(value) {
 
 </body>
 </html>
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>

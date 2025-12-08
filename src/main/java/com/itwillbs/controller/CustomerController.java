@@ -32,14 +32,18 @@ public class CustomerController {
 
 	// 고객센터 공지사항
 	@GetMapping("/customer/notices")
-	public String notices(Model model) {
+	public String notices(Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
 
-	    // ✔ DB에서 받아온 리스트
-	    List<NoticesVO> list = customerService.notices();
+	    int pageSize = 5;
+	    int offset = (page - 1) * pageSize;
 
+	    // ✔ 원본 NoticeVO 리스트 가져오기
+	    List<NoticesVO> list = customerService.getNoticesPaged(offset, pageSize);
+
+	    // ✔ 날짜 포맷터
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-	    // ✔ 출력용 리스트
+	    // ✔ JSP에서 쓰기 쉽게 가공한 리스트
 	    List<Map<String, Object>> displayList = new ArrayList<>();
 
 	    for (NoticesVO vo : list) {
@@ -48,13 +52,21 @@ public class CustomerController {
 	        map.put("title", vo.getTitle());
 	        map.put("content", vo.getContent());
 
-	        // ★ createdAt 날짜를 yyyy-MM-dd 로 변환
-	        map.put("createdAt", vo.getCreatedAt().format(formatter));
+	        // 날짜 변환
+	        map.put("createdAt", vo.getCreatedAt() != null
+	                ? vo.getCreatedAt().format(formatter)
+	                : "-");
 
 	        displayList.add(map);
 	    }
 
+	    // ✔ 전체 공지 개수
+	    int totalCount = customerService.getNoticesCount();
+	    int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+
 	    model.addAttribute("list", displayList);
+	    model.addAttribute("currentPage", page);
+	    model.addAttribute("totalPages", totalPages);
 
 	    return "/customer/notices";
 	}
@@ -82,10 +94,18 @@ public class CustomerController {
 	
 
 	@GetMapping("/customer/faqs")
-	public String faqs(Model model, HttpSession session) {
-	    List<FaqsVO> list = customerService.faqs();
+	public String faqs(Model model,
+	                   @RequestParam(value = "page", defaultValue = "1") int page,
+	                   HttpSession session) {
 
-	    String userId = (String) session.getAttribute("user_id");
+	    int pageSize = 5;
+	    int offset = (page - 1) * pageSize;
+
+	    List<FaqsVO> list = customerService.getFaqsPaged(offset, pageSize);
+
+	    int totalCount = customerService.getFaqsCount();
+	    int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	    List<Map<String, Object>> displayList = new ArrayList<>();
 
@@ -94,76 +114,149 @@ public class CustomerController {
 	        map.put("id", vo.getId());
 	        map.put("question", vo.getQuestion());
 	        map.put("answer", vo.getAnswer());
-	        map.put("createdAt", vo.getCreatedAt().format(formatter));
 	        map.put("category", vo.getCategory());
+	        map.put("createdAt", vo.getCreatedAt() != null ? vo.getCreatedAt().format(formatter) : "-");
+
 	        displayList.add(map);
 	    }
 
 	    model.addAttribute("list", displayList);
+	    model.addAttribute("currentPage", page);
+	    model.addAttribute("totalPages", totalPages);
+
+	    // ✅ 로그인 여부 JSP로 전달
+	    Object userId = session.getAttribute("userId");
+	    model.addAttribute("isLogin", userId != null);
+
 	    return "/customer/faqs";
 	}
 
 
 
-	// 고객센터 1:1 문의
+
 	@GetMapping("/customer/inquiries")
-	public String inquiries(HttpSession session, Model model) {
-		String userId = (String)session.getAttribute("user_id");
-		List<InquiriesVO> inquiry_list = customerService.inquiries(userId);
+    public String inquiries(HttpSession session, Model model,
+                            @RequestParam(value="sort", required=false) String sort) {
+        String userId = (String) session.getAttribute("user_id");
+        if(userId == null) return "redirect:/member/login";
 
-		int count = customerService.inquiry_count(userId);
+        List<InquiriesVO> inquiry_list = customerService.inquiries(userId);
 
-		model.addAttribute("inquiry_list", inquiry_list);
-		System.out.println(inquiry_list);
-		model.addAttribute("count", count);
+        // 정렬 처리
+        if(sort != null) {
+            switch(sort) {
+                case "date_desc":
+                    inquiry_list.sort((a,b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
+                    break;
+                case "date_asc":
+                    inquiry_list.sort((a,b) -> a.getCreatedAt().compareTo(b.getCreatedAt()));
+                    break;
+                case "pending":
+                    // "답변대기" 먼저, "답변완료" 나중
+                    inquiry_list.sort((a,b) -> getStatusPriority(a.getStatus()) - getStatusPriority(b.getStatus()));
+                    break;
+                case "completed":
+                    // "답변완료" 먼저, "답변대기" 나중
+                    inquiry_list.sort((a,b) -> getStatusPriority(b.getStatus()) - getStatusPriority(a.getStatus()));
+                    break;
+            }
+            
+        }
 
-		return "/customer/inquiries/inquiries";
-	}
+        
+        int count = customerService.inquiry_count(userId);
+        model.addAttribute("inquiry_list", inquiry_list);
+        model.addAttribute("count", count);
 
-	@GetMapping("/customer/inquiry_update")
-	public String inquiry_update(Model model, HttpServletRequest request) {
-		int id = Integer.parseInt(request.getParameter("id"));
-		InquiriesVO inquiriesVO = customerService.inquiry_update(id);
-
-
-		return "customer/write_inquiry";
-	}
-
-	@GetMapping("/customer/inquiry_delete")
-	public String inquiry_delete(@RequestParam("id") int id) {
-
-	    customerService.inquiry_delete(id);   // 서비스 호출
-
-	    return "redirect:/customer/inquiries";  // 삭제 후 목록으로 이동
-	}
+        return "/customer/inquiries/inquiries";
+    }
+	
+	// pending = 0, completed = 1
+		private int getStatusPriority(String status) {
+		    if("pending".equals(status)) return 0;
+		    else return 1; // completed 또는 그 외
+		}
 
 
+	// 문의 작성 페이지
 	@GetMapping("/customer/write_inquiry")
-	public String write_inquiry() {
-
-	    return "/customer/inquiries/write_inquiry"; 
+	public String write_inquiry(Model model) {
+	    model.addAttribute("mode", "write");
+	    model.addAttribute("inq", new InquiriesVO());
+	    return "customer/inquiries/write_inquiry"; // ✔ 수정됨
 	}
 	
-
-
-
+	// 문의 작성 처리
 	@PostMapping("/customer/write_inquiry_pro")
-	public String write_inquiry_pro(InquiriesVO inquiriesVO, HttpSession session) {
-		inquiriesVO.setUserId((String)session.getAttribute("user_id"));
+	public String write_inquiry_pro(InquiriesVO inq, HttpSession session) {
 
-		System.out.println("inquiriesVO = " + inquiriesVO);
-		customerService.insertinquiry(inquiriesVO);
+	    String userId = (String) session.getAttribute("user_id");
 
+	    if (userId == null) {
+	        return "redirect:/member/login";
+	    }
 
-		return "redirect:/customer/inquiries";
+	    inq.setUserId(userId);
+	    customerService.insertinquiry(inq);
+
+	    return "redirect:/customer/inquiries";
 	}
+
+
+	// 문의 수정 페이지 (작성 폼 재사용)
+	@GetMapping("/customer/inquiry_update")
+	public String inquiry_update(@RequestParam("id") int id, Model model, HttpSession session) {
+
+	    String userId = (String) session.getAttribute("user_id");
+	    if (userId == null) return "redirect:/member/login";
+
+	    InquiriesVO vo = customerService.inquiry_detail(id);
+
+	    if (vo == null || !vo.getUserId().equals(userId)) {
+	        model.addAttribute("msg", "수정 권한이 없습니다.");
+	        model.addAttribute("url", "/customer/inquiries");
+	        return "/error/redirect";
+	    }
+
+	    model.addAttribute("mode", "update");
+	    model.addAttribute("inq", vo);
+	    return "customer/inquiries/write_inquiry"; // ✔ 수정됨
+	}
+
+
+
+	// 문의 수정 처리
+	@PostMapping("/customer/inquiry_update_pro")
+	public String inquiry_update_pro(InquiriesVO inq, HttpSession session) {
+
+	    String userId = (String) session.getAttribute("user_id");
+	    if (userId == null) return "redirect:/member/login";
+
+	    inq.setUserId(userId);
+	    customerService.updateInquiry(inq);
+
+	    return "redirect:/customer/inquiries";
+	}
+
+
+	// 문의 삭제 처리
+	@GetMapping("/customer/inquiry_delete")
+	public String inquiry_delete(@RequestParam("id") int id, HttpSession session) {
+
+	    String userId = (String) session.getAttribute("user_id");
+	    if (userId == null) return "redirect:/member/login";
+
+	    customerService.deleteInquiry(id, userId);
+
+	    return "redirect:/customer/inquiries";
+	}
+	
 
 	@GetMapping("/customer/inquiries/inquiry_detail")
 	public String inquiry_detail(@RequestParam("id") int id, Model model,HttpSession session) {
 
 	    // 1. 로그인 체크
 	    String userId = (String) session.getAttribute("user_id");
-	    System.out.println(userId);
 	    if (userId == null) {
 	        // 로그인 안 되었으면 로그인 페이지로 리다이렉트
 	        return "redirect:/member/login";
@@ -200,64 +293,179 @@ public class CustomerController {
 	    return "customer/inquiries/inquiry_detail";
 	}
 
-    @GetMapping("/customer/movie_request")
-    public String movie_request(HttpSession session, Model model) {
+	@GetMapping("/customer/movie_request")
+	public String movie_request(HttpSession session, Model model,
+	                            @RequestParam(value="sort", required=false) String sort) {
+	    String userId = (String) session.getAttribute("user_id");
+	    if(userId == null) return "redirect:/member/login";
+
+	    List<MovieRequestVO> list = customerService.movie_request(userId);
+
+	    // 정렬 처리
+	    if(sort != null) {
+	        switch(sort) {
+	            case "date_desc":
+	                list.sort((a,b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
+	                break;
+	            case "date_asc":
+	                list.sort((a,b) -> a.getCreatedAt().compareTo(b.getCreatedAt()));
+	                break;
+	            case "pending":
+	                list.sort((a,b) -> getStatusPriority(a.getStatus()) - getStatusPriority(b.getStatus()));
+	                break;
+	            case "completed":
+	                list.sort((a,b) -> getStatusPriority(b.getStatus()) - getStatusPriority(a.getStatus()));
+	                break;
+	        }
+	    }
+
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+	    List<Map<String,Object>> displayList = new ArrayList<>();
+	    for(MovieRequestVO vo : list) {
+	        Map<String,Object> map = new HashMap<>();
+	        map.put("id", vo.getId());
+	        map.put("title", vo.getTitle());
+	        map.put("content", vo.getContent());
+	        map.put("status", vo.getStatus());
+	        map.put("createdAt", vo.getCreatedAt() != null ? vo.getCreatedAt().format(formatter) : "-");
+	        displayList.add(map);
+	    }
+
+	    model.addAttribute("movie_request_list", displayList);
+	    model.addAttribute("count", list.size());
+
+	    return "/customer/movie_request/movie_request";
+	}
+
+	
+
+
+
+    @GetMapping("/customer/write_movie_request")
+    public String writeMovieRequest(@RequestParam(value = "id", required = false) Integer id,
+                                    HttpSession session,
+                                    Model model) {
+
         String userId = (String) session.getAttribute("user_id");
+        if (userId == null) return "redirect:/member/login";
 
-        // DB에서 VO 리스트 가져오기
-        List<MovieRequestVO> list = customerService.movie_request(userId);
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        // 출력용 Map 리스트 생성
-        List<Map<String, Object>> displayList = new ArrayList<>();
-
-        for (MovieRequestVO vo : list) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("id", vo.getId());
-            map.put("title", vo.getTitle());
-            map.put("content", vo.getContent());
-            map.put("status", vo.getStatus());
-
-            // createdAt 날짜를 yyyy-MM-dd로 변환
-            map.put("createdAt", vo.getCreatedAt() != null ? vo.getCreatedAt().format(formatter) : "-");
-
-            displayList.add(map);
+        // id가 없으면 작성 모드
+        if (id == null) {
+            model.addAttribute("mode", "write");
+            model.addAttribute("movieRequest", new MovieRequestVO());
+            return "/customer/movie_request/write_movie_request";
         }
-        
-        System.out.println(list);
 
-        model.addAttribute("movie_request_list", displayList);
-        model.addAttribute("count", list.size());
+        // id가 있으면 수정 모드
+        MovieRequestVO vo = customerService.movie_request_detail(id);
 
-        return "/customer/movie_request/movie_request";
+        // 본인 요청인지 확인
+        if (vo == null || !vo.getUserId().equals(userId)) {
+            model.addAttribute("msg", "수정 권한이 없습니다.");
+            model.addAttribute("url", "/customer/movie_request");
+            return "/error/redirect";
+        }
+
+        model.addAttribute("mode", "update");
+        model.addAttribute("movieRequest", vo);
+
+        return "/customer/movie_request/write_movie_request";
     }
 
-
-	// 영화 요청 작성
-	@GetMapping("/customer/write_movie_request")
-	public String writeMovieRequest() {
-		return "/customer/movie_request/write_movie_request";	
-	}
 
 
 	@PostMapping("/customer/write_movie_request_pro")
 	public String write_movie_request_pro(MovieRequestVO movieRequestVO, HttpSession session) {
-		System.out.println("customerController write_movie_request_pro");
 		movieRequestVO.setUserId((String)session.getAttribute("user_id"));
 
-		System.out.println("movieRequestVO = " + movieRequestVO);
 		customerService.insert_movie_request(movieRequestVO);
 
 
 		return "redirect:/customer/movie_request";
 	}
 	
-	@GetMapping("/customer/movie_request_detail")
-	public String movie_request_detail() {
-		
-		return "/customer/movie_request/movie_request_detail";
+	// 영화 요청 수정 페이지 (작성 페이지 재사용)
+	@GetMapping("/customer/movie_request_update")
+	public String movie_request_update(@RequestParam("id") int id, Model model, HttpSession session) {
+
+	    String userId = (String) session.getAttribute("user_id");
+	    if (userId == null) return "redirect:/member/login";
+
+	    MovieRequestVO vo = customerService.movie_request_detail(id);
+
+	    if (vo == null || !vo.getUserId().equals(userId)) {
+	        model.addAttribute("msg", "수정 권한이 없습니다.");
+	        model.addAttribute("url", "/customer/movie_request");
+	        return "/error/redirect";
+	    }
+
+	    model.addAttribute("mode", "update");
+	    model.addAttribute("movieRequest", vo);
+
+	    return "/customer/movie_request/write_movie_request"; 
 	}
+
+
+
+	@PostMapping("/customer/movie_request_update_pro")
+	public String movie_request_update_pro(MovieRequestVO vo, HttpSession session) {
+
+	    String userId = (String) session.getAttribute("user_id");
+	    if (userId == null) return "redirect:/member/login";
+
+	    vo.setUserId(userId);
+	    customerService.update_movie_request(vo);
+
+	    return "redirect:/customer/movie_request";
+	}
+
+
+	
+	
+	
+
+
+	// 영화 요청 삭제
+	@GetMapping("/customer/movie_request_delete")
+	public String movie_request_delete(@RequestParam("id") int id, HttpSession session) {
+
+	    String userId = (String) session.getAttribute("user_id");
+	    if (userId == null) return "redirect:/member/login";
+
+	    customerService.delete_movie_request(id, userId);
+
+	    return "redirect:/customer/movie_request";
+	}
+
+
+
+	@GetMapping("/customer/movie_request_detail")
+	public String movie_request_detail(@RequestParam("id") int id, Model model, HttpSession session) {
+
+	    String userId = (String) session.getAttribute("user_id");
+	    if (userId == null) return "redirect:/member/login";
+
+	    MovieRequestVO vo = customerService.movie_request_detail(id);
+	    if (vo == null) {
+	        model.addAttribute("msg", "존재하지 않는 요청입니다.");
+	        model.addAttribute("url", "/customer/movie_request");
+	        return "/error/redirect";
+	    }
+
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+	    String createdAt = vo.getCreatedAt() != null ? vo.getCreatedAt().format(formatter) : "-";
+	    String processedAt = vo.getProcessedAt() != null ? vo.getProcessedAt().format(formatter) : "-";
+
+	    model.addAttribute("movieRequest", vo);   // JSP에서 movieRequest로 접근
+	    model.addAttribute("createdAt", createdAt);
+	    model.addAttribute("processedAt", processedAt);
+
+	    return "/customer/movie_request/movie_request_detail";
+	}
+
+
 
 
 	// 약관 및 정책 (이용약관)

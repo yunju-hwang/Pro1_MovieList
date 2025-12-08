@@ -1,0 +1,56 @@
+/* terms.css */
+
+body {
+     background: #F7F7F7 ;
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    padding: 0;
+    /* 🔥 flex 제거 → navbar가 내려오는 문제 해결 */
+}
+
+.terms-container {
+    max-width: 900px;
+    max-height: 600px; /* 원하는 높이로 설정 */
+    margin: 50px auto;
+    padding: 20px;
+    line-height: 1.6;
+    font-family: 'Nanum Gothic', sans-serif;
+    background-color: #fff;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); /* 여기서 그림자 추가됨 */
+
+    /* 스크롤 추가 */
+    overflow-y: auto;
+}
+
+.terms-container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.terms-container h2 {
+    margin-top: 20px;
+    color: #333;
+}
+
+.terms-container p, .terms-container li {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+/* 확인 버튼 */
+.confirm-btn {
+    display: block;
+    margin: 5px auto 0;     /* 🔼 버튼을 더 위로 — 기존 30px → 15px */
+    padding: 10px 20px;      /* 🔽 버튼 크기 줄임 — 기존 15px 30px → 10px 20px */
+    font-size: 1rem;         /* 🔽 글자 크기 줄임 */
+    background-color: #cd0000;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.confirm-btn:hover {
+    background-color: #a00000; /* hover도 어울리게 수정 추천 */
+}

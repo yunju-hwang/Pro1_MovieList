@@ -2,6 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/navbar.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 
 <!DOCTYPE html>
@@ -16,26 +18,44 @@
 <h1 id="title">${title}</h1>
 <input type="hidden" id="tmdbId" value="${tmdbId}">
 
-
+<button id="openFavModal" class="btn btn-preferred">선호 영화관 보기</button>	
 <div class="page-layout">
+	
 	<div class="theater-wrapper">
+	
+	
 	    <!-- 왼쪽: 지역 -->
 	    <ul class="region-list">
 	        <c:forEach var="loc" items="${locationsList}">
 	            <li data-location="${loc}">${loc}</li>
 	        </c:forEach>
 	    </ul>
+	    
 	
 	    <!-- 오른쪽: 영화관 -->
+	    <!-- 영화관 리스트 -->
 	    <div class="theater-list">
-	        <c:forEach var="t" items="${theaters}">
-	            <div class="theater-card" data-location="${t.location}" data-id="${t.theaterId}">
-	                ${t.name}
-	            </div>
-	        </c:forEach>
-	    </div>
-	</div>
+			<c:forEach var="t" items="${theaters}">
+			    <div class="theater-card
+			         <c:if test="${fn:contains(userTheaterIds, t.theaterId)}"> preferred</c:if>"
+			         data-location="${t.location}"
+			         data-id="${t.theaterId}">
+			        ${t.name}
+			    </div>
+			</c:forEach>
 
+		</div>
+		
+		<!-- 선호 영화관 모달 -->
+		<div id="favTheaterModal" class="modal">
+		  <div class="modal-content">
+		    <span id="closeModal" class="close">&times;</span>
+		    <h3>나의 선호 영화관</h3>
+		    <div id="favTheaterContainer"></div>
+		  </div>
+		</div>
+		
+</div>
 
 
 	<!-- 날짜 버튼 영역 -->

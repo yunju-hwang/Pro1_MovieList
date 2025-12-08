@@ -126,16 +126,15 @@ public class KakaoService {
         MemberVO memberVO = memberMapper.findBykakaoId(kakaoId);
 
         if (memberVO == null) {
-            // 신규 가입
+            // 신규 가입(카카오 로그인만 했고 추가정보 미입력 상태)
             memberVO = new MemberVO();
             memberVO.setUser_id(generateUserId());
             memberVO.setPassword(generateTempPassword());
             memberVO.setKakaoId(kakaoId);
 
-            // 이메일
+            // 카카오 이메일이 없으면 null로 저장 → 나중에 추가정보 입력해야 함
             String email = userInfo.getEmail();
-            memberVO.setEmail(email);
-
+ 
             memberVO.setRole("user");
 
             // 닉네임
@@ -152,8 +151,11 @@ public class KakaoService {
             String profileImage = userInfo.getProfileImageUrl();
             memberVO.setProfileImage(profileImage);
 
-            // DB에 삽입
+            // DB에 삽입(이메일/전화번호 미완료 상태)
             memberMapper.insertkakaoMember(memberVO);
+            // ❗여기서 return VO에 "추가정보 필요" 표시
+            memberVO.setRequireAdditionalInfo(true);
+            
         } else {
             System.out.println("이미 가입된 회원입니다: " + memberVO.getNickname());
         }
