@@ -43,4 +43,6 @@
 	<!-- @Transactional 활성화 -->
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 	
+	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate" />
+	
 </beans>

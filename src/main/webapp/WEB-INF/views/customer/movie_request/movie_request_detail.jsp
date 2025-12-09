@@ -42,12 +42,19 @@
             <div class="box-body">
             
             <p class="date">완료일 : ${processedAt}</p>
+            
+            <div class="back-btn-container">
+        <button class="back-btn" onclick="history.back();">← 뒤로가기</button>
+    </div>
         </div>
     </c:when>
     <c:otherwise>
         <div class="empty-answer">
             <img src="<c:url value='/resources/img/wait.png'/>" class="wait-icon">
             <p>아직 심사가 완료되지 않았어요.<br>조금만 기다려주세요 😊</p>
+            <div class="back-btn-container">
+                <button class="back-btn" onclick="history.back();">← 뒤로가기</button>
+            </div>
         </div>
     </c:otherwise>
 </c:choose>
