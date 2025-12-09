@@ -1,6 +1,7 @@
 package com.itwillbs.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -49,6 +50,11 @@ public interface MemberMapper {
 
 	void updateAccessToken(MemberVO memberVO);
 
+	public MemberVO getMemberByEmail(String email);
+
+	// 이메일 중복 시 네이버 정보 업데이트 (계정 연동 로직용)
+	public void updateNaverLinkage(Map<String, Object> params);
+	
 	// mail용
     public String findIdByEmail(String email);
     
