@@ -268,6 +268,17 @@
 		FROM users
 		WHERE user_id = #{userId} AND kakao_id IS NOT NULL;
 	</select>
+	
+	<select id="selectNaverUserByUserId" resultType="com.itwillbs.domain.MemberVO">
+		SELECT
+			user_id,
+			username,
+			naver_id AS naverId,
+			nickname,
+			email
+		FROM users
+		WHERE user_id = #{userId} AND naver_id IS NOT NULL
+	</select>
 
 
 

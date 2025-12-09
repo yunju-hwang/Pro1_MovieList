@@ -142,6 +142,7 @@ body {
 	flex-direction: column;
 	justify-content: space-between;
 	width: 230px;
+	height: 546px;
 	background: white;
 	padding: 10px;
 	border-radius: 10px;
@@ -152,8 +153,9 @@ body {
 /* 임시 이미지 플레이스홀더 */
 .poster {
 	width: 100%; /* 카드 너비에 맞춤 */
+	height: 345px;
 	border-radius: 8px;
-	/* 	overflow: hidden; */
+	overflow: hidden;
 	/* 	position: relative; */
 }
 
@@ -209,7 +211,7 @@ body {
 /* 🚨 포스터 이미지 스타일 */
 .movie-poster {
 	width: 100%;
-	height: auto; /* 부모 div.poster의 높이에 꽉 차도록 설정 */
+	height: 100%; /* 부모 div.poster의 높이에 꽉 차도록 설정 */
 	display: block;
 	object-fit: cover; /* 이미지가 잘리지 않게 채우도록 설정 (중요) */
 	border-radius: 8px;
@@ -298,7 +300,7 @@ body {
 	<div class="header-nav">
 		<ul>
 			<li><a href="/movielist/mypage/reservations"><i class="fa-solid fa-calendar-check"></i> 예매 내역</a></li>
-			<li class="active"><a href="/movielist/mypage/favorites"><i class="fa-regular fa-heart"></i> 관심 목록</a></li>
+			<li class="active"><a href="/movielist/mypage/favorites"><i class="fa-regular fa-heart"></i> 관심 영화</a></li>
 			<li><a href="/movielist/mypage/profile"><i class="fa-regular fa-user"></i> 회원 정보</a></li>
 			<li><a href="/movielist/mypage/theaters"><i class="fa-solid fa-map-pin"></i> 선호 영화관</a></li>
 			<li><a href="/movielist/mypage/inquiries"><i class="fa-regular fa-clipboard"></i> 문의 내역</a></li>
@@ -417,8 +419,7 @@ body {
 														}
 
 														// AJAX DELETE 요청
-														$
-																.ajax({
+														$.ajax({
 																	url : '/movielist/mypage/favorites/' + tmdbId, // Controller에 정의한 URL
 																	type : 'DELETE', // HTTP DELETE 메서드 사용
 																	success : function(response) {
@@ -435,6 +436,7 @@ body {
 																	}
 																});
 													});
+									
 								});
 			</script>
 			

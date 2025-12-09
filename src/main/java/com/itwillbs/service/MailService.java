@@ -46,9 +46,9 @@ public class MailService {
             return false; 
         }
         
-        String subject = "[MovieSite] 요청하신 아이디 정보입니다.";
+        String subject = "[MovieList] 요청하신 아이디 정보입니다.";
         String contentText = 
-            "<h2>[MovieSite] 회원 아이디 안내</h2>" +
+            "<h2>[MovieList] 회원 아이디 안내</h2>" +
             "<p>회원님의 아이디는 <b>" + foundId + "</b> 입니다.</p>" + 
             "<p>로그인 페이지로 돌아가 로그인해 주세요. 감사합니다.</p>";
             
@@ -85,9 +85,9 @@ public class MailService {
             return false;
         }
 
-        String subject = "[MovieSite] 요청하신 임시 비밀번호입니다.";
+        String subject = "[MovieList] 요청하신 임시 비밀번호입니다.";
         String contentText = 
-            "<h2>[MovieSite] 임시 비밀번호 안내</h2>" +
+            "<h2>[MovieList] 임시 비밀번호 안내</h2>" +
             "<p>요청하신 회원님의 임시 비밀번호는 <b>" + tempPassword + "</b> 입니다.</p>" + 
             "<p>로그인 후 즉시 **비밀번호를 변경**해 주세요. 감사합니다.</p>";
             
