@@ -4,7 +4,7 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    background-color: #f5f7fb;
+    background-color: #f7f7f7;
     font-family: "Noto Sans KR", sans-serif;
     display: flex;
     flex-direction: column;

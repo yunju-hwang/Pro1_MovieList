@@ -27,114 +27,189 @@ import com.itwillbs.service.CustomerService;
 @Controller
 public class CustomerController {
 
-	@Inject
-	private CustomerService customerService;
+    @Inject
+    private CustomerService customerService;
 
-	// 고객센터 공지사항
-	@GetMapping("/customer/notices")
-	public String notices(Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
+    
+    /* -------------------------------------
+       📌 공지사항 내용 자동 줄바꿈 함수
+    ------------------------------------- */
+    private String cleanNoticeContent(String content) {
+    	if (content == null) return "";
 
-	    int pageSize = 5;
-	    int offset = (page - 1) * pageSize;
 
-	    // ✔ 원본 NoticeVO 리스트 가져오기
-	    List<NoticesVO> list = customerService.getNoticesPaged(offset, pageSize);
+    	content = content.replace("\r\n", "\n");
+    	StringBuilder result = new StringBuilder();
+    	String[] lines = content.split("\n");
 
-	    // ✔ 날짜 포맷터
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-	    // ✔ JSP에서 쓰기 쉽게 가공한 리스트
-	    List<Map<String, Object>> displayList = new ArrayList<>();
+    	for (int i = 0; i < lines.length; i++) {
+    	String line = lines[i].trim();
 
-	    for (NoticesVO vo : list) {
-	        Map<String, Object> map = new HashMap<>();
-	        map.put("id", vo.getId());
-	        map.put("title", vo.getTitle());
-	        map.put("content", vo.getContent());
 
-	        // 날짜 변환
-	        map.put("createdAt", vo.getCreatedAt() != null
-	                ? vo.getCreatedAt().format(formatter)
-	                : "-");
+    	// "※" 단독 라인 → 다음 문장과 병합
+    	if (line.equals("※") && i + 1 < lines.length) {
+    	String next = lines[i + 1].trim();
+    	result.append("※ ").append(next).append("\n");
+    	i++;
+    	} else {
+    	result.append(lines[i]).append("\n");
+    	}
+    	}
 
-	        displayList.add(map);
-	    }
 
-	    // ✔ 전체 공지 개수
-	    int totalCount = customerService.getNoticesCount();
-	    int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+    	return result.toString().trim();
+    	}
 
-	    model.addAttribute("list", displayList);
-	    model.addAttribute("currentPage", page);
-	    model.addAttribute("totalPages", totalPages);
 
-	    return "/customer/notices";
-	}
+    private String formatNoticeContent(String content) {
+        if (content == null) return "";
 
-	@GetMapping("/customer/notice_detail")
-	public String notice_detail(@RequestParam("id") int id, Model model) {
+        String result = content;
 
-	    NoticesVO notice = customerService.notice_detail(id);
-	    if(notice == null) {
-	        // 공지가 없으면 404 페이지나 기본 메시지
-	        return "/error/404";
-	    }
+        result = result.replaceAll("[\\u2028\\u2029\\u00A0]", " ");
+        result = result.replaceAll("[ ]{2,}", " ");
+        result = result.replaceAll("(\\r?\\n\\s*){2,}", "\n");
+        result = result.replaceAll("(?<=[.!?])\\s*", "\n");
 
-	    String createdDate = "";
-	    if(notice.getCreatedAt() != null) {
-	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	        createdDate = notice.getCreatedAt().format(formatter);
-	    }
+        result = result.replaceAll("\\s*\\[(.*?)\\]\\s*", "\n\n[$1]\n");
 
-	    model.addAttribute("notice", notice);
-	    model.addAttribute("createdDate", createdDate);
+        result = result.replaceAll("\\s*-\\s*", "\n- ");
 
-	    return "/customer/notice_detail";
-	}
-	
+        // ※ 병합된 뒤 → HTML <span> 적용
+        result = result.replaceAll("※", "<span class='notice-mark'>※</span>");
 
-	@GetMapping("/customer/faqs")
-	public String faqs(Model model,
-	                   @RequestParam(value = "page", defaultValue = "1") int page,
-	                   HttpSession session) {
+        // ⭐ 여기 추가됨: ※ 앞에 무조건 한 줄 띄움
+        result = result.replaceAll("(<br>)*<span class='notice-mark'>※</span>", "<br><span class='notice-mark'>※</span>");
 
-	    int pageSize = 5;
-	    int offset = (page - 1) * pageSize;
+        // 줄바꿈 <br> 변환
+        result = result.replaceAll("\\r?\\n", "<br>");
 
-	    List<FaqsVO> list = customerService.getFaqsPaged(offset, pageSize);
+        result = result.replaceAll("(<br>\\s*){3,}", "<br><br>");
 
-	    int totalCount = customerService.getFaqsCount();
-	    int totalPages = (int) Math.ceil((double) totalCount / pageSize);
-
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	    List<Map<String, Object>> displayList = new ArrayList<>();
-
-	    for (FaqsVO vo : list) {
-	        Map<String, Object> map = new HashMap<>();
-	        map.put("id", vo.getId());
-	        map.put("question", vo.getQuestion());
-	        map.put("answer", vo.getAnswer());
-	        map.put("category", vo.getCategory());
-	        map.put("createdAt", vo.getCreatedAt() != null ? vo.getCreatedAt().format(formatter) : "-");
-
-	        displayList.add(map);
-	    }
-
-	    model.addAttribute("list", displayList);
-	    model.addAttribute("currentPage", page);
-	    model.addAttribute("totalPages", totalPages);
-
-	    // ✅ 로그인 여부 JSP로 전달
-	    Object userId = session.getAttribute("userId");
-	    model.addAttribute("isLogin", userId != null);
-
-	    return "/customer/faqs";
-	}
+        return result.trim();
+    }
 
 
 
 
-	@GetMapping("/customer/inquiries")
+
+    	/* -------------------------------------
+    	📌 공지사항 목록
+    	------------------------------------- */
+    	@GetMapping("/customer/notices")
+    	public String notices(Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
+
+
+    	int pageSize = 5;
+    	int offset = (page - 1) * pageSize;
+
+
+    	List<NoticesVO> list = customerService.getNoticesPaged(offset, pageSize);
+
+
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    	List<Map<String, Object>> displayList = new ArrayList<>();
+
+
+    	for (NoticesVO vo : list) {
+    	Map<String, Object> map = new HashMap<>();
+    	map.put("id", vo.getId());
+    	map.put("title", vo.getTitle());
+    	map.put("content", vo.getContent());
+    	map.put("createdAt", vo.getCreatedAt() != null ? vo.getCreatedAt().format(formatter) : "-");
+    	displayList.add(map);
+    	}
+    	int totalCount = customerService.getNoticesCount();
+    	int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+
+
+    	model.addAttribute("list", displayList);
+    	model.addAttribute("currentPage", page);
+    	model.addAttribute("totalPages", totalPages);
+
+
+    	return "/customer/notices";
+
+    	}
+    	@GetMapping("/customer/notice_detail")
+    	public String notice_detail(@RequestParam("id") int id, Model model) {
+
+
+    	NoticesVO notice = customerService.notice_detail(id);
+    	if (notice == null) return "/error/404";
+
+
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    	String createdDate = notice.getCreatedAt() != null ? notice.getCreatedAt().format(formatter) : "-";
+
+
+    	// 1) ※ 단독 문장 방지
+    	String cleaned = cleanNoticeContent(notice.getContent());
+
+
+    	// 2) 자동 줄바꿈 + HTML 변환
+    	String formattedContent = formatNoticeContent(cleaned);
+
+
+    	model.addAttribute("notice", notice);
+    	model.addAttribute("createdDate", createdDate);
+    	model.addAttribute("formattedContent", formattedContent);
+
+
+    	return "/customer/notice_detail";
+    	}
+
+
+
+
+    /* -------------------------------------
+       📌 FAQ
+    ------------------------------------- */
+    @GetMapping("/customer/faqs")
+    public String faqs(Model model,
+                       @RequestParam(value = "page", defaultValue = "1") int page,
+                       HttpSession session) {
+
+        int pageSize = 5;
+        int offset = (page - 1) * pageSize;
+
+        List<FaqsVO> list = customerService.getFaqsPaged(offset, pageSize);
+
+        int totalCount = customerService.getFaqsCount();
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        List<Map<String, Object>> displayList = new ArrayList<>();
+
+        for (FaqsVO vo : list) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", vo.getId());
+            map.put("question", vo.getQuestion());
+            map.put("answer", vo.getAnswer());
+            map.put("category", vo.getCategory());
+            map.put("createdAt", vo.getCreatedAt() != null ? vo.getCreatedAt().format(formatter) : "-");
+
+            displayList.add(map);
+        }
+
+        model.addAttribute("list", displayList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
+        Object userId = session.getAttribute("userId");
+        model.addAttribute("isLogin", userId != null);
+
+        return "/customer/faqs";
+    }
+
+
+
+
+    /* -------------------------------------
+       📌 1:1 문의내역
+    ------------------------------------- */
+    @GetMapping("/customer/inquiries")
     public String inquiries(HttpSession session, Model model,
                             @RequestParam(value="sort", required=false) String sort) {
         String userId = (String) session.getAttribute("user_id");
@@ -142,204 +217,166 @@ public class CustomerController {
 
         List<InquiriesVO> inquiry_list = customerService.inquiries(userId);
 
-        // 정렬 처리
         if(sort != null) {
             switch(sort) {
-                case "date_desc":
-                    inquiry_list.sort((a,b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
-                    break;
-                case "date_asc":
-                    inquiry_list.sort((a,b) -> a.getCreatedAt().compareTo(b.getCreatedAt()));
-                    break;
-                case "pending":
-                    // "답변대기" 먼저, "답변완료" 나중
-                    inquiry_list.sort((a,b) -> getStatusPriority(a.getStatus()) - getStatusPriority(b.getStatus()));
-                    break;
-                case "completed":
-                    // "답변완료" 먼저, "답변대기" 나중
-                    inquiry_list.sort((a,b) -> getStatusPriority(b.getStatus()) - getStatusPriority(a.getStatus()));
-                    break;
+                case "date_desc": inquiry_list.sort((a,b) -> b.getCreatedAt().compareTo(a.getCreatedAt())); break;
+                case "date_asc": inquiry_list.sort((a,b) -> a.getCreatedAt().compareTo(b.getCreatedAt())); break;
+                case "pending": inquiry_list.sort((a,b) -> getStatusPriority(a.getStatus()) - getStatusPriority(b.getStatus())); break;
+                case "completed": inquiry_list.sort((a,b) -> getStatusPriority(b.getStatus()) - getStatusPriority(a.getStatus())); break;
             }
-            
         }
 
-        
         int count = customerService.inquiry_count(userId);
+
         model.addAttribute("inquiry_list", inquiry_list);
         model.addAttribute("count", count);
 
         return "/customer/inquiries/inquiries";
     }
-	
-	// pending = 0, completed = 1
-		private int getStatusPriority(String status) {
-		    if("pending".equals(status)) return 0;
-		    else return 1; // completed 또는 그 외
-		}
+
+    private int getStatusPriority(String status) {
+        return "pending".equals(status) ? 0 : 1;
+    }
 
 
-	// 문의 작성 페이지
-	@GetMapping("/customer/write_inquiry")
-	public String write_inquiry(Model model) {
-	    model.addAttribute("mode", "write");
-	    model.addAttribute("inq", new InquiriesVO());
-	    return "customer/inquiries/write_inquiry"; // ✔ 수정됨
-	}
-	
-	// 문의 작성 처리
-	@PostMapping("/customer/write_inquiry_pro")
-	public String write_inquiry_pro(InquiriesVO inq, HttpSession session) {
-
-	    String userId = (String) session.getAttribute("user_id");
-
-	    if (userId == null) {
-	        return "redirect:/member/login";
-	    }
-
-	    inq.setUserId(userId);
-	    customerService.insertinquiry(inq);
-
-	    return "redirect:/customer/inquiries";
-	}
+    @GetMapping("/customer/write_inquiry")
+    public String write_inquiry(Model model) {
+        model.addAttribute("mode", "write");
+        model.addAttribute("inq", new InquiriesVO());
+        return "customer/inquiries/write_inquiry";
+    }
 
 
-	// 문의 수정 페이지 (작성 폼 재사용)
-	@GetMapping("/customer/inquiry_update")
-	public String inquiry_update(@RequestParam("id") int id, Model model, HttpSession session) {
+    @PostMapping("/customer/write_inquiry_pro")
+    public String write_inquiry_pro(InquiriesVO inq, HttpSession session) {
 
-	    String userId = (String) session.getAttribute("user_id");
-	    if (userId == null) return "redirect:/member/login";
+        String userId = (String) session.getAttribute("user_id");
 
-	    InquiriesVO vo = customerService.inquiry_detail(id);
+        if (userId == null) {
+            return "redirect:/member/login";
+        }
 
-	    if (vo == null || !vo.getUserId().equals(userId)) {
-	        model.addAttribute("msg", "수정 권한이 없습니다.");
-	        model.addAttribute("url", "/customer/inquiries");
-	        return "/error/redirect";
-	    }
+        inq.setUserId(userId);
+        customerService.insertinquiry(inq);
 
-	    model.addAttribute("mode", "update");
-	    model.addAttribute("inq", vo);
-	    return "customer/inquiries/write_inquiry"; // ✔ 수정됨
-	}
+        return "redirect:/customer/inquiries";
+    }
+
+
+    @GetMapping("/customer/inquiry_update")
+    public String inquiry_update(@RequestParam("id") int id, Model model, HttpSession session) {
+
+        String userId = (String) session.getAttribute("user_id");
+        if (userId == null) return "redirect:/member/login";
+
+        InquiriesVO vo = customerService.inquiry_detail(id);
+
+        if (vo == null || !vo.getUserId().equals(userId)) {
+            model.addAttribute("msg", "수정 권한이 없습니다.");
+            model.addAttribute("url", "/customer/inquiries");
+            return "/error/redirect";
+        }
+
+        model.addAttribute("mode", "update");
+        model.addAttribute("inq", vo);
+        return "customer/inquiries/write_inquiry";
+    }
 
 
 
-	// 문의 수정 처리
-	@PostMapping("/customer/inquiry_update_pro")
-	public String inquiry_update_pro(InquiriesVO inq, HttpSession session) {
+    @PostMapping("/customer/inquiry_update_pro")
+    public String inquiry_update_pro(InquiriesVO inq, HttpSession session) {
 
-	    String userId = (String) session.getAttribute("user_id");
-	    if (userId == null) return "redirect:/member/login";
+        String userId = (String) session.getAttribute("user_id");
+        if (userId == null) return "redirect:/member/login";
 
-	    inq.setUserId(userId);
-	    customerService.updateInquiry(inq);
+        inq.setUserId(userId);
+        customerService.updateInquiry(inq);
 
-	    return "redirect:/customer/inquiries";
-	}
+        return "redirect:/customer/inquiries";
+    }
 
 
-	// 문의 삭제 처리
-	@GetMapping("/customer/inquiry_delete")
-	public String inquiry_delete(@RequestParam("id") int id, HttpSession session) {
+    @GetMapping("/customer/inquiry_delete")
+    public String inquiry_delete(@RequestParam("id") int id, HttpSession session) {
 
-	    String userId = (String) session.getAttribute("user_id");
-	    if (userId == null) return "redirect:/member/login";
+        String userId = (String) session.getAttribute("user_id");
+        if (userId == null) return "redirect:/member/login";
 
-	    customerService.deleteInquiry(id, userId);
+        customerService.deleteInquiry(id, userId);
 
-	    return "redirect:/customer/inquiries";
-	}
-	
+        return "redirect:/customer/inquiries";
+    }
 
-	@GetMapping("/customer/inquiries/inquiry_detail")
-	public String inquiry_detail(@RequestParam("id") int id, Model model,HttpSession session) {
 
-	    // 1. 로그인 체크
-	    String userId = (String) session.getAttribute("user_id");
-	    if (userId == null) {
-	        // 로그인 안 되었으면 로그인 페이지로 리다이렉트
-	        return "redirect:/member/login";
-	    }
 
-	    // 2. DB에서 문의사항 가져오기
-	    InquiriesVO vo = customerService.inquiry_detail(id);
+    @GetMapping("/customer/inquiries/inquiry_detail")
+    public String inquiry_detail(@RequestParam("id") int id, Model model,HttpSession session) {
 
-	    if (vo == null) {
-	        // id가 없는 경우 404 대신 간단히 메세지 페이지로 이동
-	        model.addAttribute("msg", "존재하지 않는 문의입니다.");
-	        model.addAttribute("url", "/customer/inquiries");
-	        return "redirect"; // redirect.jsp 필요
-	    }
-	    
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String userId = (String) session.getAttribute("user_id");
+        if (userId == null) return "redirect:/member/login";
 
-	 // 작성일 변환
-	 String createdDate = vo.getCreatedAt().format(formatter);
+        InquiriesVO vo = customerService.inquiry_detail(id);
 
-	 // 답변일 변환 (null 체크)
-	 String answeredDate = null;
-	 if (vo.getAnsweredAt() != null) {
-	     answeredDate = vo.getAnsweredAt().format(formatter);
-	 }
+        if (vo == null) {
+            model.addAttribute("msg", "존재하지 않는 문의입니다.");
+            model.addAttribute("url", "/customer/inquiries");
+            return "redirect";
+        }
 
-	 model.addAttribute("createdDate", createdDate);
-	 model.addAttribute("answeredDate", answeredDate);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-	    // 3. Model에 데이터 담기
-	    model.addAttribute("inq", vo);
+        String createdDate = vo.getCreatedAt().format(formatter);
+        String answeredDate = vo.getAnsweredAt() != null ? vo.getAnsweredAt().format(formatter) : null;
 
-	    // 4. JSP 이름 반환 (redirect 제거!)
-	    return "customer/inquiries/inquiry_detail";
-	}
+        model.addAttribute("createdDate", createdDate);
+        model.addAttribute("answeredDate", answeredDate);
+        model.addAttribute("inq", vo);
 
-	@GetMapping("/customer/movie_request")
-	public String movie_request(HttpSession session, Model model,
-	                            @RequestParam(value="sort", required=false) String sort) {
-	    String userId = (String) session.getAttribute("user_id");
-	    if(userId == null) return "redirect:/member/login";
+        return "customer/inquiries/inquiry_detail";
+    }
 
-	    List<MovieRequestVO> list = customerService.movie_request(userId);
 
-	    // 정렬 처리
-	    if(sort != null) {
-	        switch(sort) {
-	            case "date_desc":
-	                list.sort((a,b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
-	                break;
-	            case "date_asc":
-	                list.sort((a,b) -> a.getCreatedAt().compareTo(b.getCreatedAt()));
-	                break;
-	            case "pending":
-	                list.sort((a,b) -> getStatusPriority(a.getStatus()) - getStatusPriority(b.getStatus()));
-	                break;
-	            case "completed":
-	                list.sort((a,b) -> getStatusPriority(b.getStatus()) - getStatusPriority(a.getStatus()));
-	                break;
-	        }
-	    }
 
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-	    List<Map<String,Object>> displayList = new ArrayList<>();
-	    for(MovieRequestVO vo : list) {
-	        Map<String,Object> map = new HashMap<>();
-	        map.put("id", vo.getId());
-	        map.put("title", vo.getTitle());
-	        map.put("content", vo.getContent());
-	        map.put("status", vo.getStatus());
-	        map.put("createdAt", vo.getCreatedAt() != null ? vo.getCreatedAt().format(formatter) : "-");
-	        displayList.add(map);
-	    }
+    /* -------------------------------------
+       📌 영화 요청
+    ------------------------------------- */
+    @GetMapping("/customer/movie_request")
+    public String movie_request(HttpSession session, Model model,
+                                @RequestParam(value="sort", required=false) String sort) {
+        String userId = (String) session.getAttribute("user_id");
+        if(userId == null) return "redirect:/member/login";
 
-	    model.addAttribute("movie_request_list", displayList);
-	    model.addAttribute("count", list.size());
+        List<MovieRequestVO> list = customerService.movie_request(userId);
 
-	    return "/customer/movie_request/movie_request";
-	}
+        if(sort != null) {
+            switch(sort) {
+                case "date_desc": list.sort((a,b) -> b.getCreatedAt().compareTo(a.getCreatedAt())); break;
+                case "date_asc": list.sort((a,b) -> a.getCreatedAt().compareTo(b.getCreatedAt())); break;
+                case "pending": list.sort((a,b) -> getStatusPriority(a.getStatus()) - getStatusPriority(b.getStatus())); break;
+                case "completed": list.sort((a,b) -> getStatusPriority(b.getStatus()) - getStatusPriority(a.getStatus())); break;
+            }
+        }
 
-	
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+        List<Map<String,Object>> displayList = new ArrayList<>();
+        for(MovieRequestVO vo : list) {
+            Map<String,Object> map = new HashMap<>();
+            map.put("id", vo.getId());
+            map.put("title", vo.getTitle());
+            map.put("content", vo.getContent());
+            map.put("status", vo.getStatus());
+            map.put("createdAt", vo.getCreatedAt() != null ? vo.getCreatedAt().format(formatter) : "-");
+            displayList.add(map);
+        }
+
+        model.addAttribute("movie_request_list", displayList);
+        model.addAttribute("count", list.size());
+
+        return "/customer/movie_request/movie_request";
+    }
 
 
     @GetMapping("/customer/write_movie_request")
@@ -350,17 +387,16 @@ public class CustomerController {
         String userId = (String) session.getAttribute("user_id");
         if (userId == null) return "redirect:/member/login";
 
-        // id가 없으면 작성 모드
+        // 새 글 작성
         if (id == null) {
             model.addAttribute("mode", "write");
             model.addAttribute("movieRequest", new MovieRequestVO());
             return "/customer/movie_request/write_movie_request";
         }
 
-        // id가 있으면 수정 모드
+        // 기존 수정
         MovieRequestVO vo = customerService.movie_request_detail(id);
 
-        // 본인 요청인지 확인
         if (vo == null || !vo.getUserId().equals(userId)) {
             model.addAttribute("msg", "수정 권한이 없습니다.");
             model.addAttribute("url", "/customer/movie_request");
@@ -375,123 +411,113 @@ public class CustomerController {
 
 
 
-	@PostMapping("/customer/write_movie_request_pro")
-	public String write_movie_request_pro(MovieRequestVO movieRequestVO, HttpSession session) {
-		movieRequestVO.setUserId((String)session.getAttribute("user_id"));
+    @PostMapping("/customer/write_movie_request_pro")
+    public String write_movie_request_pro(MovieRequestVO movieRequestVO, HttpSession session) {
+        movieRequestVO.setUserId((String)session.getAttribute("user_id"));
 
-		customerService.insert_movie_request(movieRequestVO);
+        customerService.insert_movie_request(movieRequestVO);
 
-
-		return "redirect:/customer/movie_request";
-	}
-	
-	// 영화 요청 수정 페이지 (작성 페이지 재사용)
-	@GetMapping("/customer/movie_request_update")
-	public String movie_request_update(@RequestParam("id") int id, Model model, HttpSession session) {
-
-	    String userId = (String) session.getAttribute("user_id");
-	    if (userId == null) return "redirect:/member/login";
-
-	    MovieRequestVO vo = customerService.movie_request_detail(id);
-
-	    if (vo == null || !vo.getUserId().equals(userId)) {
-	        model.addAttribute("msg", "수정 권한이 없습니다.");
-	        model.addAttribute("url", "/customer/movie_request");
-	        return "/error/redirect";
-	    }
-
-	    model.addAttribute("mode", "update");
-	    model.addAttribute("movieRequest", vo);
-
-	    return "/customer/movie_request/write_movie_request"; 
-	}
+        return "redirect:/customer/movie_request";
+    }
 
 
 
-	@PostMapping("/customer/movie_request_update_pro")
-	public String movie_request_update_pro(MovieRequestVO vo, HttpSession session) {
+    @GetMapping("/customer/movie_request_update")
+    public String movie_request_update(@RequestParam("id") int id, Model model, HttpSession session) {
 
-	    String userId = (String) session.getAttribute("user_id");
-	    if (userId == null) return "redirect:/member/login";
+        String userId = (String) session.getAttribute("user_id");
+        if (userId == null) return "redirect:/member/login";
 
-	    vo.setUserId(userId);
-	    customerService.update_movie_request(vo);
+        MovieRequestVO vo = customerService.movie_request_detail(id);
 
-	    return "redirect:/customer/movie_request";
-	}
+        if (vo == null || !vo.getUserId().equals(userId)) {
+            model.addAttribute("msg", "수정 권한이 없습니다.");
+            model.addAttribute("url", "/customer/movie_request");
+            return "/error/redirect";
+        }
 
+        model.addAttribute("mode", "update");
+        model.addAttribute("movieRequest", vo);
 
-	
-	
-	
-
-
-	// 영화 요청 삭제
-	@GetMapping("/customer/movie_request_delete")
-	public String movie_request_delete(@RequestParam("id") int id, HttpSession session) {
-
-	    String userId = (String) session.getAttribute("user_id");
-	    if (userId == null) return "redirect:/member/login";
-
-	    customerService.delete_movie_request(id, userId);
-
-	    return "redirect:/customer/movie_request";
-	}
+        return "/customer/movie_request/write_movie_request"; 
+    }
 
 
 
-	@GetMapping("/customer/movie_request_detail")
-	public String movie_request_detail(@RequestParam("id") int id, Model model, HttpSession session) {
+    @PostMapping("/customer/movie_request_update_pro")
+    public String movie_request_update_pro(MovieRequestVO vo, HttpSession session) {
 
-	    String userId = (String) session.getAttribute("user_id");
-	    if (userId == null) return "redirect:/member/login";
+        String userId = (String) session.getAttribute("user_id");
+        if (userId == null) return "redirect:/member/login";
 
-	    MovieRequestVO vo = customerService.movie_request_detail(id);
-	    if (vo == null) {
-	        model.addAttribute("msg", "존재하지 않는 요청입니다.");
-	        model.addAttribute("url", "/customer/movie_request");
-	        return "/error/redirect";
-	    }
+        vo.setUserId(userId);
+        customerService.update_movie_request(vo);
 
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-	    String createdAt = vo.getCreatedAt() != null ? vo.getCreatedAt().format(formatter) : "-";
-	    String processedAt = vo.getProcessedAt() != null ? vo.getProcessedAt().format(formatter) : "-";
-
-	    model.addAttribute("movieRequest", vo);   // JSP에서 movieRequest로 접근
-	    model.addAttribute("createdAt", createdAt);
-	    model.addAttribute("processedAt", processedAt);
-
-	    return "/customer/movie_request/movie_request_detail";
-	}
+        return "redirect:/customer/movie_request";
+    }
 
 
 
 
-	// 약관 및 정책 (이용약관)
-	@GetMapping("/terms")
-	public String terms() {
-		return "/terms/terms_of_service";
-	}
+    @GetMapping("/customer/movie_request_delete")
+    public String movie_request_delete(@RequestParam("id") int id, HttpSession session) {
+
+        String userId = (String) session.getAttribute("user_id");
+        if (userId == null) return "redirect:/member/login";
+
+        customerService.delete_movie_request(id, userId);
+
+        return "redirect:/customer/movie_request";
+    }
 
 
-	// 약관 및 정책 (개인정보처리방침)
-	@GetMapping("/terms/policy")
-	public String policy() {
-		return "/terms/privacy_policy";
-	}
 
-	// 약관 및 정책 (청소년 보호정책)
-	@GetMapping("/terms/youth")
-	public String youth() {
-		return "/terms/youth_policy";
-	}
+    @GetMapping("/customer/movie_request_detail")
+    public String movie_request_detail(@RequestParam("id") int id, Model model, HttpSession session) {
+
+        String userId = (String) session.getAttribute("user_id");
+        if (userId == null) return "redirect:/member/login";
+
+        MovieRequestVO vo = customerService.movie_request_detail(id);
+        if (vo == null) {
+            model.addAttribute("msg", "존재하지 않는 요청입니다.");
+            model.addAttribute("url", "/customer/movie_request");
+            return "/error/redirect";
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        String createdAt = vo.getCreatedAt() != null ? vo.getCreatedAt().format(formatter) : "-";
+        String processedAt = vo.getProcessedAt() != null ? vo.getProcessedAt().format(formatter) : "-";
+
+        model.addAttribute("movieRequest", vo);
+        model.addAttribute("createdAt", createdAt);
+        model.addAttribute("processedAt", processedAt);
+
+        return "/customer/movie_request/movie_request_detail";
+    }
 
 
-	// 약관 및 정책 (위치기반서비스)
-	@GetMapping("/terms/location")
-	public String locationTerms() {
-		return "/terms/location_terms";
-	}
+
+    // 약관 페이지
+    @GetMapping("/terms")
+    public String terms() {
+        return "/terms/terms_of_service";
+    }
+
+    @GetMapping("/terms/policy")
+    public String policy() {
+        return "/terms/privacy_policy";
+    }
+
+    @GetMapping("/terms/youth")
+    public String youth() {
+        return "/terms/youth_policy";
+    }
+
+    @GetMapping("/terms/location")
+    public String locationTerms() {
+        return "/terms/location_terms";
+    }
 
 }

@@ -19,6 +19,8 @@ import com.itwillbs.domain.MemberVO;
 		
 		public MemberVO selectKakaoUserByUserId(String userId);
 		
+		public MemberVO selectNaverUserByUserId(String userId);
+		
 		int updateMember(MemberVO member);
 		
 		public int updatePassword(@Param("userId") String userId, @Param("password") String password);
