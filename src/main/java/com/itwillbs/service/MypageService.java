@@ -33,6 +33,12 @@ public class MypageService {
         return mypageMapper.selectKakaoUserByUserId(userId);
     }
 	
+	public MemberVO selectNaverUserByUserId(String userId) {
+        // MemberMapper에 findByNaverId(userId)와 유사한 형태의 메서드가 필요함
+        // userId를 사용하여 네이버 관련 정보가 포함된 MemberVO를 반환한다고 가정
+        return mypageMapper.selectNaverUserByUserId(userId);
+    }
+	
 	public int updateMember(MemberVO member) {
         return mypageMapper.updateMember(member);
     }

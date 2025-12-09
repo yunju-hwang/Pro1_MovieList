@@ -187,6 +187,8 @@ public class MypageController {
 	    
 	    // DB에서 카카오 사용자 정보 조회
 	    MemberVO kakaoUser = mypageService.selectKakaoUserByUserId(userId);
+	    
+	    MemberVO naverUser = mypageService.selectNaverUserByUserId(userId);
 
 	    if (kakaoUser != null && kakaoUser.getKakaoId() != null) {
 	        
@@ -195,7 +197,10 @@ public class MypageController {
 	 
 	        return "/mypage/socialProfile"; // 🟢 View 이름만 반환 (FORWARD)
 
-	    } else {
+	    } else if (naverUser != null && naverUser.getNaverId() != null) {
+	    model.addAttribute("loginMember", naverUser);
+        return "/mypage/socialProfile"; // 🟢 View 이름만 반환 (FORWARD)
+        } else {
 	        // 일반 사용자 처리: DB 정보를 다시 가져옵니다.
 	        MemberVO memberInfoFromDB = mypageService.getMember(userId);
 
@@ -311,7 +316,8 @@ public class MypageController {
 	    if (uploadFile != null && !uploadFile.isEmpty()) {
 	        
 	        // 🚨 [핵심 수정] 실제 소스 코드 폴더 경로를 직접 지정
-	        String realPath = "D:" + File.separator + "JSP" + File.separator + "workspace_git" + File.separator 
+	        String realPath = "D:" + File.separator + "JSP" + File.separator + "workspace_sts" + File.separator 
+	                          + "Pro1_MovieList" + File.separator 
 	                          + "Pro1_MovieList" + File.separator + "src" + File.separator + "main" + File.separator 
 	                          + "webapp" + File.separator + "resources" + File.separator + "upload";
 	        
@@ -393,8 +399,8 @@ public class MypageController {
 		    rttr.addFlashAttribute("msg", "회원 정보가 성공적으로 수정되었습니다.");
 	        
 	        // 🔑 핵심 수정: 업데이트 성공 후, 비밀번호 확인 상태 세션 제거
-		    session.removeAttribute("confirmedExpiryTime"); // ✅ 키 통일
-			session.removeAttribute("isConfirmedForEdit");
+//		    session.removeAttribute("confirmedExpiryTime"); // ✅ 키 통일
+//			session.removeAttribute("isConfirmedForEdit");
 	        
 		} else {
 		    // DB 업데이트 실패 (예: 쿼리 오류 등)
@@ -420,9 +426,13 @@ public class MypageController {
 	    }
 	    
 	    String userId = loginUser.getUser_id();
-	    MemberVO memberInfoFromDB = mypageService.selectKakaoUserByUserId(userId);
 	    
-	    if (memberInfoFromDB != null && memberInfoFromDB.getKakaoId() != null) {
+	    MemberVO kakaoUserFromDB = mypageService.selectKakaoUserByUserId(userId);
+	    
+	    MemberVO naverUserFromDB = mypageService.selectNaverUserByUserId(userId);
+	    
+	    if ((kakaoUserFromDB != null && kakaoUserFromDB.getKakaoId() != null) ||
+		    (naverUserFromDB != null && naverUserFromDB.getNaverId() != null)) {
 	        // 소셜 로그인(카카오) 사용자 확인
 	        response.put("isUpdated", false);
 	        response.put("message", "소셜 로그인된 상태에서는 비밀번호를 변경할 수 없습니다.");
