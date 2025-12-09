@@ -216,7 +216,8 @@ public class MypageController {
 	                isConfirmedForEdit = true;
 	            } else {
 	                // 만료 시각이 지났다면: 세션에서 제거하고 재확인 필요
-	                session.removeAttribute("confirmedExpiryTime");
+	            	session.removeAttribute("confirmedExpiryTime");
+	                session.removeAttribute("isConfirmedForEdit");
 	            }
 	        }
 	        
@@ -269,11 +270,12 @@ public class MypageController {
 	    
 	    if (!isValid) {
 	        response.put("message", "비밀번호가 틀립니다.");
-	        session.removeAttribute("confirmedExpiryTime");
+	        session.removeAttribute("isConfirmedForEdit");
 	    } else {
 	    	response.put("message", "비밀번호 일치");
-	    	long expiryTime = System.currentTimeMillis() + (5 * 60 * 1000L); 
+	    	long expiryTime = System.currentTimeMillis() + (1 * 60 * 1000L); 
 	        session.setAttribute("confirmedExpiryTime", expiryTime);
+	        session.setAttribute("isConfirmedForEdit", true);
 	    }
 	    
 	    return response; // { "isValid": true/false, "message": "..." } 형태로 JSON 반환
@@ -391,7 +393,8 @@ public class MypageController {
 		    rttr.addFlashAttribute("msg", "회원 정보가 성공적으로 수정되었습니다.");
 	        
 	        // 🔑 핵심 수정: 업데이트 성공 후, 비밀번호 확인 상태 세션 제거
-	        session.removeAttribute("passwordConfirmed"); // ✨ 이 코드를 추가해주세요.
+		    session.removeAttribute("confirmedExpiryTime"); // ✅ 키 통일
+			session.removeAttribute("isConfirmedForEdit");
 	        
 		} else {
 		    // DB 업데이트 실패 (예: 쿼리 오류 등)
@@ -437,7 +440,10 @@ public class MypageController {
 	        response.put("isUpdated", true);
 	        response.put("message", "비밀번호가 성공적으로 변경되었습니다.");
 	        
-	        session.removeAttribute("passwordConfirmed");
+	        session.removeAttribute("confirmedExpiryTime"); // ✅ checkPassword와 일치하는 키
+	        session.removeAttribute("isConfirmedForEdit");
+	       
+	        	
 	        
 	    } else {
 	        response.put("isUpdated", false);

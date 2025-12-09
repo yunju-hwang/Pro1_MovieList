@@ -9,11 +9,246 @@
 <head>
 <meta charset="UTF-8">
 <title>영화 요청 내역</title>
-<link rel="stylesheet" href="<c:url value='/resources/css/movie_request.css'/>">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <style>
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f7fb;
+    font-family: "Noto Sans KR", sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1;
+    width: 80%;
+    margin: 0 auto;
+    align-items: center; /* 중앙 정렬 */
+}
+
+/* 제목 */
+.request {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 32px;
+    font-weight: 700;
+    color: #333;
+}
+
+.title_icon {
+    width: 30px;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+/* 총 개수 */
+.many {
+    text-align: center;
+    color: #555;
+    margin-bottom: 40px;
+}
+
+/* 데이터 없을 때 */
+.no-data {
+    text-align: center;
+    font-size: 22px;
+    padding: 40px;
+    background: white;
+    border-radius: 15px;
+    color: #777;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.08);
+}
+
+.no_icon {
+    width: 50px;
+    display: block;
+    margin: 0 auto 10px;
+}
+
+/* 그리드 */
+.grid-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr 1fr 1fr; /* 마지막 열 자동으로 공간 확보 */
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+/* 헤더 */
+.request_head {
+    padding: 15px;
+    background: #e9eef7;
+    font-weight: 700;
+    border-radius: 10px;
+    color: #333;
+    text-align: center;
+    width: 100%;
+}
+
+/* 리스트 아이템 */
+.request_item {
+    padding: 18px;
+    margin-top: 8px;
+    background: white;
+    border-radius: 10px;
+    transition: 0.2s;
+    box-shadow: 0 5px 14px rgba(0,0,0,0.05);
+    text-align: center;
+    width: 100%;
+    cursor: pointer;
+    text-decoration: none; /* 밑줄 제거 */
+    color: inherit;
+}
+
+.request_item:hover {
+    background-color: #f0f4f9;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* 번호, 제목, 내용, 날짜, 상태 */
+.item_num, .item_date {
+    text-align: center;
+}
+
+.item_title {
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    overflow: hidden; /* 영역을 벗어난 텍스트 숨김 */
+    text-overflow: ellipsis; /* 숨겨진 텍스트 대신 말줄임표 표시 */
+    display: block;
+}
+
+.item_content {
+    color: #666;
+}
+
+/* 상태 아이콘 */
+.status_icon {
+    width: 16px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.item_status_pen {
+    color: #d9534f;
+    font-weight: 700;
+}
+
+.item_status_com {
+    color: #28a745;
+    font-weight: 700;
+}
+
+/* 수정/삭제 버튼 */
+.item_edit, .item_delete {
+    margin: 0 8px;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+.item_edit {
+    background: #ffe082;
+    color: #8d6e63;
+}
+
+.item_edit:hover {
+    background: #ffca28;
+}
+
+.item_delete {
+    background: #ef9a9a;
+    color: #b71c1c;
+}
+
+.item_delete:hover {
+    background: #e57373;
+}
+
+.edit_icon, .delete_icon {
+    width: 16px;
+    margin-right: 4px;
+}
+
+/* 영화 요청 버튼 */
+.req-con {
+    width: 140px;
+    margin: 30px auto;
+    background: #4a69bd;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(74,105,189,0.3);
+    transition: 0.25s;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.req-con:hover {
+    background: #3b4f8f;
+    transform: translateY(-2px);
+}
+
+.write_icon {
+    width: 16px;
+    margin-right: 6px;
+}
+
+
+
+/* select 박스 */
+.sort-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.sort-container select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 6px 30px 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    background-image: url('https://cdn-icons-png.flaticon.com/512/271/271228.png');
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px 16px;
+    transition: all 0.2s;
+}
+
+.sort-container select:hover {
+    border-color: #888;
+    background-color: #f9f9f9;
+}
+
+.sort-container select:focus {
+    outline: none;
+    border-color: #555;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
 .header-nav {
 	width: 100%;
 	background-color: #ffffff;
@@ -85,7 +320,6 @@
 	</div>
 
 <h1 class="request">
-    <img src="<c:url value='/resources/img/film_red.png' />" class="title_icon">
     영화 요청 내역
 </h1>
 
@@ -113,7 +347,8 @@
             <!-- 리스트 -->
             <div class="request_list">
                 <c:forEach var="movieRequest" items="${movie_request_list}" varStatus="status">
-                    <div class="request_item grid-row">
+                
+                    <a href="/movielist/customer/movie_request_detail?id=${movieRequest.id}" class="request_item grid-row">
                         <span class="item_num">${status.index + 1}</span>
                         <span class="item_title">${movieRequest.title}</span>
                         <span class="item_content">
@@ -161,7 +396,8 @@
                                 완료
                             </span>
                         </c:if>
-                    </div>
+                    </a>
+
                 </c:forEach>
             </div>
         </c:otherwise>
