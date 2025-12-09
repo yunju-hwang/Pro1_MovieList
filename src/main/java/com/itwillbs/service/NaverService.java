@@ -14,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.beans.factory.annotation.Autowired; 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -132,25 +134,26 @@ public class NaverService {
     // DB 처리
     @Transactional
     public MemberVO loginOrSignup(String accessToken, NaverUserVO userInfo) {
+    	
     	String naverId = userInfo.getNaverId();
+    	String naverEmail = userInfo.getEmail();
+    	String mobile = userInfo.getMobile();
+        
+        // 1. 이메일로 기존 회원 조회
+    	MemberVO memberVO = memberMapper.getMemberByEmail(naverEmail);
+
         System.out.println("네이버ID: " + naverId);
-
-        // 1. 기존 회원 조회
-        MemberVO memberVO = memberMapper.findBynaverId(naverId);
-
+        System.out.println("조회된 기존 회원: " + (memberVO != null ? memberVO.getUser_id() : "없음"));
+        
         if (memberVO == null) {
             // 신규 가입
             memberVO = new MemberVO();
             memberVO.setUser_id(generateUserId());
             memberVO.setPassword(generateTempPassword());
             memberVO.setNaverId(naverId);
-
-            // 이메일
-            String email = userInfo.getEmail();
-            memberVO.setEmail(email);
-
+            memberVO.setEmail(naverEmail);
             memberVO.setRole("user");
-
+            
             // 닉네임
             String nickname = userInfo.getNickname();
             System.out.println("원래 닉네임: " + nickname);
@@ -173,16 +176,36 @@ public class NaverService {
             
             // DB에 삽입
             memberMapper.insertnaverMember(memberVO);
+            return memberMapper.getMemberByEmail(naverEmail);
+            
         } else {
-            System.out.println("이미 가입된 회원입니다: " + memberVO.getNickname());
+            System.out.println(">>> 기존 회원 연동 및 로그인 진행: 이메일 중복");
+            
+            if (memberVO.getNaverId() != null && memberVO.getNaverId().equals(naverId)) {
+                System.out.println("이미 네이버 연동된 계정입니다. 토큰만 업데이트.");
+                // 토큰만 업데이트하고 종료
+            } else {
+                // 2.2. 네이버 ID가 연동되지 않은 기존 계정 (자체 or 카카오) -> 연동 진행!
+                
+                System.out.println("네이버 ID 연동 진행: 기존 계정(" + memberVO.getUser_id() + ")에 네이버 정보 추가");
+                
+                Map<String, Object> updateParams = new HashMap<>();
+                updateParams.put("email", naverEmail);
+                updateParams.put("naverId", naverId);
+                updateParams.put("naver_access_token", accessToken);
+                updateParams.put("phone", mobile); // DB에 전화번호가 없다면 업데이트
+                
+                memberMapper.updateNaverLinkage(updateParams);
+            }
+            
+
             memberVO.setNaver_access_token(accessToken);
             memberMapper.updateAccessToken(memberVO);
-        }
-    	
-    	return memberVO;
+            
+            return memberMapper.getMemberByEmail(naverEmail);
     	
     }
-    
+    }
     public void naverLogout(String accessToken) {
         /*
          String naverLogoutUrl = "https://nid.naver.com/oauth2.0/token?grant_type=delete" +

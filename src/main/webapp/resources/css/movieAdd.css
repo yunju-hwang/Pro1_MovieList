@@ -131,8 +131,6 @@
     display: flex;
     justify-content: space-between; /* 왼쪽: 검색폼, 오른쪽: 추가 버튼 */
     align-items: center;
-    margin-bottom: 20px;
-    gap: 20px;
 }
 
 .table-header .search-wrap {
