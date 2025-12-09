@@ -503,6 +503,7 @@ body {
 						style="display: none;"> <input type="hidden"
 						id="memberProfileImage" name="profileImage"
 						value="${loginMember.profileImage}">
+					
 	
 					<div class="form-group">
 						<label>닉네임 <span class="required">*</span></label> <input
