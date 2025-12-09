@@ -317,6 +317,7 @@ public class MemberController {
 			// 로그인 실패 처리
 			model.addAttribute("msg", "아이디 혹은 비밀번호가 일치하지 않습니다.");
 			model.addAttribute("user_id", memberVO.getUser_id()); // ★ 사용자가 입력한 아이디 다시 전달
+			
 			return "/user/login";
 		}
 	}
