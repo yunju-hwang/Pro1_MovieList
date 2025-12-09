@@ -316,12 +316,9 @@ public class MypageController {
 	    if (uploadFile != null && !uploadFile.isEmpty()) {
 	        
 	        // 🚨 [핵심 수정] 실제 소스 코드 폴더 경로를 직접 지정
-	        String realPath = "D:" + File.separator + "JSP" + File.separator + "workspace_sts" + File.separator 
-	                          + "Pro1_MovieList" + File.separator 
-	                          + "Pro1_MovieList" + File.separator + "src" + File.separator + "main" + File.separator 
-	                          + "webapp" + File.separator + "resources" + File.separator + "upload";
+	    	String realPath = request.getSession().getServletContext().getRealPath("/resources/upload");
 	        
-	        System.out.println("✅ Final Correct Path: " + realPath);
+	        System.out.println("✅ Real Path (WAS Context): " + realPath);
 	        
 	        File targetDir = new File(realPath);
 	        if (!targetDir.exists()) {
@@ -334,8 +331,6 @@ public class MypageController {
 	        
 	        File targetFile = new File(realPath, savedFileName);
 	        
-	        System.out.println("✅ Final Target File Path: " + targetFile.getAbsolutePath());
-	        
 	        try {
 	            uploadFile.transferTo(targetFile);
 	            
@@ -345,7 +340,7 @@ public class MypageController {
 	        } catch (Exception e) {
 	            System.err.println("파일 업로드 실패: " + e.getMessage());
 	        }
-	    } 
+	    }
 	    // =================================================================
 	    // 🟢 파일 업로드 처리 로직 종료
 	    // =================================================================
