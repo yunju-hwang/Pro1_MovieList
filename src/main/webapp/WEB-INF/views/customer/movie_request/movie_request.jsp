@@ -39,7 +39,7 @@
                 <span class="sp_date">요청일</span>
                 <span class="sp_status">상태</span>
                 <div class="sort-container">
-                    <form method="get" action="/movielist/customer/movie_request">
+                    <form method="get" action="${pageContext.request.contextPath}/customer/movie_request">
                         <select name="sort" onchange="this.form.submit()">
                         	<option value="date_desc" ${param.sort == 'date_desc' ? 'selected' : ''}>최신순</option>
                         	<option value="date_asc" ${param.sort == 'date_asc' ? 'selected' : ''}>오래된순</option>
@@ -105,7 +105,7 @@
 
 </div>
 
-<div class="req-con" onclick="location.href='/movielist/customer/write_movie_request'">
+<div class="req-con" onclick="location.href='${pageContext.request.contextPath}/customer/write_movie_request'">
     <img src="https://cdn-icons-png.flaticon.com/512/992/992651.png" class="write_icon">
     <p>영화 요청하기</p>
 </div>

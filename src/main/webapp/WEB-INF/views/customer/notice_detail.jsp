@@ -16,7 +16,7 @@
 <div class="notice-container">
 <a href="/movielist/customer/notices">
 <h3 class="back">
-<img src="<c:url value='/resources/img/right_arrow.png'/>" alt="오른쪽 화살표" class="right-arrow">
+<img src="<c:url value='${pageContext.request.contextPath}/resources/img/right_arrow.png'/>" alt="오른쪽 화살표" class="right-arrow">
 목록으로 돌아가기
 </h3>
 </a>

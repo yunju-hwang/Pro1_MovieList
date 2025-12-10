@@ -52,7 +52,7 @@
 
         <!-- 리스트 -->
         <c:forEach var="inquiriesVO" items="${inquiry_list}" varStatus="status">
-            <div class="inquiry_item grid-row" onclick="location.href='/movielist/customer/inquiries/inquiry_detail?id=${inquiriesVO.id}'">
+            <div class="inquiry_item grid-row" onclick="location.href='${pageContext.request.contextPath}/customer/inquiries/inquiry_detail?id=${inquiriesVO.id}'">
                 
                 <span class="item_num">${status.index + 1}</span>
                 <span class="item_title">
@@ -107,7 +107,7 @@
 
 </div>
 
-<div class="inq-con" onclick="location.href='/movielist/customer/write_inquiry'">
+<div class="inq-con" onclick="location.href='${pageContext.request.contextPath}/customer/write_inquiry'">
     <img src="https://cdn-icons-png.flaticon.com/512/992/992651.png" class="write_icon">
     <p>1:1 문의하기</p>
 </div>
