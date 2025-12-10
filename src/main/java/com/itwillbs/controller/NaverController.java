@@ -27,7 +27,7 @@ public class NaverController {
 		String accessToken = naverService.getAccessToken(code);
 		System.out.println(code);
 	
-		NaverUserVO user = naverService.getUserInfo(accessToken);
+		NaverUserVO user = 	naverService.getUserInfo(accessToken);
 		System.out.println(accessToken);
 		
 		System.out.println(user);
@@ -36,8 +36,12 @@ public class NaverController {
 		
 
 		session.setAttribute("loginUser", loginUser);
-		
-		return "redirect:/";
+		if (loginUser != null && loginUser.isRequireAdditionalInfo()) {
+	        System.out.println(">>> 필수 정보 누락! 추가 정보 입력 페이지로 리다이렉트.");
+	        return "redirect:/member/extra-info"; // 추가 정보 입력 페이지로 이동
+	    }
+	    
+	    // 5. 로그인 성공
+	    return "redirect:/main"; // 메인 페이지로 이동
 	}
-	
 }

@@ -92,6 +92,8 @@
     <c:if test="${not empty alertMsg}">
         alert('${alertMsg}');
     </c:if>
+    
+    
     </script>
 	
 </body>

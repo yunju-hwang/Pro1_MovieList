@@ -87,6 +87,19 @@
     SET naver_access_token = #{naver_access_token}
     WHERE naver_id = #{naverId} </update>
     
+	<!-- 네이버 이메일 중복시 연동 -->
+    <update id="updateNaverLinkage">
+    UPDATE users
+    SET 
+    naver_id = #{naverId}, 
+    naver_access_token = #{naver_access_token},
+    phone = #{phone} 
+    WHERE email = #{email} </update>
+    
+    <select id="getMemberByEmail" resultType="com.itwillbs.domain.MemberVO">
+    SELECT * FROM users WHERE email = #{email}
+</select>
+    
      <!-- 소셜 회원가입 시 업데이트 -->
     <update id="updateAdditionalInfo">
 	    UPDATE users
@@ -95,6 +108,25 @@
 	        phone = #{phone}
 	    WHERE user_id = #{user_id}
 	</update>
+	
+	<select id="findIdByEmail" parameterType="String" resultType="String">
+    SELECT user_id
+    FROM users
+    WHERE email = #{email}
+    </select>
+    
+    <select id="getMemberByIdAndEmail" resultType="com.itwillbs.domain.MemberVO">
+    SELECT *
+    FROM users
+    WHERE user_id = #{userId} AND email = #{userEmail}
+    </select>
+    
+    <update id="updateTemporaryPassword" parameterType="com.itwillbs.domain.MemberVO">
+    UPDATE users
+    SET password = #{password}
+    WHERE user_id = #{user_id}
+    </update>
+    
 
 
 
