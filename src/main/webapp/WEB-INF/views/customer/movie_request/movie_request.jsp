@@ -43,8 +43,8 @@
                         <select name="sort" onchange="this.form.submit()">
                         	<option value="date_desc" ${param.sort == 'date_desc' ? 'selected' : ''}>최신순</option>
                         	<option value="date_asc" ${param.sort == 'date_asc' ? 'selected' : ''}>오래된순</option>
-                            <option value="completed" ${param.sort == 'completed' ? 'selected' : ''}>답변 완료</option>
-                            <option value="pending" ${param.sort == 'pending' ? 'selected' : ''}>답변 대기</option>
+                            <option value="completed" ${param.sort == 'completed' ? 'selected' : ''}>검토 완료</option>
+                            <option value="pending" ${param.sort == 'pending' ? 'selected' : ''}>검토 대기</option>
                         </select>
                     </form>
                 </div>
