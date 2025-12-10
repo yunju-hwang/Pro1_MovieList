@@ -36,7 +36,7 @@ html, body {
 
 .grid-row {
     display: grid;
-    grid-template-columns: 1fr 2fr 3fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 2fr 3fr 1fr 1fr 1.5fr;
     align-items: center;
     width: 100%;
     gap: 10px;
@@ -139,22 +139,32 @@ html, body {
 
 .write_icon { width: 16px; margin-right: 6px; }
 
-.sort-container { display: inline-block; margin-left: auto; text-align: right; position: relative; }
+.sort-container { display: inline-block;     display: flex;
+    justify-content: center;   /* 가운데 정렬 */
+    align-items: center;       /* 수직 가운데 정렬 */
+    margin-left: 0;            /* 기존 자동 밀림 제거 */
+    text-align: center; }
 .sort-container select {
-    padding: 8px 36px 8px 12px;
+    padding: 8px 12px;               /* 오른쪽 패딩 줄여서 화살표 공간 제거 */
     border-radius: 25px;
     border: 1px solid #ccc;
-    background: linear-gradient(145deg,#fff,#f0f0f0);
+    background: #fff;
     font-size: 14px;
     color: #333;
     cursor: pointer;
+
+    /* 화살표 제거 */
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
+    
+    background-image: none !important;  /* 혹시 숨겨진 기본 화살표 제거 */
     box-shadow: 2px 2px 5px rgba(0,0,0,0.08);
-    position: relative;
 }
-.sort-container::after { content:"▼"; font-size:12px; color:#555; position:absolute; right:12px; top:50%; transform:translateY(-50%); pointer-events:none; }
+
+.sort-container::after {
+    content: none !important;
+}
 
 /* ================== 반응형 ================== */
 @media screen and (max-width: 768px) {

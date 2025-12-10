@@ -86,15 +86,18 @@
                     </c:choose>
                 </span>
 
-                <!-- 버튼 그룹 -->
-                <div class="button-group">
-                    <span class="item_edit" onclick="event.stopPropagation(); location.href='/movielist/customer/inquiry_update?id=${inquiriesVO.id}'">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" class="edit_icon">수정
-                    </span>
-                    <span class="item_delete" onclick="event.stopPropagation(); if(confirm('정말 삭제하시겠습니까?')) location.href='/movielist/customer/inquiry_delete?id=${inquiriesVO.id}'">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3405/3405244.png" class="delete_icon">삭제
-                    </span>
-                </div>
+                <!-- 버튼 그룹: 답변대기일 때만 표시 -->
+<c:if test="${inquiriesVO.status eq 'pending'}">
+    <div class="button-group">
+        <span class="item_edit" onclick="event.stopPropagation(); location.href='/movielist/customer/inquiry_update?id=${inquiriesVO.id}'">
+            <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" class="edit_icon">수정
+        </span>
+        <span class="item_delete" onclick="event.stopPropagation(); if(confirm('정말 삭제하시겠습니까?')) location.href='/movielist/customer/inquiry_delete?id=${inquiriesVO.id}'">
+            <img src="https://cdn-icons-png.flaticon.com/512/3405/3405244.png" class="delete_icon">삭제
+        </span>
+    </div>
+</c:if>
+
 
             </div>
         </c:forEach>

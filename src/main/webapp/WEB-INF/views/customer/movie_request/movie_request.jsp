@@ -41,6 +41,8 @@
                 <div class="sort-container">
                     <form method="get" action="/movielist/customer/movie_request">
                         <select name="sort" onchange="this.form.submit()">
+                        	<option value="date_desc" ${param.sort == 'date_desc' ? 'selected' : ''}>최신순</option>
+                        	<option value="date_asc" ${param.sort == 'date_asc' ? 'selected' : ''}>오래된순</option>
                             <option value="completed" ${param.sort == 'completed' ? 'selected' : ''}>답변 완료</option>
                             <option value="pending" ${param.sort == 'pending' ? 'selected' : ''}>답변 대기</option>
                         </select>
@@ -82,15 +84,18 @@
                         </c:choose>
                     </span>
 
-                    <!-- 버튼 그룹: 항상 가로 유지 -->
-                    <div class="button-group">
-                        <span class="item_edit" onclick="event.stopPropagation(); location.href='/movielist/customer/write_movie_request?id=${movieRequest.id}'">
-                            <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" class="edit_icon">수정
-                        </span>
-                        <span class="item_delete" onclick="event.stopPropagation(); if(confirm('정말 삭제하시겠습니까?')) location.href='/movielist/customer/movie_request_delete?id=${movieRequest.id}'">
-                            <img src="https://cdn-icons-png.flaticon.com/512/3405/3405244.png" class="delete_icon">삭제
-                        </span>
-                    </div>
+                    <!-- 버튼 그룹: pending(대기)일 때만 표시 -->
+<c:if test="${movieRequest.status eq 'pending'}">
+    <div class="button-group">
+        <span class="item_edit" onclick="event.stopPropagation(); location.href='/movielist/customer/write_movie_request?id=${movieRequest.id}'">
+            <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" class="edit_icon">수정
+        </span>
+        <span class="item_delete" onclick="event.stopPropagation(); if(confirm('정말 삭제하시겠습니까?')) location.href='/movielist/customer/movie_request_delete?id=${movieRequest.id}'">
+            <img src="https://cdn-icons-png.flaticon.com/512/3405/3405244.png" class="delete_icon">삭제
+        </span>
+    </div>
+</c:if>
+
 
                 </div>
             </c:forEach>

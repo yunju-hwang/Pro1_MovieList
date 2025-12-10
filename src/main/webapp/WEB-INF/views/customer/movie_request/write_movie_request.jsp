@@ -13,8 +13,17 @@
 
 <body>
 
-<h1 class="title">영화 등록 요청</h1>
-<h4 class="title1">보고 싶으신 영화를 요청해주시면 검토 후 등록해 드립니다</h4>
+<c:choose>
+    <c:when test="${mode == 'update'}">
+        <h1 class="title">영화 요청 수정</h1>
+        <h4 class="title1">요청하신 내용을 수정할 수 있습니다</h4>
+    </c:when>
+    <c:otherwise>
+        <h1 class="title">영화 등록 요청</h1>
+        <h4 class="title1">보고 싶으신 영화를 요청해주시면 검토 후 등록해 드립니다</h4>
+    </c:otherwise>
+</c:choose>
+
 
 <c:choose>
     <c:when test="${mode == 'update'}">

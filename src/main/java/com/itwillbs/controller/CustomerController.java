@@ -311,7 +311,7 @@ public class CustomerController {
 
 
     @GetMapping("/customer/inquiries/inquiry_detail")
-    public String inquiry_detail(@RequestParam("id") int id, Model model,HttpSession session) {
+    public String inquiry_detail(@RequestParam("id") int id, Model model, HttpSession session) {
 
         String userId = (String) session.getAttribute("user_id");
         if (userId == null) return "redirect:/member/login";
@@ -321,7 +321,7 @@ public class CustomerController {
         if (vo == null) {
             model.addAttribute("msg", "존재하지 않는 문의입니다.");
             model.addAttribute("url", "/customer/inquiries");
-            return "redirect";
+            return "redirect:/customer/inquiries";   // 🔥 여기 수정됨
         }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -333,8 +333,9 @@ public class CustomerController {
         model.addAttribute("answeredDate", answeredDate);
         model.addAttribute("inq", vo);
 
-        return "customer/inquiries/inquiry_detail";
+        return "/customer/inquiries/inquiry_detail";   // ★ 이건 정상
     }
+
 
 
 
