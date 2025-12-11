@@ -77,12 +77,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <c:choose>
     <c:when test="${not empty sessionScope.loginUser}">
-        <a href="/movielist/customer/write_inquiry" class="inq">1:1 문의하기 →</a>
+        <a href="${pageContext.request.contextPath}/customer/write_inquiry" class="inq">1:1 문의하기 →</a>
     </c:when>
 
     <c:otherwise>
-        <a href="#" class="inq"
-           onclick="alert('로그인이 필요한 서비스입니다.'); return false;">
+        <a href="#" class="inq" onclick="alert('로그인이 필요한 서비스입니다.'); return false;">
             1:1 문의하기 →
         </a>
     </c:otherwise>

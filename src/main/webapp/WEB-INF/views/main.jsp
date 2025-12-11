@@ -58,6 +58,8 @@
     const isLogin = container.dataset.islogin === 'true';
     const loginUser = '<c:out value="${sessionScope.loginUser.user_id}" default=""/>';
     localStorage.setItem("userId", "${sessionScope.loginUser.user_id}");
+    sessionStorage.setItem("nickname", "${sessionScope.nickname}");
+    
 </script>
 
 

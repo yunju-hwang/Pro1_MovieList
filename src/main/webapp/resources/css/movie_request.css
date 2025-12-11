@@ -49,7 +49,7 @@ html, body {
 /* 그리드 */
 .grid-row {
     display: grid;
-    grid-template-columns: 1fr 2fr 3fr 1fr 1fr 1fr; /* 버튼 영역 따로 flex 적용 */
+    grid-template-columns: 1fr 2fr 3fr 1fr 1fr 1.5fr; /* 버튼 영역 따로 flex 적용 */
     align-items: center;
     width: 100%;
     gap: 10px;
@@ -152,33 +152,41 @@ html, body {
 
 /* ================== 정렬 select 박스 꾸미기 ================== */
 .sort-container {
-    display: inline-block;
-    margin-left: auto;
-    text-align: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;      /* 유지 */
     position: relative;
-    font-family: "Noto Sans KR", sans-serif;
 }
+
 
 .sort-container form { display: inline-block; }
 
 .sort-container select {
-    padding: 8px 36px 8px 12px;
+    padding: 8px 12px;  /* 오른쪽 패딩 원래 36px → 12px로 줄임 */
     border-radius: 25px;
     border: 1px solid #ccc;
-    background: linear-gradient(145deg,#fff,#f0f0f0);
+    background: #fff;
     font-size: 14px;
     color: #333;
     cursor: pointer;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.08);
-    position: relative;
 }
 
 .sort-container select:hover { border-color: #4a69bd; background: linear-gradient(145deg,#f0f0f0,#e9eef7); box-shadow:3px3px8px rgba(0,0,0,0.12);}
 .sort-container select:focus { outline:none; border-color:#4a69bd; box-shadow:0 0 8px rgba(74,105,189,0.3); }
-.sort-container::after { content:"▼"; font-size:12px; color:#555; position:absolute; right:12px; top:50%; transform:translateY(-50%); pointer-events:none; }
+/* .sort-container select::after { */
+/*     content: "▼"; */
+/*     font-size: 12px; */
+/*     color: #555; */
+/*     position: absolute; */
+/*     right: 12px;     select의 오른쪽 기준 */
+/*     top: 50%; */
+/*     transform: translateY(-50%); */
+/*     pointer-events: none; */
+/* } */
 
 /* ================== 반응형 ================== */
 @media screen and (max-width: 768px) {

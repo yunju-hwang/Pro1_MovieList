@@ -9,8 +9,16 @@
 <link rel="stylesheet" href="<c:url value='/resources/css/write_inquiry.css?after'/>">
 </head>
 <body>
-	<h1 class="title">1:1 문의</h1>
-	<h4 class="title1">궁금한 사항을 남겨주시면 빠르게 답변 드리겠습니다</h4>
+	<c:choose>
+    <c:when test="${mode == 'update'}">
+        <h1 class="title">1:1 문의 수정</h1>
+        <h4 class="title1">문의 내용을 수정할 수 있습니다</h4>
+    </c:when>
+    <c:otherwise>
+        <h1 class="title">1:1 문의</h1>
+        <h4 class="title1">궁금한 사항을 남겨주시면 빠르게 답변 드리겠습니다</h4>
+    </c:otherwise>
+</c:choose>
 <form action="<c:choose>
                 <c:when test='${mode == "update"}'>
                     ${pageContext.request.contextPath}/customer/inquiry_update_pro
