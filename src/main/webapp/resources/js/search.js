@@ -1,3 +1,6 @@
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("search-container");
     const movieListDiv = document.getElementById("movie-list");
@@ -21,6 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const query = searchInput.value.trim();
         if (!query) return;
 
+		    // 🔥 검색 시 페이징 숨기기
+    	const pagination = document.getElementById("pagination");
+   		 if (pagination) pagination.style.display = "none";
         fetch(`${ctx}/movies/search?query=${encodeURIComponent(query)}&language=ko-KR`)
             .then(res => res.json())
             .then(data => {
