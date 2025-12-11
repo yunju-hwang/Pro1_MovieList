@@ -112,6 +112,18 @@ function renderMovies(movies, ctx) {
 function renderPagination(totalCount, currentPage) {
     const totalPages = Math.ceil(totalCount / pageSize);
     const container = document.getElementById("pagination");
+    
+    
+    // ⭐ 검색 페이지에서는 페이징 숨기기
+    if (window.location.pathname.includes("/movies/search")) {
+        container.innerHTML = "";
+        container.style.display = "none";
+        return;
+    }
+    
+    
+    
+    
     container.innerHTML = "";
 
     if (totalPages <= 1) return;
@@ -186,3 +198,7 @@ function addEventListeners(ctx) {
         });
     });
 }
+
+
+
+
